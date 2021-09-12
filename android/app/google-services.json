@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "763831901091",
+    "project_id": "vof-project",
+    "storage_bucket": "vof-project.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:763831901091:android:9c86f86a65274dc814d816",
+        "android_client_info": {
+          "package_name": "com.vof.vof"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "763831901091-3ie69v7gsq2neffo5b2aqdqg8n6ng1jh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCYGNw3QmMiOkdXSNMpJqpCXrqmFBuc5Hw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "763831901091-3ie69v7gsq2neffo5b2aqdqg8n6ng1jh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
