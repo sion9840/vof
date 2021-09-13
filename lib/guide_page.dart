@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'login_page.dart';
-import 'signin1_page.dart';
+import 'student_signin1_page.dart';
 
 class GuidePage extends StatelessWidget {
   @override
@@ -39,9 +39,30 @@ class GuidePage extends StatelessWidget {
               width: double.infinity,
               child: RaisedButton(
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => SignIn1Page()),
+                  showDialog<String>(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        actions: <Widget>[
+                          TextButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => TeacherSignIn1Page()),
+                              );
+                            },
+                            child: const Text("교사로 회원가입"),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => StudentSignIn1Page()),
+                              );
+                            },
+                            child: const Text("학생으로 회원가입"),
+                          ),
+                        ],
+                      )
                   );
                 },
                 child: Text("회원가입"),

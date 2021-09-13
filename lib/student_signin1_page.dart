@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
-import 'package:vof/signin2_page.dart';
+import 'package:vof/student_signin2_page.dart';
 
-class SignIn1Page extends StatelessWidget {
+class StudentSignIn1Page extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String _church_id = "";
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("회원가입 > 교회 찾기"),
+        title: Text("교회 찾기"),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -62,7 +62,7 @@ class SignIn1Page extends StatelessWidget {
                   else{
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => Signin2Page()),
+                      MaterialPageRoute(builder: (context) => StudentSignin2Page(_church_id)),
                     );
                   }
                 },
