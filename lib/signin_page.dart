@@ -4,26 +4,30 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'main_page.dart';
 
-class StudentSignin2Page extends StatelessWidget {
-  String _church_id = "";
-  StudentSignin2Page(church_id){
-    _church_id = church_id;
+class SigninPage extends StatelessWidget {
+  String _user_type = "";
+  SigninPage(String type){
+    _user_type = type;
   }
 
   @override
   Widget build(BuildContext context) {
     final _firestoreInstance = FirebaseFirestore.instance;
     Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
-    var _uuid = Uuid();
 
-    String _student_name = "";
-    String _student_id = "";
-    String _student_password = "";
-    String _student_passwordcheck = "";
+    String _user_name = "";
+    String _user_id = "";
+    String _user_password = "";
+    String _user_passwordcheck = "";
+
+    String _display_user_type = "학생";
+    if(_user_type == "t"){
+      _display_user_type = "교사";
+    }
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("회원가입"),
+        title: Text("${_display_user_type} 회원가입"),
       ),
       body: FutureBuilder<SharedPreferences>(
         future: _prefs,
@@ -41,34 +45,37 @@ class StudentSignin2Page extends StatelessWidget {
                       labelText: "이름(ex:홍길동, 1~10자)",
                     ),
                     onChanged: (value) {
-                      _student_name = value;
+                      _user_name = value;
                     },
                   ),
+                  SizedBox(height: 10,),
                   TextField(
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),
                       labelText: "아이디(6~16자)",
                     ),
                     onChanged: (value) {
-                      _student_id = value;
+                      _user_id = value;
                     },
                   ),
+                  SizedBox(height: 10,),
                   TextField(
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),
                       labelText: "비밀번호(6~16자)",
                     ),
                     onChanged: (value) {
-                      _student_password = value;
+                      _user_password = value;
                     },
                   ),
+                  SizedBox(height: 10,),
                   TextField(
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),
                       labelText: "비밀번호 확인",
                     ),
                     onChanged: (value) {
-                      _student_passwordcheck = value;
+                      _user_passwordcheck = value;
                     },
                   ),
                   Spacer(),
@@ -76,7 +83,7 @@ class StudentSignin2Page extends StatelessWidget {
                     width: double.infinity,
                     child: RaisedButton(
                       onPressed: () {
-                        if((1 > _student_name.length) || (10 < _student_name.length)) {
+                        if((1 > _user_name.length) || (10 < _user_name.length)) {
                           showDialog<String>(
                               context: context,
                               builder: (context) => AlertDialog(
@@ -90,7 +97,7 @@ class StudentSignin2Page extends StatelessWidget {
                               )
                           );
                         }
-                        else if((6 > _student_id.length) || (16 < _student_id.length)) {
+                        else if((6 > _user_id.length) || (16 < _user_id.length)) {
                           showDialog<String>(
                               context: context,
                               builder: (context) => AlertDialog(
@@ -104,7 +111,7 @@ class StudentSignin2Page extends StatelessWidget {
                               )
                           );
                         }
-                        else if((6 > _student_password.length) || (16 < _student_password.length)) {
+                        else if((6 > _user_password.length) || (16 < _user_password.length)) {
                           showDialog<String>(
                               context: context,
                               builder: (context) => AlertDialog(
@@ -118,7 +125,7 @@ class StudentSignin2Page extends StatelessWidget {
                               )
                           );
                         }
-                        else if(_student_password != _student_passwordcheck){
+                        else if(_user_password != _user_passwordcheck){
                           showDialog<String>(
                               context: context,
                               builder: (context) => AlertDialog(
@@ -138,7 +145,7 @@ class StudentSignin2Page extends StatelessWidget {
                             querySnapshot.docs.forEach((result) {
                               var _data = result.data();
 
-                              if(_data["id"] == _student_id){
+                              if(_data["id"] == _user_id){
                                 _is_same = true;
                                 return;
                               }
@@ -166,8 +173,8 @@ class StudentSignin2Page extends StatelessWidget {
                                   title: const Text("재확인"),
                                   content: Row(
                                     children: <Widget>[
-                                      Text("학생 이름이 "),
-                                      Text(_student_name, style: TextStyle(fontWeight: FontWeight.bold)),
+                                      Text("사용자 이름이 "),
+                                      Text(_user_name, style: TextStyle(fontWeight: FontWeight.bold)),
                                       Text("이 맞습니까?"),
                                     ],
                                   ),
@@ -180,32 +187,19 @@ class StudentSignin2Page extends StatelessWidget {
                                       onPressed: () {
                                         _firestoreInstance
                                             .collection("users")
-                                            .doc(_student_id)
+                                            .doc(_user_id)
                                             .set(
                                             {
-                                              "id" : _student_id,
-                                              "name" : _student_name,
-                                              "password" : _student_password,
-                                              "church_id" : _church_id,
+                                              "name" : _user_name,
+                                              "type" : _user_type,
+                                              "id" : _user_id,
+                                              "password" : _user_password,
+                                              "church_id" : "",
                                             });
 
-                                        List _church_students = [];
-                                        _firestoreInstance
-                                            .collection("churches")
-                                            .doc(_church_id)
-                                            .get()
-                                            .then(
-                                              (value) {
-                                                _church_students = value.get("students");
-                                              }
-                                            );
-
-                                        _firestoreInstance
-                                            .collection("churches")
-                                            .doc(_church_id)
-                                            .update({"students": _church_students + [_student_id]});
-
-                                        snapshot.data!.setBool("is_first", true);
+                                        snapshot.data!.setString("user_id", _user_id);
+                                        snapshot.data!.setString("user_type", _user_type);
+                                        snapshot.data!.setString("user_church_id", "");
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(builder: (context) => MainPage()),
@@ -244,7 +238,3 @@ class StudentSignin2Page extends StatelessWidget {
     );
   }
 }
-
-/*
-
-*/

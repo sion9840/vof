@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:vof/signin_page.dart';
 
 import 'login_page.dart';
-import 'student_signin1_page.dart';
+import 'signin_page.dart';
 
 class GuidePage extends StatelessWidget {
   @override
@@ -43,23 +44,29 @@ class GuidePage extends StatelessWidget {
                       context: context,
                       builder: (context) => AlertDialog(
                         actions: <Widget>[
-                          TextButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => TeacherSignIn1Page()),
-                              );
-                            },
-                            child: const Text("교사로 회원가입"),
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => StudentSignIn1Page()),
-                              );
-                            },
-                            child: const Text("학생으로 회원가입"),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => SigninPage("t")),
+                                  );
+                                },
+                                child: const Text("교사로 회원가입"),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => SigninPage("s")),
+                                  );
+                                },
+                                child: const Text("학생으로 회원가입"),
+                              ),
+                            ],
                           ),
                         ],
                       )

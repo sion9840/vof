@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_core/firebase_core.dart';
 
-import 'package:vof/main_page.dart';
+import 'main_page.dart';
 import 'guide_page.dart';
 
 void main() async {
@@ -36,7 +36,7 @@ class ReadyPage extends StatelessWidget {
       future: _prefs,
       builder: (context, snapshot) {
         if(snapshot.hasData) {
-          if(snapshot.data!.getBool("is_first") == null){
+          if(snapshot.data!.getString("user_id") == null){
             return GuidePage();
           }
           else{
