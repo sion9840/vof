@@ -26,6 +26,7 @@ class SigninPage extends StatelessWidget {
     }
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: Text("${_display_user_type} 회원가입"),
       ),
@@ -60,6 +61,9 @@ class SigninPage extends StatelessWidget {
                   ),
                   SizedBox(height: 10,),
                   TextField(
+                    obscureText: true,
+                    enableSuggestions: false,
+                    autocorrect: false,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),
                       labelText: "비밀번호(6~16자)",
@@ -70,6 +74,9 @@ class SigninPage extends StatelessWidget {
                   ),
                   SizedBox(height: 10,),
                   TextField(
+                    obscureText: true,
+                    enableSuggestions: false,
+                    autocorrect: false,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),
                       labelText: "비밀번호 확인",
@@ -82,7 +89,7 @@ class SigninPage extends StatelessWidget {
                   SizedBox(
                     width: double.infinity,
                     child: RaisedButton(
-                      onPressed: () {
+                      onPressed: () async{
                         if((1 > _user_name.length) || (10 < _user_name.length)) {
                           showDialog<String>(
                               context: context,
@@ -141,7 +148,7 @@ class SigninPage extends StatelessWidget {
                         }
                         else if(true){
                           bool _is_same = false;
-                          _firestoreInstance.collection("users").get().then((querySnapshot) {
+                          await _firestoreInstance.collection("users").get().then((querySnapshot) {
                             querySnapshot.docs.forEach((result) {
                               var _data = result.data();
 
@@ -184,8 +191,8 @@ class SigninPage extends StatelessWidget {
                                       child: const Text("아니요"),
                                     ),
                                     TextButton(
-                                      onPressed: () {
-                                        _firestoreInstance
+                                      onPressed: () async {
+                                        await _firestoreInstance
                                             .collection("users")
                                             .doc(_user_id)
                                             .set(
@@ -197,9 +204,14 @@ class SigninPage extends StatelessWidget {
                                               "church_id" : "",
                                             });
 
-                                        snapshot.data!.setString("user_id", _user_id);
-                                        snapshot.data!.setString("user_type", _user_type);
-                                        snapshot.data!.setString("user_church_id", "");
+                                        snapshot.data!.setStringList("user", [
+                                          _user_name,
+                                          _user_id,
+                                          _user_password,
+                                          _user_type,
+                                          ""]
+                                        );
+
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(builder: (context) => MainPage()),

@@ -21,6 +21,9 @@ class MyApp extends StatelessWidget {
           bodyText1: TextStyle(
             fontSize: 18,
           ),
+          bodyText2: TextStyle(
+            fontSize: 24,
+          ),
         ),
       ),
       home: ReadyPage(),
@@ -36,7 +39,7 @@ class ReadyPage extends StatelessWidget {
       future: _prefs,
       builder: (context, snapshot) {
         if(snapshot.hasData) {
-          if(snapshot.data!.getString("user_id") == null){
+          if(snapshot.data!.getStringList("user") == null){
             return GuidePage();
           }
           else{

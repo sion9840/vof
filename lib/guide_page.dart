@@ -9,6 +9,7 @@ class GuidePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: Text("안내"),
       ),
       body: Padding(
@@ -50,6 +51,7 @@ class GuidePage extends StatelessWidget {
                             children: <Widget>[
                               TextButton(
                                 onPressed: () {
+                                  Navigator.pop(context, "교사로 회원가입");
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(builder: (context) => SigninPage("t")),
@@ -59,6 +61,7 @@ class GuidePage extends StatelessWidget {
                               ),
                               TextButton(
                                 onPressed: () {
+                                  Navigator.pop(context, "학생으로 회원가입");
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(builder: (context) => SigninPage("s")),
