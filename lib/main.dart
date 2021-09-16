@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:vof/global_variable.dart';
 
 import 'main_page.dart';
 import 'guide_page.dart';
@@ -32,14 +33,17 @@ class MyApp extends StatelessWidget {
 }
 
 class ReadyPage extends StatelessWidget {
+  Future<SharedPreferences> prefs = SharedPreferences.getInstance();
+
   @override
   Widget build(BuildContext context) {
-    Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
     return FutureBuilder<SharedPreferences>(
-      future: _prefs,
+      future: prefs,
       builder: (context, snapshot) {
         if(snapshot.hasData) {
-          if(snapshot.data!.getStringList("user") == null){
+          tiny_db = snapshot.data;
+
+          if(tiny_db.getStringList("user") == null){
             return GuidePage();
           }
           else{
