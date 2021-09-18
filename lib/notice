@@ -1,2 +1,2 @@
 tiny db 형식
-[유저 아이디, 유저 이름, 유저 타입, 유저 교회 아이디]
+["user_name", "user_type", "user_email", "user_church_id", "user_point"]

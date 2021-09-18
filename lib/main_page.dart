@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -24,7 +25,7 @@ class MainPage extends StatelessWidget {
             children: <Widget>[
               SizedBox(height: 20,),
               Text(
-                "안녕하세요\n${tiny_db.getStringList("user")![1]}님",
+                "안녕하세요\n${tiny_db.getString("user_name")}님",
                 style: Theme.of(context).textTheme.bodyText2,
               ),
               SizedBox(height: 20,),
@@ -39,8 +40,14 @@ class MainPage extends StatelessWidget {
                         content: const Text("로그아웃 하시겠습니까?"),
                         actions: <Widget>[
                           TextButton(
-                            onPressed: (){
-                              tiny_db.remove("user");
+                            onPressed: () async{
+                              await FirebaseAuth.instance.signOut();
+
+                              tiny_db.remove("user_name");
+                              tiny_db.remove("user_type");
+                              tiny_db.remove("user_email");
+                              tiny_db.remove("user_church_id");
+                              tiny_db.remove("user_point");
 
                               Navigator.push(
                                 context,
@@ -77,7 +84,7 @@ class MainPage extends StatelessWidget {
                     MaterialPageRoute(builder: (context) =>
                         AttQrimagePage(
                             QrImage(
-                              data: tiny_db.getStringList("user")![0],
+                              data: tiny_db.getString("user_id"),
                               backgroundColor: Colors.white,
                               size: MediaQuery.of(context).size.width-40,
                             )
@@ -93,8 +100,7 @@ class MainPage extends StatelessWidget {
             SizedBox(
               width: double.infinity,
               child: RaisedButton(
-                onPressed: (){
-
+                onPressed: () {
                 },
                 child: Text(
                     "오늘 QT 완료"

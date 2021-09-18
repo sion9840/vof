@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -33,6 +34,7 @@ class MyApp extends StatelessWidget {
 }
 
 class ReadyPage extends StatelessWidget {
+  final firestoreInstance = FirebaseFirestore.instance;
   Future<SharedPreferences> prefs = SharedPreferences.getInstance();
 
   @override
@@ -43,10 +45,11 @@ class ReadyPage extends StatelessWidget {
         if(snapshot.hasData) {
           tiny_db = snapshot.data;
 
-          if(tiny_db.getStringList("user") == null){
+          if(tiny_db.getString("user_email") == null){
             return GuidePage();
           }
           else{
+            checkUserPoint();
             return GuidePage();
           }
         }
@@ -68,6 +71,14 @@ class ReadyPage extends StatelessWidget {
           );
         }
       }
+    );
+  }
+
+  void checkUserPoint() async{
+    await firestoreInstance.collection("users").doc(tiny_db.getString("user_email")).get().then(
+            (value) {
+              tiny_db.setInt("user_point", value["point"]);
+            }
     );
   }
 }

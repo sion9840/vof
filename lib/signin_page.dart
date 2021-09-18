@@ -1,4 +1,5 @@
 import 'package:email_validator/email_validator.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:vof/global_variable.dart';
@@ -9,10 +10,9 @@ class SigninPage extends StatelessWidget {
   final firestoreInstance = FirebaseFirestore.instance;
 
   String input_user_name = "";
-  String input_user_id = "";
+  String input_user_email = "";
   String input_user_password = "";
   String input_user_passwordcheck = "";
-  String input_user_email = "";
   String input_user_type = "";
 
   String display_user_type = "학생";
@@ -51,10 +51,10 @@ class SigninPage extends StatelessWidget {
               TextField(
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
-                  labelText: "아이디(6~16자)",
+                  labelText: "이메일",
                 ),
                 onChanged: (value) {
-                  input_user_id = value;
+                  input_user_email = value;
                 },
               ),
               SizedBox(height: 10,),
@@ -84,16 +84,6 @@ class SigninPage extends StatelessWidget {
                 },
               ),
               SizedBox(height: 10,),
-              TextField(
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: "이메일",
-                ),
-                onChanged: (value) {
-                  input_user_email = value;
-                },
-              ),
-              SizedBox(height: 10,),
               SizedBox(
                 width: double.infinity,
                 child: RaisedButton(
@@ -103,20 +93,6 @@ class SigninPage extends StatelessWidget {
                           context: context,
                           builder: (context) => AlertDialog(
                             content: const Text("이름은 1~10자여야 합니다"),
-                            actions: <Widget>[
-                              TextButton(
-                                onPressed: () => Navigator.pop(context, "확인"),
-                                child: const Text("확인"),
-                              ),
-                            ],
-                          )
-                      );
-                    }
-                    else if((6 > input_user_id.length) || (16 < input_user_id.length)) {
-                      showDialog<String>(
-                          context: context,
-                          builder: (context) => AlertDialog(
-                            content: const Text("아이디는 6~16자여야 합니다"),
                             actions: <Widget>[
                               TextButton(
                                 onPressed: () => Navigator.pop(context, "확인"),
@@ -155,129 +131,158 @@ class SigninPage extends StatelessWidget {
                       );
                     }
                     else if(true){
-                      bool _is_same_id = false;
-                      await firestoreInstance.collection("users").get().then((querySnapshot) {
-                        querySnapshot.docs.forEach((result) {
-                          var _data = result.data();
+                      bool _is_error = false;
 
-                          if(input_user_id == _data["id"]){
-                            _is_same_id = true;
-                            return;
-                          }
-                        });
-                      });
-
-                      if(_is_same_id == true){
-                        showDialog<String>(
-                            context: context,
-                            builder: (context) => AlertDialog(
-                              content: const Text("이미 존재하는 아이디입니다"),
-                              actions: <Widget>[
-                                TextButton(
-                                  onPressed: () => Navigator.pop(context, "확인"),
-                                  child: const Text("확인"),
-                                ),
-                              ],
-                            )
+                      try {
+                        UserCredential _userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+                            email: input_user_email,
+                            password: input_user_password
                         );
-                      }
-                      else{
-                        bool _is_valid = EmailValidator.validate(input_user_email);
+                      } on FirebaseAuthException catch (e) {
+                        _is_error = true;
 
-                        if(_is_valid == false){
+                        print(e);
+
+                        if (e.code == 'weak-password') {
                           showDialog<String>(
                               context: context,
-                              builder: (context) => AlertDialog(
-                                content: const Text("존재하지 않는 이메일 입니다"),
-                                actions: <Widget>[
-                                  TextButton(
-                                    onPressed: () => Navigator.pop(context, "확인"),
-                                    child: const Text("확인"),
-                                  ),
-                                ],
-                              )
+                              builder: (context) =>
+                                  AlertDialog(
+                                    content: const Text(
+                                        "보안이 약한 비밀번호입니다\n비밀번호를 바꿔주세요"),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        onPressed: () =>
+                                            Navigator.pop(context, "확인"),
+                                        child: const Text("확인"),
+                                      ),
+                                    ],
+                                  )
+                          );
+                        } else if (e.code == 'email-already-in-use') {
+                          showDialog<String>(
+                              context: context,
+                              builder: (context) =>
+                                  AlertDialog(
+                                    content: const Text("이미 존재하는 이메일입니다"),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        onPressed: () =>
+                                            Navigator.pop(context, "확인"),
+                                        child: const Text("확인"),
+                                      ),
+                                    ],
+                                  )
+                          );
+                        } else if (e.code == 'invalid-email'){
+                          showDialog<String>(
+                              context: context,
+                              builder: (context) =>
+                                  AlertDialog(
+                                    content: const Text("이메일의 형식이 맞지 않습니다"),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        onPressed: () =>
+                                            Navigator.pop(context, "확인"),
+                                        child: const Text("확인"),
+                                      ),
+                                    ],
+                                  )
                           );
                         }
                         else{
-                          bool _is_same_email = false;
-
-                          await firestoreInstance.collection("users").get().then((querySnapshot) {
-                            querySnapshot.docs.forEach((result) {
-                              var _data = result.data();
-
-                              if(input_user_email == _data["email"]){
-                                _is_same_email = true;
-                                return;
-                              }
-                            });
-                          });
-
-                          if(_is_same_email){
-                            showDialog<String>(
-                                context: context,
-                                builder: (context) => AlertDialog(
-                                  content: const Text("이미 존재하는 이메일 입니다\n다른 이메일을 사용해주세요"),
-                                  actions: <Widget>[
-                                    TextButton(
-                                      onPressed: () => Navigator.pop(context, "확인"),
-                                      child: const Text("확인"),
-                                    ),
-                                  ],
-                                )
-                            );
-                          }
-                          else{
-                            showDialog<String>(
-                                context: context,
-                                builder: (context) => AlertDialog(
-                                  title: const Text("재확인"),
-                                  content: Row(
-                                    children: <Widget>[
-                                      Text("사용자 이름이 "),
-                                      Text(input_user_name, style: TextStyle(fontWeight: FontWeight.bold)),
-                                      Text("이 맞습니까?"),
+                          showDialog<String>(
+                              context: context,
+                              builder: (context) =>
+                                  AlertDialog(
+                                    content: const Text("회원가입에 실패하셨습니다"),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        onPressed: () =>
+                                            Navigator.pop(context, "확인"),
+                                        child: const Text("확인"),
+                                      ),
                                     ],
-                                  ),
+                                  )
+                          );
+                        }
+                      }
+
+                      if(_is_error == false){
+                        User? _user = await FirebaseAuth.instance.currentUser;
+
+                        await _user!.sendEmailVerification();
+
+                        showDialog<String>(
+                            context: context,
+                            builder: (context) =>
+                                AlertDialog(
+                                  content: Text("${input_user_email}에 인증을 위한 메일을 보냈습니다\n인증 후, 인증 완료 버튼을 눌러주세요"),
                                   actions: <Widget>[
                                     TextButton(
-                                      onPressed: () async {
-                                        await firestoreInstance
-                                            .collection("users")
-                                            .doc(input_user_id)
-                                            .set(
-                                            {
-                                              "name" : input_user_name,
-                                              "type" : input_user_type,
-                                              "id" : input_user_id,
-                                              "password" : input_user_password,
-                                              "church_id" : "",
-                                              "email" : input_user_email,
-                                            });
+                                      onPressed: () async{
+                                        await _user!.reload();
+                                        _user = await FirebaseAuth.instance.currentUser;
 
-                                        tiny_db.setStringList("user", [
-                                          input_user_id,
-                                          input_user_name,
-                                          input_user_type,
-                                          "",
-                                        ]
-                                        );
+                                        if(_user!.emailVerified == false){
+                                          showDialog<String>(
+                                              context: context,
+                                              builder: (context) =>
+                                                  AlertDialog(
+                                                    content: const Text("인증이 되지 않았습니다"),
+                                                    actions: <Widget>[
+                                                      TextButton(
+                                                        onPressed: () =>
+                                                            Navigator.pop(context, "확인"),
+                                                        child: const Text("확인"),
+                                                      ),
+                                                    ],
+                                                  )
+                                          );
+                                        }
+                                        else{
+                                          int _user_point = 0;
+                                          if(input_user_type == "t"){
+                                            _user_point = -1;
+                                          }
 
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(builder: (context) => MainPage()),
-                                        );
+                                          await firestoreInstance
+                                              .collection("users")
+                                              .doc(input_user_email)
+                                              .set(
+                                              {
+                                                "name" : input_user_name,
+                                                "type" : input_user_type,
+                                                "email" : input_user_email,
+                                                "password" : input_user_password,
+                                                "church_id" : "",
+                                                "qt_completion_dates" : [],
+                                                "worship_completion_dates" : [],
+                                                "point" : _user_point,
+                                              });
+
+                                          tiny_db.setString("user_name", input_user_name);
+                                          tiny_db.setString("user_type", input_user_type);
+                                          tiny_db.setString("user_email", input_user_email);
+                                          tiny_db.setString("user_church_id", "");
+                                          tiny_db.setInt("user_point", _user_point);
+
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(builder: (context) => MainPage()),
+                                          );
+                                        }
                                       },
-                                      child: const Text("네"),
+                                      child: const Text("인증 완료"),
                                     ),
                                     TextButton(
-                                      onPressed: () => Navigator.pop(context, "아니요"),
-                                      child: const Text("아니요"),
+                                      onPressed: () =>
+                                          Navigator.pop(context, "취소"),
+                                      child: const Text("취소"),
                                     ),
                                   ],
                                 )
-                            );
-                          }
-                        }
+                        );
                       }
                     }
                   },
