@@ -50,7 +50,7 @@ class ReadyPage extends StatelessWidget {
           }
           else{
             checkUserPoint();
-            return GuidePage();
+            return MainPage();
           }
         }
         else if(snapshot.hasError) {

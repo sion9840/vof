@@ -145,7 +145,7 @@ class LoginPage extends StatelessWidget {
                         String _db_user_church_id = "";
                         int _db_user_point = 0;
 
-                        await firestoreInstance.collection("users")..doc(input_user_email).get().then(
+                        await firestoreInstance.collection("users").doc(input_user_email).get().then(
                             (value) {
                               _db_user_name = value["name"];
                               _db_user_type = value["type"];

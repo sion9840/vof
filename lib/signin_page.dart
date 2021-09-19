@@ -240,11 +240,6 @@ class SigninPage extends StatelessWidget {
                                           );
                                         }
                                         else{
-                                          int _user_point = 0;
-                                          if(input_user_type == "t"){
-                                            _user_point = -1;
-                                          }
-
                                           await firestoreInstance
                                               .collection("users")
                                               .doc(input_user_email)
@@ -257,14 +252,14 @@ class SigninPage extends StatelessWidget {
                                                 "church_id" : "",
                                                 "qt_completion_dates" : [],
                                                 "worship_completion_dates" : [],
-                                                "point" : _user_point,
+                                                "point" : 0,
                                               });
 
                                           tiny_db.setString("user_name", input_user_name);
                                           tiny_db.setString("user_type", input_user_type);
                                           tiny_db.setString("user_email", input_user_email);
                                           tiny_db.setString("user_church_id", "");
-                                          tiny_db.setInt("user_point", _user_point);
+                                          tiny_db.setInt("user_point", 0);
 
                                           Navigator.push(
                                             context,
@@ -275,8 +270,10 @@ class SigninPage extends StatelessWidget {
                                       child: const Text("인증 완료"),
                                     ),
                                     TextButton(
-                                      onPressed: () =>
-                                          Navigator.pop(context, "취소"),
+                                      onPressed: () async{
+                                        await FirebaseAuth.instance.currentUser!.delete();
+                                        Navigator.pop(context, "취소");
+                                      },
                                       child: const Text("취소"),
                                     ),
                                   ],
