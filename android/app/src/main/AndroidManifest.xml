@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.vof.vof">
    <application
-        android:label="vof"
+        android:label="VOF 포인트"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

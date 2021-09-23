@@ -1,7 +1,7 @@
-import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:vof/custom_theme.dart';
 import 'package:vof/global_variable.dart';
 
 class AttQrimageScannerPage extends StatefulWidget {
@@ -14,6 +14,7 @@ class _AttQrimageScannerPageState extends State<AttQrimageScannerPage> {
 
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   QRViewController? controller;
+  String notice = "";
 
   @override
   void initState() {
@@ -23,8 +24,20 @@ class _AttQrimageScannerPageState extends State<AttQrimageScannerPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
+        centerTitle: true,
         title: const Text("예배 참석 QR코드 스캐너"),
+        backgroundColor: Colors.transparent,
+        elevation: 0.0,
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.flip_camera_android),
+            onPressed: (){
+              this.controller!.flipCamera();
+            },
+          )
+        ],
       ),
       body: Column(
         children: <Widget>[
@@ -41,14 +54,26 @@ class _AttQrimageScannerPageState extends State<AttQrimageScannerPage> {
                   key: qrKey,
                   onQRViewCreated: onQRViewCreated,
                   overlay: QrScannerOverlayShape(
-                      borderColor: Colors.red,
+                      borderColor: Color(CtTheme.CtHexColor.primary),
                       borderRadius: 10,
                       borderLength: 30,
                       borderWidth: 10,
                       cutOutSize: scanArea),
-                  onPermissionSet: (ctrl, p) => onPermissionSet(context, ctrl, p),
                 );
               }
+            ),
+          ),
+          Container(
+            width: double.infinity,
+            height: 200,
+            child: Center(
+              child: Text(
+                  notice,
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: CtTheme.CtTextSize.general,
+                ),
+              ),
             ),
           ),
         ],
@@ -56,16 +81,7 @@ class _AttQrimageScannerPageState extends State<AttQrimageScannerPage> {
     );
   }
 
-  void onPermissionSet(BuildContext context, QRViewController ctrl, bool p) {
-    log('${DateTime.now().toIso8601String()}_onPermissionSet $p');
-    if (!p) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('no Permission')),
-      );
-    }
-  }
-
-  void onQRViewCreated(QRViewController controller) {
+  void onQRViewCreated(QRViewController controller) async{
     setState(() {
       this.controller = controller;
     });
@@ -85,22 +101,12 @@ class _AttQrimageScannerPageState extends State<AttQrimageScannerPage> {
       );
 
       if(_students.contains(_data) == false){
-        showDialog<String>(
-            context: context,
-            builder: (context) =>
-                AlertDialog(
-                  content: Text("예배 출석 QR코드가 아닙니다"),
-                  actions: <Widget>[
-                    TextButton(
-                      onPressed: () =>
-                          Navigator.pop(context, "확인"),
-                      child: const Text("확인"),
-                    ),
-                  ],
-                )
-        );
+        setState(() {
+          notice = "예배참석 QR코드가 아닙니다";
+        });
       }
       else{
+        String _db_user_name = "";
         int _db_user_point = 0;
         int _plus_point = 0;
         List<String> _worship_completion_dates = [];
@@ -114,24 +120,14 @@ class _AttQrimageScannerPageState extends State<AttQrimageScannerPage> {
                 (value){
               _worship_completion_dates = value["worship_completion_dates"].cast<String>();
               _db_user_point = value["point"];
+              _db_user_name = value["name"];
             }
         );
 
         if(_worship_completion_dates.contains(_today_datestring)){
-          showDialog<String>(
-              context: context,
-              builder: (context) =>
-                  AlertDialog(
-                    content: Text("오늘 이미 예배에 참석하셨습니다"),
-                    actions: <Widget>[
-                      TextButton(
-                        onPressed: () =>
-                            Navigator.pop(context, "확인"),
-                        child: const Text("확인"),
-                      ),
-                    ],
-                  )
-          );
+          setState(() {
+            notice = "${_db_user_name}님이 예배에 출석하셨습니다";
+          });
         }
         else{
           await firestoreInstance
@@ -155,20 +151,9 @@ class _AttQrimageScannerPageState extends State<AttQrimageScannerPage> {
               }
           );
 
-          showDialog<String>(
-              context: context,
-              builder: (context) =>
-                  AlertDialog(
-                    content: Text("예배 출석이 완료되었습니다"),
-                    actions: <Widget>[
-                      TextButton(
-                        onPressed: () =>
-                            Navigator.pop(context, "확인"),
-                        child: const Text("확인"),
-                      ),
-                    ],
-                  )
-          );
+          setState(() {
+            notice = "${_db_user_name}님이 예배에 출석하셨습니다";
+          });
         }
       }
     });
