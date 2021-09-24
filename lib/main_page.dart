@@ -20,9 +20,9 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   final firestoreInstance = FirebaseFirestore.instance;
+  DateTime today_datetime = new DateTime.now();
 
   String input_user_church_id = "";
-
   String input_user_password = "";
 
   @override
@@ -133,25 +133,30 @@ class _MainPageState extends State<MainPage> {
                               );
                             }
                             else{
-                              List<String> _students = [];
+                              List<String> _members = [];
+
+                              String _db_type_tag = "students";
+                              if(tiny_db.getString("user_type") == "t"){
+                                _db_type_tag = "teachers";
+                              }
 
                               await firestoreInstance
                                   .collection("churches")
                                   .doc(input_user_church_id)
                                   .get().then(
                                   (value){
-                                    _students = value["students"].cast<String>();
+                                    _members = value[_db_type_tag].cast<String>();
                                   }
                               );
 
-                              _students.add(tiny_db.getString("user_email"));
+                              _members.add(tiny_db.getString("user_email"));
 
                               await firestoreInstance
                                   .collection("churches")
                                   .doc(input_user_church_id)
                                   .update(
                                   {
-                                    "students" : _students,
+                                    _db_type_tag : _members,
                                   }
                               );
 
@@ -389,6 +394,23 @@ class _MainPageState extends State<MainPage> {
                             Expanded(
                               child: TextButton(
                                   onPressed: () async{
+                                    if(today_datetime.weekday != 6){
+                                      showDialog<String>(
+                                          context: context,
+                                          builder: (context) => AlertDialog(
+                                            content: const Text("주일이 아닙니다"),
+                                            actions: <Widget>[
+                                              TextButton(
+                                                onPressed: () => Navigator.pop(context, "확인"),
+                                                child: const Text("확인"),
+                                              ),
+                                            ],
+                                          )
+                                      );
+
+                                      return;
+                                    }
+
                                     List _db_worship_completion_dates = [];
                                     DateTime _today_datetime = new DateTime.now();
                                     Map<String, int> _today_datemap = {"year" : _today_datetime.year, "month" : _today_datetime.month, "day" : _today_datetime.day, "hour" : int.parse(DateFormat("ss").format(_today_datetime)), "minute" : _today_datetime.minute};
@@ -462,12 +484,120 @@ class _MainPageState extends State<MainPage> {
                                     }
                                   },
                                   child: Text(
-                                    "예배참석",
+                                    "주일예배참석",
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontSize: CtTheme.CtTextSize.small,
                                     ),
                                   )
+                              ),
+                            ),
+                            Container(
+                              height: 30.0,
+                              child: VerticalDivider(
+                                thickness: 1.0,
+                                color: Colors.white,
+                              ),
+                            ),
+                            Expanded(
+                              child: TextButton(
+                                onPressed: () async{
+                                  if(today_datetime.weekday == 6){
+                                    showDialog<String>(
+                                        context: context,
+                                        builder: (context) => AlertDialog(
+                                          content: const Text("주일외의 요일에만 기도회 참석이 가능합니다"),
+                                          actions: <Widget>[
+                                            TextButton(
+                                              onPressed: () => Navigator.pop(context, "확인"),
+                                              child: const Text("확인"),
+                                            ),
+                                          ],
+                                        )
+                                    );
+
+                                    return;
+                                  }
+
+                                  List _db_worship_completion_dates = [];
+                                  DateTime _today_datetime = new DateTime.now();
+                                  Map<String, int> _today_datemap = {"year" : _today_datetime.year, "month" : _today_datetime.month, "day" : _today_datetime.day, "hour" : int.parse(DateFormat("ss").format(_today_datetime)), "minute" : _today_datetime.minute};
+
+                                  await firestoreInstance
+                                      .collection("users")
+                                      .doc(tiny_db.getString("user_email"))
+                                      .get().then(
+                                          (value){
+                                        _db_worship_completion_dates = value["worship_completion_dates"].cast<Map>();
+                                      }
+                                  );
+
+                                  bool _is_contain = false;
+                                  for(int i = 0; i<_db_worship_completion_dates.length; i++){
+                                    Map<String, dynamic> _db_worship_completion_date = _db_worship_completion_dates[i];
+                                    if((_db_worship_completion_date["day"] == _today_datemap["day"]) && (_db_worship_completion_date["month"] == _today_datemap["month"]) && (_db_worship_completion_date["year"] == _today_datemap["year"])){
+                                      _is_contain = true;
+                                      break;
+                                    }
+                                  }
+
+                                  if(_is_contain){
+                                    showDialog<String>(
+                                        context: context,
+                                        builder: (context) =>
+                                            AlertDialog(
+                                              content: Text("오늘 이미 예배에 참석하셨습니다"),
+                                              actions: <Widget>[
+                                                TextButton(
+                                                  onPressed: () =>
+                                                      Navigator.pop(context, "확인"),
+                                                  child: const Text("확인"),
+                                                ),
+                                              ],
+                                            )
+                                    );
+                                  }
+                                  else {
+                                    await Navigator.push(
+                                      context,
+                                      MaterialPageRoute(builder: (context) =>
+                                          AttQrimagePage(
+                                              QrImage(
+                                                data: tiny_db.getString(
+                                                    "user_email"),
+                                                backgroundColor: Colors.white,
+                                                size: MediaQuery
+                                                    .of(context)
+                                                    .size
+                                                    .width - 40,
+                                              )
+                                          )
+                                      ),
+                                    );
+
+                                    int _db_user_point = 0;
+
+                                    await firestoreInstance
+                                        .collection("users")
+                                        .doc(tiny_db.getString("user_email"))
+                                        .get().then(
+                                            (value){
+                                          _db_user_point = value["point"];
+                                        }
+                                    );
+
+                                    tiny_db.setInt("user_point", _db_user_point);
+
+                                    setState(() {});
+                                  }
+                                },
+                                child: Text(
+                                  "기도회참석",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: CtTheme.CtTextSize.small,
+                                  ),
+                                ),
                               ),
                             ),
                           ],

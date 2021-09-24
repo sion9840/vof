@@ -23,6 +23,7 @@ class _GuidePageState extends State<GuidePage> {
             Spacer(),
             Text(
               "믿음의 항해를 통해 포인트를 적립하세요",
+              textAlign: TextAlign.center,
               style: TextStyle(
                 color: Colors.black,
                 fontSize: CtTheme.CtTextSize.general,
