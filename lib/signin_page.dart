@@ -245,6 +245,7 @@ class SigninPage extends StatelessWidget {
                             "church_id" : "",
                             "qt_completion_dates" : [],
                             "worship_completion_dates" : [],
+                            "worship_write_completion_dates" : [],
                             "point" : 0,
                           });
 

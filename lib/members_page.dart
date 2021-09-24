@@ -30,7 +30,7 @@ class _MembersPageState extends State<MembersPage> {
         ),
       ),
       body: FutureBuilder<QuerySnapshot<Map<String, dynamic>>>(
-        future: firestoreInstance.collection("users").where("church_id", isEqualTo: tiny_db.getString("user_church_id")).orderBy("point", descending: true).get().then((value) => value),
+        future: firestoreInstance.collection("users").where("church_id", isEqualTo: tiny_db.getString("user_church_id")).get().then((value) => value),
         builder: (context, snapshot){
           if(snapshot.hasData){
             return SingleChildScrollView(

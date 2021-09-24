@@ -52,7 +52,7 @@ class _PointspecPageState extends State<PointspecPage> {
         actions: <Widget>[
           Builder(
             builder: (context){
-              if((user_type == "t") && (user_name != "") && (user_email != tiny_db.getString("user_email"))){
+              if((tiny_db.getString("user_type") == "t") && (user_name != "") && (user_email != tiny_db.getString("user_email"))){
                 return Row(
                   children: <Widget>[
                     IconButton(
@@ -137,11 +137,12 @@ class _PointspecPageState extends State<PointspecPage> {
               child: Padding(
                 padding: const EdgeInsets.all(30.0),
                 child: FutureBuilder<List>(
-                  future: firestoreInstance.collection("users").doc(user_email).get().then((value) => [value["qt_completion_dates"], value["worship_completion_dates"]]),
+                  future: firestoreInstance.collection("users").doc(user_email).get().then((value) => [value["qt_completion_dates"], value["worship_completion_dates"], value["worship_write_completion_dates"]]),
                   builder: (context, snapshot){
                     if(snapshot.hasData){
                       List _temp_qt_completion_dates = snapshot.data![0];
                       List _temp_worship_completion_dates = snapshot.data![1];
+                      List _temp_worship_write_completion_dates = snapshot.data![2];
 
                       for(int i = 0; i<_temp_qt_completion_dates.length; i++){
                         Map<String, dynamic> _temp_qt_completion_date = _temp_qt_completion_dates[i];
@@ -168,12 +169,27 @@ class _PointspecPageState extends State<PointspecPage> {
 
                       for(int i = 0; i<_temp_worship_completion_dates.length; i++){
                         Map<String, dynamic> _temp_worship_completion_date = _temp_worship_completion_dates[i];
+                        DateTime _thatday_datetime = new DateTime(
+                            _temp_worship_completion_date["year"],
+                            _temp_worship_completion_date["month"],
+                            _temp_worship_completion_date["day"],
+                            0,
+                            0,
+                            0,
+                            0,
+                            0
+                        );
+                        String _display_worship_name = "예배";
+
+                        if(_thatday_datetime.weekday != 7){
+                          _display_worship_name = "기도회";
+                        }
 
                         if(events.containsKey(DateTime(_temp_worship_completion_date["year"], _temp_worship_completion_date["month"], _temp_worship_completion_date["day"]))){
                           dynamic _temp = events[DateTime(_temp_worship_completion_date["year"], _temp_worship_completion_date["month"], _temp_worship_completion_date["day"])];
 
                           _temp.add(
-                            CleanCalendarEvent('예배 참석',
+                            CleanCalendarEvent('${_display_worship_name} 출석',
                                 startTime: DateTime(
                                     _temp_worship_completion_date["year"],
                                     _temp_worship_completion_date["month"],
@@ -188,7 +204,7 @@ class _PointspecPageState extends State<PointspecPage> {
                                     _temp_worship_completion_date["hour"],
                                     _temp_worship_completion_date["minute"]
                                 ),
-                                description: "예배에 참석하셨습니다",
+                                description: "${_display_worship_name}에 출석하셨습니다",
                                 color: Colors.green)
                           );
 
@@ -196,7 +212,7 @@ class _PointspecPageState extends State<PointspecPage> {
                         }
                         else{
                           events[DateTime(_temp_worship_completion_date["year"], _temp_worship_completion_date["month"], _temp_worship_completion_date["day"])] = [
-                            CleanCalendarEvent('예배 참석',
+                            CleanCalendarEvent('${_display_worship_name} 출석',
                                 startTime: DateTime(
                                     _temp_worship_completion_date["year"],
                                     _temp_worship_completion_date["month"],
@@ -211,8 +227,59 @@ class _PointspecPageState extends State<PointspecPage> {
                                     _temp_worship_completion_date["hour"],
                                     _temp_worship_completion_date["minute"]
                                 ),
-                                description: "예배에 참석하셨습니다",
+                                description: "${_display_worship_name}에 출석하셨습니다",
                                 color: Colors.green)
+                          ];
+                        }
+                      }
+
+                      for(int i = 0; i<_temp_worship_write_completion_dates.length; i++){
+                        Map<String, dynamic> _temp_worship_write_completion_date = _temp_worship_write_completion_dates[i];
+
+                        if(events.containsKey(DateTime(_temp_worship_write_completion_date["year"], _temp_worship_write_completion_date["month"], _temp_worship_write_completion_date["day"]))){
+                          dynamic _temp = events[DateTime(_temp_worship_write_completion_date["year"], _temp_worship_write_completion_date["month"], _temp_worship_write_completion_date["day"])];
+
+                          _temp.add(
+                              CleanCalendarEvent('설교메모 완료',
+                                  startTime: DateTime(
+                                      _temp_worship_write_completion_date["year"],
+                                      _temp_worship_write_completion_date["month"],
+                                      _temp_worship_write_completion_date["day"],
+                                      _temp_worship_write_completion_date["hour"],
+                                      _temp_worship_write_completion_date["minute"]
+                                  ),
+                                  endTime: DateTime(
+                                      _temp_worship_write_completion_date["year"],
+                                      _temp_worship_write_completion_date["month"],
+                                      _temp_worship_write_completion_date["day"],
+                                      _temp_worship_write_completion_date["hour"],
+                                      _temp_worship_write_completion_date["minute"]
+                                  ),
+                                  description: "설교를 메모하셨습니다",
+                                  color: Colors.blue)
+                          );
+
+                          events[DateTime(_temp_worship_write_completion_date["year"], _temp_worship_write_completion_date["month"], _temp_worship_write_completion_date["day"])] = _temp;
+                        }
+                        else{
+                          events[DateTime(_temp_worship_write_completion_date["year"], _temp_worship_write_completion_date["month"], _temp_worship_write_completion_date["day"])] = [
+                            CleanCalendarEvent('설교메모 완료',
+                                startTime: DateTime(
+                                    _temp_worship_write_completion_date["year"],
+                                    _temp_worship_write_completion_date["month"],
+                                    _temp_worship_write_completion_date["day"],
+                                    _temp_worship_write_completion_date["hour"],
+                                    _temp_worship_write_completion_date["minute"]
+                                ),
+                                endTime: DateTime(
+                                    _temp_worship_write_completion_date["year"],
+                                    _temp_worship_write_completion_date["month"],
+                                    _temp_worship_write_completion_date["day"],
+                                    _temp_worship_write_completion_date["hour"],
+                                    _temp_worship_write_completion_date["minute"]
+                                ),
+                                description: "설교를 메모하셨습니다",
+                                color: Colors.blue)
                           ];
                         }
                       }

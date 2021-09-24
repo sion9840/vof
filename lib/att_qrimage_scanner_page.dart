@@ -18,6 +18,7 @@ class _AttQrimageScannerPageState extends State<AttQrimageScannerPage> {
   String notice = "";
 
   List<String> korea_weekday_names = ["월", "화", "수", "목", "금", "토", "일"];
+  List<String> worship_weekday_names = ["기도회", "기도회", "기도회", "기도회", "기도회", "기도회", "예배"];
   DateTime today_datetime = new DateTime.now();
 
   @override
@@ -26,7 +27,7 @@ class _AttQrimageScannerPageState extends State<AttQrimageScannerPage> {
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         centerTitle: true,
-        title: Text("${korea_weekday_names[today_datetime.weekday]}요예배 참석"),
+        title: Text("${worship_weekday_names[today_datetime.weekday-1]} 참석"),
         backgroundColor: Colors.transparent,
         elevation: 0.0,
         actions: <Widget>[
@@ -134,7 +135,7 @@ class _AttQrimageScannerPageState extends State<AttQrimageScannerPage> {
 
         if(_is_contain){
           setState(() {
-            notice = "${_db_user_name}님이 ${korea_weekday_names[today_datetime.weekday]}요예배에 출석하셨습니다";
+            notice = "${_db_user_name}님이 ${worship_weekday_names[today_datetime.weekday-1]}에 출석하셨습니다";
           });
         }
         else{
@@ -149,7 +150,7 @@ class _AttQrimageScannerPageState extends State<AttQrimageScannerPage> {
               }
           );
 
-          if(_today_datetime.weekday != 6){
+          if(_today_datetime.weekday != 7){
             bool _get_complete_multi_special_worship = false;
 
             Map<String, dynamic> _worship_completion_date = _worship_completion_dates[0];
@@ -164,9 +165,9 @@ class _AttQrimageScannerPageState extends State<AttQrimageScannerPage> {
                 0
             );
 
-            if(_today_datetime.compareTo(_thatday_datetime) < (1 + _today_datetime.weekday)){
+            if(_today_datetime.compareTo(_thatday_datetime) < _today_datetime.weekday){
               setState(() {
-                notice = "${_db_user_name}님이 ${korea_weekday_names[_today_datetime.weekday]}요예배에 출석하셨습니다\n(이번주에 이미 특별예배를 참석하셨기에 포인트가 지급되어지지 않습니다)";
+                notice = "${_db_user_name}님이 ${worship_weekday_names[today_datetime.weekday-1]}에 출석하셨습니다\n(이번주에 이미 기도회를 참석하셨기에 포인트가 지급되어지지 않습니다)";
               });
             }
             else{
@@ -175,7 +176,7 @@ class _AttQrimageScannerPageState extends State<AttQrimageScannerPage> {
                   .doc(tiny_db.getString("user_church_id"))
                   .get().then(
                       (value){
-                    _plus_point = value["worship_completion_points"][korea_weekday_names[_today_datetime.weekday]];
+                    _plus_point = value["worship_completion_points"][korea_weekday_names[_today_datetime.weekday-1]];
                   }
               );
 
@@ -189,7 +190,7 @@ class _AttQrimageScannerPageState extends State<AttQrimageScannerPage> {
               );
 
               setState(() {
-                notice = "${_db_user_name}님이 ${korea_weekday_names[today_datetime.weekday]}요예배에 출석하셨습니다";
+                notice = "${_db_user_name}님이 ${worship_weekday_names[today_datetime.weekday-1]}에 출석하셨습니다";
               });
             }
           }
@@ -199,7 +200,7 @@ class _AttQrimageScannerPageState extends State<AttQrimageScannerPage> {
                 .doc(tiny_db.getString("user_church_id"))
                 .get().then(
                     (value){
-                  _plus_point = value["worship_completion_points"][korea_weekday_names[_today_datetime.weekday]];
+                  _plus_point = value["worship_completion_points"][korea_weekday_names[_today_datetime.weekday-1]];
                 }
             );
 
@@ -213,7 +214,7 @@ class _AttQrimageScannerPageState extends State<AttQrimageScannerPage> {
             );
 
             setState(() {
-              notice = "${_db_user_name}님이 ${korea_weekday_names[today_datetime.weekday]}요예배에 출석하셨습니다";
+              notice = "${_db_user_name}님이 ${worship_weekday_names[today_datetime.weekday-1]}에 출석하셨습니다";
             });
           }
         }

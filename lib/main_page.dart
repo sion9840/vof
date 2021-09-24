@@ -49,19 +49,32 @@ class _MainPageState extends State<MainPage> {
             actions: <Widget>[
               Builder(
                 builder: (context){
-                  if(tiny_db.getString("user_type") == "s"){
-                    return SizedBox();
+                  if((tiny_db.getString("user_type") == "t") && (tiny_db.getString("user_church_id") != "")){
+                    return Row(
+                      children: [
+                        IconButton(
+                          onPressed: (){
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => AttQrimageScannerPage()),
+                            );
+                          },
+                          icon: Icon(Icons.scanner),
+                        ),
+                        IconButton(
+                          onPressed: (){
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => MembersPage()),
+                            );
+                          },
+                          icon: Icon(Icons.group),
+                        )
+                      ],
+                    );
                   }
                   else{
-                    return IconButton(
-                      onPressed: (){
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => AttQrimageScannerPage()),
-                        );
-                      },
-                      icon: Icon(Icons.scanner),
-                    );
+                    return SizedBox();
                   }
                 }
               ),
@@ -252,6 +265,35 @@ class _MainPageState extends State<MainPage> {
                               fontSize: CtTheme.CtTextSize.general,
                             ),
                           ),
+                          Spacer(),
+                          IconButton(
+                            onPressed: () async{
+                              await firestoreInstance.collection("users").doc(tiny_db.getString("user_email")).get().then(
+                                      (value) {
+                                    tiny_db.setInt("user_point", value["point"]);
+                                  }
+                              );
+
+                              setState(() {});
+
+                              showDialog<String>(
+                                  context: context,
+                                  builder: (context) => AlertDialog(
+                                    content: const Text("새로고침 완료"),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        onPressed: () => Navigator.pop(context, "확인"),
+                                        child: const Text("확인"),
+                                      ),
+                                    ],
+                                  )
+                              );
+                            },
+                            icon: Icon(
+                              Icons.cached,
+                              color: Colors.white,
+                            ),
+                          ),
                         ],
                       ),
                       Expanded(
@@ -394,23 +436,6 @@ class _MainPageState extends State<MainPage> {
                             Expanded(
                               child: TextButton(
                                   onPressed: () async{
-                                    if(today_datetime.weekday != 6){
-                                      showDialog<String>(
-                                          context: context,
-                                          builder: (context) => AlertDialog(
-                                            content: const Text("주일이 아닙니다"),
-                                            actions: <Widget>[
-                                              TextButton(
-                                                onPressed: () => Navigator.pop(context, "확인"),
-                                                child: const Text("확인"),
-                                              ),
-                                            ],
-                                          )
-                                      );
-
-                                      return;
-                                    }
-
                                     List _db_worship_completion_dates = [];
                                     DateTime _today_datetime = new DateTime.now();
                                     Map<String, int> _today_datemap = {"year" : _today_datetime.year, "month" : _today_datetime.month, "day" : _today_datetime.day, "hour" : int.parse(DateFormat("ss").format(_today_datetime)), "minute" : _today_datetime.minute};
@@ -438,7 +463,7 @@ class _MainPageState extends State<MainPage> {
                                           context: context,
                                           builder: (context) =>
                                               AlertDialog(
-                                                content: Text("오늘 이미 예배에 참석하셨습니다"),
+                                                content: Text("오늘 이미 예배에 출석하셨습니다"),
                                                 actions: <Widget>[
                                                   TextButton(
                                                     onPressed: () =>
@@ -484,7 +509,7 @@ class _MainPageState extends State<MainPage> {
                                     }
                                   },
                                   child: Text(
-                                    "주일예배참석",
+                                    "예배&기도회 출석",
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontSize: CtTheme.CtTextSize.small,
@@ -502,24 +527,26 @@ class _MainPageState extends State<MainPage> {
                             Expanded(
                               child: TextButton(
                                 onPressed: () async{
-                                  if(today_datetime.weekday == 6){
+                                  if(today_datetime.weekday != 7){
                                     showDialog<String>(
                                         context: context,
-                                        builder: (context) => AlertDialog(
-                                          content: const Text("주일외의 요일에만 기도회 참석이 가능합니다"),
-                                          actions: <Widget>[
-                                            TextButton(
-                                              onPressed: () => Navigator.pop(context, "확인"),
-                                              child: const Text("확인"),
-                                            ),
-                                          ],
-                                        )
+                                        builder: (context) =>
+                                            AlertDialog(
+                                              content: const Text("주일이 아닙니다"),
+                                              actions: <Widget>[
+                                                TextButton(
+                                                  onPressed: () =>
+                                                      Navigator.pop(context, "확인"),
+                                                  child: const Text("확인"),
+                                                ),
+                                              ],
+                                            )
                                     );
 
                                     return;
                                   }
 
-                                  List _db_worship_completion_dates = [];
+                                  List _db_worship_write_completion_dates = [];
                                   DateTime _today_datetime = new DateTime.now();
                                   Map<String, int> _today_datemap = {"year" : _today_datetime.year, "month" : _today_datetime.month, "day" : _today_datetime.day, "hour" : int.parse(DateFormat("ss").format(_today_datetime)), "minute" : _today_datetime.minute};
 
@@ -528,14 +555,14 @@ class _MainPageState extends State<MainPage> {
                                       .doc(tiny_db.getString("user_email"))
                                       .get().then(
                                           (value){
-                                        _db_worship_completion_dates = value["worship_completion_dates"].cast<Map>();
+                                        _db_worship_write_completion_dates = value["worship_write_completion_dates"].cast<Map>();
                                       }
                                   );
 
                                   bool _is_contain = false;
-                                  for(int i = 0; i<_db_worship_completion_dates.length; i++){
-                                    Map<String, dynamic> _db_worship_completion_date = _db_worship_completion_dates[i];
-                                    if((_db_worship_completion_date["day"] == _today_datemap["day"]) && (_db_worship_completion_date["month"] == _today_datemap["month"]) && (_db_worship_completion_date["year"] == _today_datemap["year"])){
+                                  for(int i = 0; i<_db_worship_write_completion_dates.length; i++){
+                                    Map<String, dynamic> _db_worship_write_completion_date = _db_worship_write_completion_dates[i];
+                                    if((_db_worship_write_completion_date["day"] == _today_datemap["day"]) && (_db_worship_write_completion_date["month"] == _today_datemap["month"]) && (_db_worship_write_completion_date["year"] == _today_datemap["year"])){
                                       _is_contain = true;
                                       break;
                                     }
@@ -546,7 +573,7 @@ class _MainPageState extends State<MainPage> {
                                         context: context,
                                         builder: (context) =>
                                             AlertDialog(
-                                              content: Text("오늘 이미 예배에 참석하셨습니다"),
+                                              content: const Text("오늘 이미 설교를 메모하셨습니다"),
                                               actions: <Widget>[
                                                 TextButton(
                                                   onPressed: () =>
@@ -557,25 +584,18 @@ class _MainPageState extends State<MainPage> {
                                             )
                                     );
                                   }
-                                  else {
-                                    await Navigator.push(
-                                      context,
-                                      MaterialPageRoute(builder: (context) =>
-                                          AttQrimagePage(
-                                              QrImage(
-                                                data: tiny_db.getString(
-                                                    "user_email"),
-                                                backgroundColor: Colors.white,
-                                                size: MediaQuery
-                                                    .of(context)
-                                                    .size
-                                                    .width - 40,
-                                              )
-                                          )
-                                      ),
-                                    );
-
+                                  else{
+                                    int _plus_point = 0;
                                     int _db_user_point = 0;
+
+                                    await firestoreInstance
+                                        .collection("churches")
+                                        .doc(tiny_db.getString("user_church_id"))
+                                        .get().then(
+                                            (value){
+                                          _plus_point = value["worship_write_completion_point"];
+                                        }
+                                    );
 
                                     await firestoreInstance
                                         .collection("users")
@@ -586,13 +606,48 @@ class _MainPageState extends State<MainPage> {
                                         }
                                     );
 
-                                    tiny_db.setInt("user_point", _db_user_point);
+                                    await firestoreInstance
+                                        .collection("users")
+                                        .doc(tiny_db.getString("user_email"))
+                                        .update(
+                                        {
+                                          "point" : _db_user_point + _plus_point,
+                                        }
+                                    );
+
+                                    tiny_db.setInt("user_point", _db_user_point + _plus_point);
+
+                                    _db_worship_write_completion_dates.add(_today_datemap);
+
+                                    await firestoreInstance
+                                        .collection("users")
+                                        .doc(tiny_db.getString("user_email"))
+                                        .update(
+                                        {
+                                          "worship_write_completion_dates" : _db_worship_write_completion_dates,
+                                        }
+                                    );
+
+                                    showDialog<String>(
+                                        context: context,
+                                        builder: (context) =>
+                                            AlertDialog(
+                                              content: Text("앗싸! ${_plus_point} 포인트가 적립되었습니다"),
+                                              actions: <Widget>[
+                                                TextButton(
+                                                  onPressed: () =>
+                                                      Navigator.pop(context, "확인"),
+                                                  child: const Text("확인"),
+                                                ),
+                                              ],
+                                            )
+                                    );
 
                                     setState(() {});
                                   }
                                 },
                                 child: Text(
-                                  "기도회참석",
+                                  "설교메모완료",
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontSize: CtTheme.CtTextSize.small,
@@ -619,7 +674,7 @@ class _MainPageState extends State<MainPage> {
               topLeft: Radius.circular(CtTheme.CtRadiusSize.general*2),
               topRight: Radius.circular(CtTheme.CtRadiusSize.general*2),
             ),
-            color: Colors.white,
+            color: Color(0xfff8f9fa),
             boxShadow: [
               BoxShadow(
                 color: Color(0x3f000000),
@@ -644,22 +699,6 @@ class _MainPageState extends State<MainPage> {
                         style: TextStyle(
                           color: Colors.black,
                           fontSize: CtTheme.CtTextSize.general,
-                        ),
-                      ),
-                      Spacer(),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => MembersPage()),
-                          );
-                        },
-                        child: Text(
-                          "자세히",
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: CtTheme.CtTextSize.small,
-                          ),
                         ),
                       ),
                     ],
