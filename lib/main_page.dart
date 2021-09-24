@@ -3,10 +3,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:vof/att_qrimage_page.dart';
 import 'package:vof/custom_theme.dart';
 import 'package:vof/global_variable.dart';
+import 'package:vof/members_page.dart';
 
 import 'att_qrimage_scanner_page.dart';
 import 'guide_page.dart';
@@ -27,72 +29,69 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: onBackPressed,
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        body: CustomScrollView(
-          slivers: <Widget>[
-            SliverAppBar(
-              floating: false,
-              pinned: true,
-              snap: false,
-              backgroundColor: Colors.white,
-              iconTheme: IconThemeData(
-                  color: Colors.black
-              ),
-              automaticallyImplyLeading: false,
-              title: Text(
-                "${tiny_db.getString("user_name")}님",
-                style: TextStyle(
-                  color: Colors.black,
-                ),
-              ),
-              actions: <Widget>[
-                Builder(
-                  builder: (context){
-                    if(tiny_db.getString("user_type") == "s"){
-                      return SizedBox();
-                    }
-                    else{
-                      return IconButton(
-                        onPressed: (){
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => AttQrimageScannerPage()),
-                          );
-                        },
-                        icon: Icon(Icons.scanner),
-                      );
-                    }
-                  }
-                ),
-                IconButton(
-                  onPressed: (){
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => UserPage()),
-                    );
-                  },
-                  icon: Icon(Icons.account_circle),
-                ),
-              ],
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: CustomScrollView(
+        slivers: <Widget>[
+          SliverAppBar(
+            floating: false,
+            pinned: true,
+            snap: false,
+            backgroundColor: Colors.white,
+            iconTheme: IconThemeData(
+                color: Colors.black
             ),
-            SliverToBoxAdapter(
-              child: Builder(
+            automaticallyImplyLeading: false,
+            title: Text(
+              "${tiny_db.getString("user_name")}님",
+              style: TextStyle(
+                color: Colors.black,
+              ),
+            ),
+            actions: <Widget>[
+              Builder(
                 builder: (context){
-                  if(tiny_db.getString("user_church_id") == ""){
-                    return goChurchView(context);
+                  if(tiny_db.getString("user_type") == "s"){
+                    return SizedBox();
                   }
                   else{
-                    return mainView(context);
+                    return IconButton(
+                      onPressed: (){
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => AttQrimageScannerPage()),
+                        );
+                      },
+                      icon: Icon(Icons.scanner),
+                    );
                   }
-                },
+                }
               ),
+              IconButton(
+                onPressed: (){
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => UserPage()),
+                  );
+                },
+                icon: Icon(Icons.account_circle),
+              ),
+            ],
+          ),
+          SliverToBoxAdapter(
+            child: Builder(
+              builder: (context){
+                if(tiny_db.getString("user_church_id") == ""){
+                  return goChurchView(context);
+                }
+                else{
+                  return mainView(context);
+                }
+              },
             ),
-          ]
-        )
-      ),
+          ),
+        ]
+      )
     );
   }
 
@@ -220,7 +219,7 @@ class _MainPageState extends State<MainPage> {
           padding: EdgeInsets.all(CtTheme.CtPaddingSize.general),
           child: OpenContainer(
             openBuilder: (_, closeContainer){
-              return PointspecPage();
+              return PointspecPage(tiny_db.getString("user_email"), tiny_db.getString("user_type"), "", tiny_db.getInt("user_point"));
             },
             closedBuilder: (_, openContainer){
               return Container(
@@ -273,20 +272,29 @@ class _MainPageState extends State<MainPage> {
                             Expanded(
                               child: TextButton(
                                   onPressed: () async{
-                                    List<String> _db_qt_completion_dates = [];
+                                    List _db_qt_completion_dates = [];
                                     DateTime _today_datetime = new DateTime.now();
-                                    String _today_datestring ="${_today_datetime.year.toString()}-${_today_datetime.month.toString().padLeft(2,'0')}-${_today_datetime.day.toString().padLeft(2,'0')}";
+                                    Map<String, int> _today_datemap = {"year" : _today_datetime.year, "month" : _today_datetime.month, "day" : _today_datetime.day, "hour" : int.parse(DateFormat("ss").format(_today_datetime)), "minute" : _today_datetime.minute};
 
                                     await firestoreInstance
                                         .collection("users")
                                         .doc(tiny_db.getString("user_email"))
                                         .get().then(
                                             (value){
-                                          _db_qt_completion_dates = value["qt_completion_dates"].cast<String>();
+                                          _db_qt_completion_dates = value["qt_completion_dates"].cast<Map>();
                                         }
                                     );
 
-                                    if(_db_qt_completion_dates.contains(_today_datestring)){
+                                    bool _is_contain = false;
+                                    for(int i = 0; i<_db_qt_completion_dates.length; i++){
+                                      Map<String, dynamic> _db_qt_completion_date = _db_qt_completion_dates[i];
+                                      if((_db_qt_completion_date["day"] == _today_datemap["day"]) && (_db_qt_completion_date["month"] == _today_datemap["month"]) && (_db_qt_completion_date["year"] == _today_datemap["year"])){
+                                        _is_contain = true;
+                                        break;
+                                      }
+                                    }
+
+                                    if(_is_contain){
                                       showDialog<String>(
                                           context: context,
                                           builder: (context) =>
@@ -335,7 +343,7 @@ class _MainPageState extends State<MainPage> {
 
                                       tiny_db.setInt("user_point", _db_user_point + _plus_point);
 
-                                      _db_qt_completion_dates.add(_today_datestring);
+                                      _db_qt_completion_dates.add(_today_datemap);
 
                                       await firestoreInstance
                                           .collection("users")
@@ -383,20 +391,29 @@ class _MainPageState extends State<MainPage> {
                             Expanded(
                               child: TextButton(
                                   onPressed: () async{
-                                    List<String> _db_worship_completion_dates = [];
+                                    List _db_worship_completion_dates = [];
                                     DateTime _today_datetime = new DateTime.now();
-                                    String _today_datestring ="${_today_datetime.year.toString()}-${_today_datetime.month.toString().padLeft(2,'0')}-${_today_datetime.day.toString().padLeft(2,'0')}";
+                                    Map<String, int> _today_datemap = {"year" : _today_datetime.year, "month" : _today_datetime.month, "day" : _today_datetime.day, "hour" : int.parse(DateFormat("ss").format(_today_datetime)), "minute" : _today_datetime.minute};
 
                                     await firestoreInstance
                                         .collection("users")
                                         .doc(tiny_db.getString("user_email"))
                                         .get().then(
                                             (value){
-                                          _db_worship_completion_dates = value["worship_completion_dates"].cast<String>();
+                                          _db_worship_completion_dates = value["worship_completion_dates"].cast<Map>();
                                         }
                                     );
 
-                                    if(_db_worship_completion_dates.contains(_today_datestring)){
+                                    bool _is_contain = false;
+                                    for(int i = 0; i<_db_worship_completion_dates.length; i++){
+                                      Map<String, dynamic> _db_worship_completion_date = _db_worship_completion_dates[i];
+                                      if((_db_worship_completion_date["day"] == _today_datemap["day"]) && (_db_worship_completion_date["month"] == _today_datemap["month"]) && (_db_worship_completion_date["year"] == _today_datemap["year"])){
+                                        _is_contain = true;
+                                        break;
+                                      }
+                                    }
+
+                                    if(_is_contain){
                                       showDialog<String>(
                                           context: context,
                                           builder: (context) =>
@@ -501,6 +518,22 @@ class _MainPageState extends State<MainPage> {
                           fontSize: CtTheme.CtTextSize.general,
                         ),
                       ),
+                      Spacer(),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => MembersPage()),
+                          );
+                        },
+                        child: Text(
+                          "자세히",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: CtTheme.CtTextSize.small,
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -512,6 +545,7 @@ class _MainPageState extends State<MainPage> {
                         width: double.infinity,
                         height: 580.0,
                         child: ListView.builder(
+                            physics: NeverScrollableScrollPhysics(),
                             itemCount: snapshot.data!.size,
                             itemBuilder: (context, index){
                               dynamic _user = snapshot.data!.docs[index];
@@ -528,48 +562,58 @@ class _MainPageState extends State<MainPage> {
                                         }
                                       }
                                   ),
-                                  Container(
-                                    width: double.infinity,
-                                    height: 100.0,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(CtTheme.CtRadiusSize.general),
-                                      color: Colors.white,
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Color(0x3f000000),
-                                          blurRadius: 4,
-                                          offset: Offset(0, 4),
-                                        ),
-                                      ],
-                                    ),
-                                    child: Padding(
-                                      padding: EdgeInsets.all(20.0),
-                                      child: Row(
-                                        children: <Widget>[
-                                          Text(
-                                            "${index+1}등",
-                                            style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: CtTheme.CtTextSize.big,
-                                            ),
-                                          ),
-                                          SizedBox(width: 20.0,),
-                                          Text(
-                                            "${_user["name"]}",
-                                            style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: CtTheme.CtTextSize.general,
-                                            ),
-                                          ),
-                                          Spacer(),
-                                          Text(
-                                            "${_user["point"]} 포인트",
-                                            style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: CtTheme.CtTextSize.general,
-                                            ),
+                                  InkWell(
+                                    onTap: () async{
+                                      await Navigator.push(
+                                        context,
+                                        MaterialPageRoute(builder: (context) => PointspecPage(_user["email"], _user["type"], _user["name"], _user["point"])),
+                                      );
+
+                                      setState(() {});
+                                    },
+                                    child: Container(
+                                      width: double.infinity,
+                                      height: 100.0,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(CtTheme.CtRadiusSize.general),
+                                        color: Colors.white,
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Color(0x3f000000),
+                                            blurRadius: 4,
+                                            offset: Offset(0, 4),
                                           ),
                                         ],
+                                      ),
+                                      child: Padding(
+                                        padding: EdgeInsets.all(20.0),
+                                        child: Row(
+                                          children: <Widget>[
+                                            Text(
+                                              "${index+1}등",
+                                              style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: CtTheme.CtTextSize.big,
+                                              ),
+                                            ),
+                                            SizedBox(width: 20.0,),
+                                            Text(
+                                              "${_user["name"]}",
+                                              style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: CtTheme.CtTextSize.general,
+                                              ),
+                                            ),
+                                            Spacer(),
+                                            Text(
+                                              "${_user["point"]} 포인트",
+                                              style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: CtTheme.CtTextSize.general,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -599,25 +643,5 @@ class _MainPageState extends State<MainPage> {
         ),
       ],
     );
-  }
-
-  Future<bool> onBackPressed() async{
-    return await showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text("앱을 종류하시겠습니까?"),
-          actions: <Widget>[
-            TextButton(
-              child: Text("네"),
-              onPressed: ()=>Navigator.pop(context, true),
-            ),
-            TextButton(
-              child: Text("아니요"),
-              onPressed: ()=>Navigator.pop(context, false),
-            ),
-          ],
-        )
-    ) ??
-        false;
   }
 }

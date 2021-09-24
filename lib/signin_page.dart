@@ -63,7 +63,7 @@ class SigninPage extends StatelessWidget {
               TextField(
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
-                  labelText: "이메일",
+                  labelText: "이메일(.com으로 끝나는 이메일만 가능합니다)",
                 ),
                 onChanged: (value) {
                   input_user_email = value;
@@ -131,6 +131,20 @@ class SigninPage extends StatelessWidget {
                         context: context,
                         builder: (context) => AlertDialog(
                           content: const Text("비밀번호가 일치하지 않습니다"),
+                          actions: <Widget>[
+                            TextButton(
+                              onPressed: () => Navigator.pop(context, "확인"),
+                              child: const Text("확인"),
+                            ),
+                          ],
+                        )
+                    );
+                  }
+                  else if(input_user_email.contains(".com") == false){
+                    showDialog<String>(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          content: const Text(".com으로 끝나는 이메일만 가능합니다"),
                           actions: <Widget>[
                             TextButton(
                               onPressed: () => Navigator.pop(context, "확인"),
@@ -240,10 +254,8 @@ class SigninPage extends StatelessWidget {
                       tiny_db.setString("user_church_id", "");
                       tiny_db.setInt("user_point", 0);
 
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => MainPage()),
-                      );
+                      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
+                          MainPage()), (Route<dynamic> route) => false);
                     }
                   }
                 },

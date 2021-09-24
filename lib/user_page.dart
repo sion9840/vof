@@ -39,11 +39,12 @@ class UserPage extends StatelessWidget {
           ),
           ListTile(
             title: Text("교회 아이디: ${tiny_db.getString("user_church_id")}"),
-            tileColor: Color(0xFFEDEDED),
+            tileColor: Colors.white,
+            onTap: (){},
           ),
           SizedBox(height: 5.0,),
           ListTile(
-            tileColor: Color(0xFFEDEDED),
+            tileColor: Colors.white,
             leading: Icon(Icons.exit_to_app),
             title: Text("로그아웃"),
             onTap: (){
@@ -62,10 +63,8 @@ class UserPage extends StatelessWidget {
                           tiny_db.remove("user_church_id");
                           tiny_db.remove("user_point");
 
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => GuidePage()),
-                          );
+                          Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
+                              GuidePage()), (Route<dynamic> route) => false);
                         },
                         child: const Text("예"),
                       ),
@@ -79,7 +78,7 @@ class UserPage extends StatelessWidget {
             },
           ),
           ListTile(
-            tileColor: Color(0xFFEDEDED),
+            tileColor: Colors.white,
             leading: Icon(Icons.delete_forever),
             title: Text("계정 삭제"),
             onTap: (){
@@ -143,10 +142,8 @@ class UserPage extends StatelessWidget {
                           tiny_db.remove("user_church_id");
                           tiny_db.remove("user_point");
 
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => GuidePage()),
-                          );
+                          Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
+                              GuidePage()), (Route<dynamic> route) => false);
                         },
                         child: const Text("예"),
                       ),

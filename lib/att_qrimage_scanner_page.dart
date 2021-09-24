@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:vof/custom_theme.dart';
 import 'package:vof/global_variable.dart';
@@ -16,10 +17,8 @@ class _AttQrimageScannerPageState extends State<AttQrimageScannerPage> {
   QRViewController? controller;
   String notice = "";
 
-  @override
-  void initState() {
-    super.initState();
-  }
+  List<String> korea_weekday_names = ["월", "화", "수", "목", "금", "토", "일"];
+  DateTime today_datetime = new DateTime.now();
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +26,7 @@ class _AttQrimageScannerPageState extends State<AttQrimageScannerPage> {
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         centerTitle: true,
-        title: const Text("예배 참석 QR코드 스캐너"),
+        title: Text("${korea_weekday_names[today_datetime.weekday]}요예배 참석"),
         backgroundColor: Colors.transparent,
         elevation: 0.0,
         actions: <Widget>[
@@ -109,51 +108,114 @@ class _AttQrimageScannerPageState extends State<AttQrimageScannerPage> {
         String _db_user_name = "";
         int _db_user_point = 0;
         int _plus_point = 0;
-        List<String> _worship_completion_dates = [];
+        List _worship_completion_dates = [];
         DateTime _today_datetime = new DateTime.now();
-        String _today_datestring ="${_today_datetime.year.toString()}-${_today_datetime.month.toString().padLeft(2,'0')}-${_today_datetime.day.toString().padLeft(2,'0')}";
+        Map<String, int> _today_datemap = {"year" : _today_datetime.year, "month" : _today_datetime.month, "day" : _today_datetime.day, "hour" : int.parse(DateFormat("ss").format(_today_datetime)), "minute" : _today_datetime.minute};
 
         await firestoreInstance
             .collection("users")
             .doc(_data)
             .get().then(
                 (value){
-              _worship_completion_dates = value["worship_completion_dates"].cast<String>();
+              _worship_completion_dates = value["worship_completion_dates"].cast<Map>();
               _db_user_point = value["point"];
               _db_user_name = value["name"];
             }
         );
 
-        if(_worship_completion_dates.contains(_today_datestring)){
+        bool _is_contain = false;
+        for(int i = 0; i<_worship_completion_dates.length; i++){
+          Map<String, dynamic> _worship_completion_date = _worship_completion_dates[i];
+          if((_worship_completion_date["day"] == _today_datemap["day"]) && (_worship_completion_date["month"] == _today_datemap["month"]) && (_worship_completion_date["year"] == _today_datemap["year"])){
+            _is_contain = true;
+            break;
+          }
+        }
+
+        if(_is_contain){
           setState(() {
-            notice = "${_db_user_name}님이 예배에 출석하셨습니다";
+            notice = "${_db_user_name}님이 ${korea_weekday_names[today_datetime.weekday]}요예배에 출석하셨습니다";
           });
         }
         else{
-          await firestoreInstance
-              .collection("churches")
-              .doc(tiny_db.getString("user_church_id"))
-              .get().then(
-                  (value){
-                _plus_point = value["worship_completion_point"];
-              }
-          );
-
-          _worship_completion_dates.add(_today_datestring);
+          _worship_completion_dates.add(_today_datemap);
 
           await firestoreInstance
               .collection("users")
               .doc(_data)
               .update(
               {
-                "point" : _db_user_point + _plus_point,
                 "worship_completion_dates" : _worship_completion_dates,
               }
           );
 
-          setState(() {
-            notice = "${_db_user_name}님이 예배에 출석하셨습니다";
-          });
+          if(_today_datetime.weekday != 6){
+            bool _get_complete_multi_special_worship = false;
+
+            Map<String, dynamic> _worship_completion_date = _worship_completion_dates[0];
+            DateTime _thatday_datetime = new DateTime(
+                _worship_completion_date["year"],
+                _worship_completion_date["month"],
+                _worship_completion_date["day"],
+                0,
+                0,
+                0,
+                0,
+                0
+            );
+
+            if(_today_datetime.compareTo(_thatday_datetime) < (1 + _today_datetime.weekday)){
+              setState(() {
+                notice = "${_db_user_name}님이 ${korea_weekday_names[_today_datetime.weekday]}요예배에 출석하셨습니다\n(이번주에 이미 특별예배를 참석하셨기에 포인트가 지급되어지지 않습니다)";
+              });
+            }
+            else{
+              await firestoreInstance
+                  .collection("churches")
+                  .doc(tiny_db.getString("user_church_id"))
+                  .get().then(
+                      (value){
+                    _plus_point = value["worship_completion_points"][korea_weekday_names[_today_datetime.weekday]];
+                  }
+              );
+
+              await firestoreInstance
+                  .collection("users")
+                  .doc(_data)
+                  .update(
+                  {
+                    "point" : _db_user_point + _plus_point,
+                  }
+              );
+
+              setState(() {
+                notice = "${_db_user_name}님이 ${korea_weekday_names[today_datetime.weekday]}요예배에 출석하셨습니다";
+              });
+            }
+          }
+          else{
+            await firestoreInstance
+                .collection("churches")
+                .doc(tiny_db.getString("user_church_id"))
+                .get().then(
+                    (value){
+                  _plus_point = value["worship_completion_points"][korea_weekday_names[_today_datetime.weekday]];
+                }
+            );
+
+            await firestoreInstance
+                .collection("users")
+                .doc(_data)
+                .update(
+                {
+                  "point" : _db_user_point + _plus_point,
+                }
+            );
+
+            setState(() {
+              notice = "${_db_user_name}님이 ${korea_weekday_names[today_datetime.weekday]}요예배에 출석하셨습니다";
+            });
+          }
         }
       }
     });

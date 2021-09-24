@@ -171,10 +171,8 @@ class LoginPage extends StatelessWidget {
                       tiny_db.setString("user_church_id", _db_user_church_id);
                       tiny_db.setInt("user_point", _db_user_point);
 
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => MainPage()),
-                      );
+                      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
+                          MainPage()), (Route<dynamic> route) => false);
                     }
                   }
                 },
