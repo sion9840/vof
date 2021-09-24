@@ -39,12 +39,12 @@ class UserPage extends StatelessWidget {
           ),
           ListTile(
             title: Text("교회 아이디: ${tiny_db.getString("user_church_id")}"),
-            tileColor: Colors.white,
+            tileColor: Color(0xfff8f9fa),
             onTap: (){},
           ),
           SizedBox(height: 5.0,),
           ListTile(
-            tileColor: Colors.white,
+            tileColor: Color(0xfff8f9fa),
             leading: Icon(Icons.exit_to_app),
             title: Text("로그아웃"),
             onTap: (){
@@ -78,7 +78,7 @@ class UserPage extends StatelessWidget {
             },
           ),
           ListTile(
-            tileColor: Colors.white,
+            tileColor: Color(0xfff8f9fa),
             leading: Icon(Icons.delete_forever),
             title: Text("계정 삭제"),
             onTap: (){

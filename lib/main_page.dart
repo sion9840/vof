@@ -419,6 +419,7 @@ class _MainPageState extends State<MainPage> {
                                   },
                                   child: Text(
                                     "QT완료",
+                                    textAlign: TextAlign.center,
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontSize: CtTheme.CtTextSize.small,
@@ -509,7 +510,8 @@ class _MainPageState extends State<MainPage> {
                                     }
                                   },
                                   child: Text(
-                                    "예배&기도회 출석",
+                                    "예배&기도회\n출석",
+                                    textAlign: TextAlign.center,
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontSize: CtTheme.CtTextSize.small,
@@ -647,7 +649,8 @@ class _MainPageState extends State<MainPage> {
                                   }
                                 },
                                 child: Text(
-                                  "설교메모완료",
+                                  "설교메모\n완료",
+                                  textAlign: TextAlign.center,
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontSize: CtTheme.CtTextSize.small,
@@ -764,12 +767,21 @@ class _MainPageState extends State<MainPage> {
                                               ),
                                             ),
                                             SizedBox(width: 20.0,),
-                                            Text(
-                                              "${_user["name"]}",
-                                              style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: CtTheme.CtTextSize.general,
-                                              ),
+                                            Builder(
+                                              builder: (context) {
+                                                String _display_type = "학생";
+                                                if(_user["type"] == "t"){
+                                                  _display_type = "선생님";
+                                                }
+
+                                                return Text(
+                                                  "${_user["name"]}(${_display_type})",
+                                                  style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: CtTheme.CtTextSize.general,
+                                                  ),
+                                                );
+                                              }
                                             ),
                                             Spacer(),
                                             Text(
