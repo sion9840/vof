@@ -20,8 +20,8 @@ class nCtRadiusSize {
 }
 
 class nCtTextSize {
-  double small = 14;
-  double general = 18;
+  double small = 12;
+  double general = 17;
   double big = 24;
   double too_big =36;
 }

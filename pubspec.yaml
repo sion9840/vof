@@ -83,6 +83,6 @@ flutter:
   # see https://flutter.dev/custom-fonts/#from-packages
 
 flutter_native_splash:
-  color: "#FFFFFF"
+  color: "#4C6EF5"
   image: img/splash.png
   fullscreen: true
