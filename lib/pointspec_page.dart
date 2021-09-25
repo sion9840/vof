@@ -127,6 +127,7 @@ class _PointspecPageState extends State<PointspecPage> {
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: CtTheme.CtTextSize.big,
+                  fontWeight: FontWeight.w900,
                 ),
               ),
             ),
@@ -146,16 +147,16 @@ class _PointspecPageState extends State<PointspecPage> {
 
                       for(int i = 0; i<_temp_qt_completion_dates.length; i++){
                         Map<String, dynamic> _temp_qt_completion_date = _temp_qt_completion_dates[i];
-                        events[DateTime(_temp_qt_completion_date["year"], _temp_qt_completion_date["month"], _temp_qt_completion_date["day"])] = [
+                        events[new DateTime(_temp_qt_completion_date["year"], _temp_qt_completion_date["month"], _temp_qt_completion_date["day"])] = [
                           CleanCalendarEvent('QT 완료',
-                              startTime: DateTime(
+                              startTime: new DateTime(
                                 _temp_qt_completion_date["year"],
                                 _temp_qt_completion_date["month"],
                                 _temp_qt_completion_date["day"],
                                 _temp_qt_completion_date["hour"],
                                 _temp_qt_completion_date["minute"]
                               ),
-                              endTime: DateTime(
+                              endTime: new DateTime(
                                   _temp_qt_completion_date["year"],
                                   _temp_qt_completion_date["month"],
                                   _temp_qt_completion_date["day"],
@@ -185,19 +186,19 @@ class _PointspecPageState extends State<PointspecPage> {
                           _display_worship_name = "기도회";
                         }
 
-                        if(events.containsKey(DateTime(_temp_worship_completion_date["year"], _temp_worship_completion_date["month"], _temp_worship_completion_date["day"]))){
-                          dynamic _temp = events[DateTime(_temp_worship_completion_date["year"], _temp_worship_completion_date["month"], _temp_worship_completion_date["day"])];
+                        if(events.containsKey(new DateTime(_temp_worship_completion_date["year"], _temp_worship_completion_date["month"], _temp_worship_completion_date["day"]))){
+                          dynamic _temp = events[new DateTime(_temp_worship_completion_date["year"], _temp_worship_completion_date["month"], _temp_worship_completion_date["day"])];
 
                           _temp.add(
                             CleanCalendarEvent('${_display_worship_name} 출석',
-                                startTime: DateTime(
+                                startTime: new DateTime(
                                     _temp_worship_completion_date["year"],
                                     _temp_worship_completion_date["month"],
                                     _temp_worship_completion_date["day"],
                                     _temp_worship_completion_date["hour"],
                                     _temp_worship_completion_date["minute"]
                                 ),
-                                endTime: DateTime(
+                                endTime: new DateTime(
                                     _temp_worship_completion_date["year"],
                                     _temp_worship_completion_date["month"],
                                     _temp_worship_completion_date["day"],
@@ -208,19 +209,19 @@ class _PointspecPageState extends State<PointspecPage> {
                                 color: Colors.green)
                           );
 
-                          events[DateTime(_temp_worship_completion_date["year"], _temp_worship_completion_date["month"], _temp_worship_completion_date["day"])] = _temp;
+                          events[new DateTime(_temp_worship_completion_date["year"], _temp_worship_completion_date["month"], _temp_worship_completion_date["day"])] = _temp;
                         }
                         else{
-                          events[DateTime(_temp_worship_completion_date["year"], _temp_worship_completion_date["month"], _temp_worship_completion_date["day"])] = [
+                          events[new DateTime(_temp_worship_completion_date["year"], _temp_worship_completion_date["month"], _temp_worship_completion_date["day"])] = [
                             CleanCalendarEvent('${_display_worship_name} 출석',
-                                startTime: DateTime(
+                                startTime: new DateTime(
                                     _temp_worship_completion_date["year"],
                                     _temp_worship_completion_date["month"],
                                     _temp_worship_completion_date["day"],
                                     _temp_worship_completion_date["hour"],
                                     _temp_worship_completion_date["minute"]
                                 ),
-                                endTime: DateTime(
+                                endTime: new DateTime(
                                     _temp_worship_completion_date["year"],
                                     _temp_worship_completion_date["month"],
                                     _temp_worship_completion_date["day"],
@@ -236,19 +237,19 @@ class _PointspecPageState extends State<PointspecPage> {
                       for(int i = 0; i<_temp_worship_write_completion_dates.length; i++){
                         Map<String, dynamic> _temp_worship_write_completion_date = _temp_worship_write_completion_dates[i];
 
-                        if(events.containsKey(DateTime(_temp_worship_write_completion_date["year"], _temp_worship_write_completion_date["month"], _temp_worship_write_completion_date["day"]))){
-                          dynamic _temp = events[DateTime(_temp_worship_write_completion_date["year"], _temp_worship_write_completion_date["month"], _temp_worship_write_completion_date["day"])];
+                        if(events.containsKey(new DateTime(_temp_worship_write_completion_date["year"], _temp_worship_write_completion_date["month"], _temp_worship_write_completion_date["day"]))){
+                          dynamic _temp = events[new DateTime(_temp_worship_write_completion_date["year"], _temp_worship_write_completion_date["month"], _temp_worship_write_completion_date["day"])];
 
                           _temp.add(
                               CleanCalendarEvent('설교메모 완료',
-                                  startTime: DateTime(
+                                  startTime: new DateTime(
                                       _temp_worship_write_completion_date["year"],
                                       _temp_worship_write_completion_date["month"],
                                       _temp_worship_write_completion_date["day"],
                                       _temp_worship_write_completion_date["hour"],
                                       _temp_worship_write_completion_date["minute"]
                                   ),
-                                  endTime: DateTime(
+                                  endTime: new DateTime(
                                       _temp_worship_write_completion_date["year"],
                                       _temp_worship_write_completion_date["month"],
                                       _temp_worship_write_completion_date["day"],
@@ -259,19 +260,19 @@ class _PointspecPageState extends State<PointspecPage> {
                                   color: Colors.blue)
                           );
 
-                          events[DateTime(_temp_worship_write_completion_date["year"], _temp_worship_write_completion_date["month"], _temp_worship_write_completion_date["day"])] = _temp;
+                          events[new DateTime(_temp_worship_write_completion_date["year"], _temp_worship_write_completion_date["month"], _temp_worship_write_completion_date["day"])] = _temp;
                         }
                         else{
-                          events[DateTime(_temp_worship_write_completion_date["year"], _temp_worship_write_completion_date["month"], _temp_worship_write_completion_date["day"])] = [
+                          events[new DateTime(_temp_worship_write_completion_date["year"], _temp_worship_write_completion_date["month"], _temp_worship_write_completion_date["day"])] = [
                             CleanCalendarEvent('설교메모 완료',
-                                startTime: DateTime(
+                                startTime: new DateTime(
                                     _temp_worship_write_completion_date["year"],
                                     _temp_worship_write_completion_date["month"],
                                     _temp_worship_write_completion_date["day"],
                                     _temp_worship_write_completion_date["hour"],
                                     _temp_worship_write_completion_date["minute"]
                                 ),
-                                endTime: DateTime(
+                                endTime: new DateTime(
                                     _temp_worship_write_completion_date["year"],
                                     _temp_worship_write_completion_date["month"],
                                     _temp_worship_write_completion_date["day"],

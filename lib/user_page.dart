@@ -37,6 +37,29 @@ class UserPage extends StatelessWidget {
               ],
             ),
           ),
+          Builder(
+            builder: (context) {
+              if(tiny_db.getString("user_type") == "s"){
+                return ListTile(
+                  title: Text("학생"),
+                  tileColor: Color(0xfff8f9fa),
+                  onTap: (){},
+                );
+              }
+              else{
+                return ListTile(
+                  title: Text("교사"),
+                  tileColor: Color(0xfff8f9fa),
+                  onTap: (){},
+                );
+              }
+            }
+          ),
+          ListTile(
+            title: Text("이메일: ${tiny_db.getString("user_email")}"),
+            tileColor: Color(0xfff8f9fa),
+            onTap: (){},
+          ),
           ListTile(
             title: Text("교회 아이디: ${tiny_db.getString("user_church_id")}"),
             tileColor: Color(0xfff8f9fa),
@@ -113,25 +136,30 @@ class UserPage extends StatelessWidget {
                               .delete();
 
                           if(tiny_db.getString("user_church_id") != ""){
-                            List<String> _students = [];
+                            String _db_user_type_tag = "students";
+                            if(tiny_db.getString("user_type") == "t"){
+                              _db_user_type_tag = "teachers";
+                            }
+
+                            List<String> _members = [];
 
                             await firestoreInstance
                                 .collection("churches")
                                 .doc(tiny_db.getString("user_church_id"))
                                 .get().then(
                                     (value){
-                                  _students = value["students"].cast<String>();
+                                  _members = value[_db_user_type_tag].cast<String>();
                                 }
                             );
 
-                            _students.remove(tiny_db.getString("user_email"));
+                            _members.remove(tiny_db.getString("user_email"));
 
                             await firestoreInstance
                                 .collection("churches")
                                 .doc(tiny_db.getString("user_church_id"))
                                 .update(
                                 {
-                                  "students" : _students
+                                  _db_user_type_tag : _members
                                 }
                             );
                           }
