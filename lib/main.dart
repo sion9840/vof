@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -65,7 +66,7 @@ class ReadyPage extends StatelessWidget {
             return GuidePage();
           }
           else{
-            checkUserPoint();
+            checkUser();
             return MainPage();
           }
         }
@@ -90,7 +91,24 @@ class ReadyPage extends StatelessWidget {
     );
   }
 
-  void checkUserPoint() async{
+  void checkUser() async{
+    if (await FirebaseAuth.instance.currentUser! == null) {
+      String _db_user_password = "";
+
+      await firestoreInstance.collection("users")
+        .doc(tiny_db.getString("user_email"))
+        .get().then(
+          (value){
+            _db_user_password = value["password"];
+          }
+      );
+
+      UserCredential _userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: tiny_db.getString("user_email"),
+          password: _db_user_password
+      );
+    }
+
     await firestoreInstance.collection("users").doc(tiny_db.getString("user_email")).get().then(
             (value) {
               tiny_db.setInt("user_point", value["point"]);

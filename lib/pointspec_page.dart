@@ -43,16 +43,32 @@ class _PointspecPageState extends State<PointspecPage> {
       appBar: AppBar(
         backgroundColor: Color(CtTheme.CtHexColor.primary),
         elevation: 0.0,
-        title: Text(
-          "${user_name}",
-          style: TextStyle(
-            color: Colors.white,
-          ),
+        title: Builder(
+          builder: (context){
+            Widget _display_type = CtTheme.CtIcon.student(Colors.white, 24.0);
+            if(user_type == "t"){
+              _display_type = CtTheme.CtIcon.teacher(Colors.white, 24.0);
+            }
+
+            return Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                _display_type,
+                SizedBox(width: 10.0,),
+                Text(
+                  "${user_name}",
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+              ],
+            );
+          },
         ),
         actions: <Widget>[
           Builder(
             builder: (context){
-              if((tiny_db.getString("user_type") == "t") && (user_name != "") && (user_email != tiny_db.getString("user_email"))){
+              if((tiny_db.getString("user_type") == "t") && (user_email != tiny_db.getString("user_email"))){
                 return Row(
                   children: <Widget>[
                     IconButton(
@@ -121,15 +137,27 @@ class _PointspecPageState extends State<PointspecPage> {
             width: double.infinity,
             height: 150.0,
             color: Color(CtTheme.CtHexColor.primary),
-            child: Center(
-              child: Text(
-                "${user_point} 포인트",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: CtTheme.CtTextSize.big,
-                  fontWeight: FontWeight.w900,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      "${user_point}",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: CtTheme.CtTextSize.big,
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
+                    SizedBox(width: 10.0,),
+                    CtTheme.CtIcon.point(Colors.white, CtTheme.CtTextSize.big),
+                  ],
                 ),
-              ),
+              ],
             ),
           ),
           Expanded(

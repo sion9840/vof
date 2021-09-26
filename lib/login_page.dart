@@ -60,137 +60,138 @@ class LoginPage extends StatelessWidget {
                 },
               ),
               SizedBox(height: 30.0,),
-              InkWell(
-                onTap: () async{
-                  if((6 > input_user_password.length) || (16 < input_user_password.length)) {
-                    showDialog<String>(
-                        context: context,
-                        builder: (context) => AlertDialog(
-                          content: const Text("비밀번호는 6~16자여야 합니다"),
-                          actions: <Widget>[
-                            TextButton(
-                              onPressed: () => Navigator.pop(context, "확인"),
-                              child: const Text("확인"),
-                            ),
-                          ],
-                        )
-                    );
-                  }
-                  else if(true){
-                    bool _is_error = false;
-
-                    try {
-                      UserCredential _userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
-                          email: input_user_email,
-                          password: input_user_password
+              SizedBox(
+                width: double.infinity,
+                height: 50.0,
+                child: ElevatedButton(
+                  onPressed: () async{
+                    if((6 > input_user_password.length) || (16 < input_user_password.length)) {
+                      showDialog<String>(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            content: const Text("비밀번호는 6~16자여야 합니다"),
+                            actions: <Widget>[
+                              TextButton(
+                                onPressed: () => Navigator.pop(context, "확인"),
+                                child: const Text("확인"),
+                              ),
+                            ],
+                          )
                       );
-                    } on FirebaseAuthException catch (e) {
-                      _is_error = true;
+                    }
+                    else if(true){
+                      bool _is_error = false;
 
-                      print(e);
+                      try {
+                        UserCredential _userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+                            email: input_user_email,
+                            password: input_user_password
+                        );
+                      } on FirebaseAuthException catch (e) {
+                        _is_error = true;
 
-                      if (e.code == 'user-not-found') {
-                        showDialog<String>(
-                            context: context,
-                            builder: (context) => AlertDialog(
-                              content: const Text("존재하지 않는 이메일입니다"),
-                              actions: <Widget>[
-                                TextButton(
-                                  onPressed: () => Navigator.pop(context, "확인"),
-                                  child: const Text("확인"),
-                                ),
-                              ],
-                            )
-                        );
-                      } else if (e.code == 'wrong-password') {
-                        showDialog<String>(
-                            context: context,
-                            builder: (context) => AlertDialog(
-                              content: const Text("비밀번호가 맞지 않습니다"),
-                              actions: <Widget>[
-                                TextButton(
-                                  onPressed: () => Navigator.pop(context, "확인"),
-                                  child: const Text("확인"),
-                                ),
-                              ],
-                            )
-                        );
-                      } else if (e.code == 'invalid-email'){
-                        showDialog<String>(
-                            context: context,
-                            builder: (context) =>
-                                AlertDialog(
-                                  content: const Text("이메일의 형식이 맞지 않습니다"),
-                                  actions: <Widget>[
-                                    TextButton(
-                                      onPressed: () =>
-                                          Navigator.pop(context, "확인"),
-                                      child: const Text("확인"),
-                                    ),
-                                  ],
-                                )
-                        );
+                        print(e);
+
+                        if (e.code == 'user-not-found') {
+                          showDialog<String>(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                content: const Text("존재하지 않는 이메일입니다"),
+                                actions: <Widget>[
+                                  TextButton(
+                                    onPressed: () => Navigator.pop(context, "확인"),
+                                    child: const Text("확인"),
+                                  ),
+                                ],
+                              )
+                          );
+                        } else if (e.code == 'wrong-password') {
+                          showDialog<String>(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                content: const Text("비밀번호가 맞지 않습니다"),
+                                actions: <Widget>[
+                                  TextButton(
+                                    onPressed: () => Navigator.pop(context, "확인"),
+                                    child: const Text("확인"),
+                                  ),
+                                ],
+                              )
+                          );
+                        } else if (e.code == 'invalid-email'){
+                          showDialog<String>(
+                              context: context,
+                              builder: (context) =>
+                                  AlertDialog(
+                                    content: const Text("이메일의 형식이 맞지 않습니다"),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        onPressed: () =>
+                                            Navigator.pop(context, "확인"),
+                                        child: const Text("확인"),
+                                      ),
+                                    ],
+                                  )
+                          );
+                        }
+                        else{
+                          showDialog<String>(
+                              context: context,
+                              builder: (context) =>
+                                  AlertDialog(
+                                    content: const Text("로그인에 실패하셨습니다"),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        onPressed: () =>
+                                            Navigator.pop(context, "확인"),
+                                        child: const Text("확인"),
+                                      ),
+                                    ],
+                                  )
+                          );
+                        }
                       }
-                      else{
-                        showDialog<String>(
-                            context: context,
-                            builder: (context) =>
-                                AlertDialog(
-                                  content: const Text("로그인에 실패하셨습니다"),
-                                  actions: <Widget>[
-                                    TextButton(
-                                      onPressed: () =>
-                                          Navigator.pop(context, "확인"),
-                                      child: const Text("확인"),
-                                    ),
-                                  ],
-                                )
+
+                      if(_is_error == false){
+                        String _db_user_name = "";
+                        String _db_user_type = "";
+                        String _db_user_password = "";
+                        String _db_user_church_id = "";
+                        int _db_user_point = 0;
+
+                        await firestoreInstance.collection("users").doc(input_user_email).get().then(
+                                (value) {
+                              _db_user_name = value["name"];
+                              _db_user_type = value["type"];
+                              _db_user_church_id = value["church_id"];
+                              _db_user_point = value["point"];
+                            }
                         );
+
+                        tiny_db.setString("user_name", _db_user_name);
+                        tiny_db.setString("user_type", _db_user_type);
+                        tiny_db.setString("user_email", input_user_email);
+                        tiny_db.setString("user_church_id", _db_user_church_id);
+                        tiny_db.setInt("user_point", _db_user_point);
+
+                        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
+                            MainPage()), (Route<dynamic> route) => false);
                       }
                     }
-
-                    if(_is_error == false){
-                      String _db_user_name = "";
-                      String _db_user_type = "";
-                      String _db_user_password = "";
-                      String _db_user_church_id = "";
-                      int _db_user_point = 0;
-
-                      await firestoreInstance.collection("users").doc(input_user_email).get().then(
-                              (value) {
-                            _db_user_name = value["name"];
-                            _db_user_type = value["type"];
-                            _db_user_church_id = value["church_id"];
-                            _db_user_point = value["point"];
-                          }
-                      );
-
-                      tiny_db.setString("user_name", _db_user_name);
-                      tiny_db.setString("user_type", _db_user_type);
-                      tiny_db.setString("user_email", input_user_email);
-                      tiny_db.setString("user_church_id", _db_user_church_id);
-                      tiny_db.setInt("user_point", _db_user_point);
-
-                      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
-                          MainPage()), (Route<dynamic> route) => false);
-                    }
-                  }
-                },
-                child: Container(
-                  width: double.infinity,
-                  height: 50.0,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(CtTheme.CtRadiusSize.general),
-                    color: Color(CtTheme.CtHexColor.primary),
-                  ),
-                  child: Center(
-                    child: Text(
-                      "로그인",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: CtTheme.CtTextSize.general,
-                      ),
+                  },
+                  child: Text(
+                    "로그인",
+                    style: TextStyle(
+                      fontSize: CtTheme.CtTextSize.general,
+                      color: Colors.white,
                     ),
+                  ),
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(Color(CtTheme.CtHexColor.primary)),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(CtTheme.CtRadiusSize.general),
+                        )),
                   ),
                 ),
               ),

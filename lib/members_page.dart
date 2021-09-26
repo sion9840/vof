@@ -55,7 +55,7 @@ class _MembersPageState extends State<MembersPage> {
                                   return Divider(
                                     thickness: 2.0,
                                     height: 20,
-                                    color: Colors.black12,
+                                    color: Color(0xfff8f9fa),
                                   );
                                 }
                               }
@@ -71,24 +71,12 @@ class _MembersPageState extends State<MembersPage> {
                             },
                             leading: Builder(
                               builder: (context){
-                                if(_user["type"] == "s"){
-                                  return Text(
-                                    "학생",
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: CtTheme.CtTextSize.general,
-                                    ),
-                                  );
+                                Widget _display_type = CtTheme.CtIcon.student(Colors.black, 24.0);
+                                if(_user["type"] == "t"){
+                                  _display_type = CtTheme.CtIcon.teacher(Colors.black, 24.0);
                                 }
-                                else{
-                                  return Text(
-                                    "선생님",
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: CtTheme.CtTextSize.general,
-                                    ),
-                                  );
-                                }
+
+                                return _display_type;
                               },
                             ),
                             title: Text(
@@ -98,12 +86,19 @@ class _MembersPageState extends State<MembersPage> {
                                 fontSize: CtTheme.CtTextSize.general,
                               ),
                             ),
-                            trailing: Text(
-                              "${_user["point"]} 포인트",
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: CtTheme.CtTextSize.general,
-                              ),
+                            trailing: Wrap(
+                              crossAxisAlignment: WrapCrossAlignment.center,
+                              children: [
+                                Text(
+                                  "${_user["point"]}",
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: CtTheme.CtTextSize.general,
+                                  ),
+                                ),
+                                SizedBox(width: 10.0,),
+                                CtTheme.CtIcon.point(Colors.black, 24.0),
+                              ],
                             ),
                           ),
                         ],

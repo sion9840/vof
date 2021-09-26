@@ -30,83 +30,90 @@ class _GuidePageState extends State<GuidePage> {
               ),
             ),
             Spacer(),
-            InkWell(
-              onTap: (){
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => LoginPage()),
-                );
-              },
-              child: Container(
-                width: double.infinity,
-                height: 50.0,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(CtTheme.CtRadiusSize.general),
-                  color: Color(CtTheme.CtHexColor.primary),
-                ),
-                child: Center(
-                  child: Text(
-                    "로그인",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: CtTheme.CtTextSize.general,
-                    ),
+            SizedBox(
+              width: double.infinity,
+              height: 50.0,
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => LoginPage()),
+                  );
+                },
+                child: Text(
+                  "로그인",
+                  style: TextStyle(
+                    fontSize: CtTheme.CtTextSize.general,
+                    color: Colors.white,
                   ),
+                ),
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all<Color>(Color(CtTheme.CtHexColor.primary)),
+                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(CtTheme.CtRadiusSize.general),
+                      )),
                 ),
               ),
             ),
             SizedBox(height: 10.0,),
-            InkWell(
-              onTap: (){
-                showDialog<String>(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                      actions: <Widget>[
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                            TextButton(
-                              onPressed: () {
-                                Navigator.pop(context, "교사로 회원가입");
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => SigninPage("t")),
-                                );
-                              },
-                              child: const Text("교사로 회원가입"),
-                            ),
-                            TextButton(
-                              onPressed: () {
-                                Navigator.pop(context, "학생으로 회원가입");
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => SigninPage("s")),
-                                );
-                              },
-                              child: const Text("학생으로 회원가입"),
-                            ),
-                          ],
-                        ),
-                      ],
-                    )
-                );
-              },
-              child: Container(
-                width: double.infinity,
-                height: 50.0,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(CtTheme.CtRadiusSize.general),
-                  border: Border.all(color: Color(CtTheme.CtHexColor.primary), width: 1, ),
-                ),
-                child: Center(
-                  child: Text(
-                    "회원가입",
-                    style: TextStyle(
-                      color: Color(CtTheme.CtHexColor.primary),
-                      fontSize: CtTheme.CtTextSize.general,
-                    ),
+            SizedBox(
+              width: double.infinity,
+              height: 50.0,
+              child: OutlinedButton(
+                onPressed: () {
+                  showDialog<String>(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        actions: <Widget>[
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context, "교사로 회원가입");
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => SigninPage("t")),
+                                  );
+                                },
+                                child: const Text("교사로 회원가입"),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context, "학생으로 회원가입");
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => SigninPage("s")),
+                                  );
+                                },
+                                child: const Text("학생으로 회원가입"),
+                              ),
+                            ],
+                          ),
+                        ],
+                      )
+                  );
+                },
+                child: Text(
+                  "회원가입",
+                  style: TextStyle(
+                    fontSize: CtTheme.CtTextSize.general,
+                    color: Color(CtTheme.CtHexColor.primary),
                   ),
+                ),
+                style: ButtonStyle(
+                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(CtTheme.CtRadiusSize.general),
+                      )),
+                    side: MaterialStateProperty.all(
+                        BorderSide(
+                          color: Color(CtTheme.CtHexColor.primary),
+                          width: 1.0,
+                          style: BorderStyle.solid)
+                    ),
                 ),
               ),
             ),

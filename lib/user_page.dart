@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:vof/custom_theme.dart';
 import 'package:vof/global_variable.dart';
 
 import 'guide_page.dart';
@@ -28,12 +29,24 @@ class UserPage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                Icon(
-                  Icons.account_circle,
-                  size: 100.0,
+                Builder(
+                    builder: (context) {
+                      Widget _display_type = CtTheme.CtIcon.student(Colors.black, 100.0);
+                      if(tiny_db.getString("user_type") == "t"){
+                        _display_type = CtTheme.CtIcon.teacher(Colors.black, 100.0);
+                      }
+
+                      return _display_type;
+                    }
                 ),
                 SizedBox(height: 10.0,),
-                Text("${tiny_db.getString("user_name")}"),
+                Text(
+                    "${tiny_db.getString("user_name")}",
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: CtTheme.CtTextSize.general,
+                  ),
+                ),
               ],
             ),
           ),
@@ -41,14 +54,26 @@ class UserPage extends StatelessWidget {
             builder: (context) {
               if(tiny_db.getString("user_type") == "s"){
                 return ListTile(
-                  title: Text("학생"),
+                  title: Text(
+                      "학생",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: CtTheme.CtTextSize.general,
+                    ),
+                  ),
                   tileColor: Color(0xfff8f9fa),
                   onTap: (){},
                 );
               }
               else{
                 return ListTile(
-                  title: Text("교사"),
+                  title: Text(
+                      "교사",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: CtTheme.CtTextSize.general,
+                    ),
+                  ),
                   tileColor: Color(0xfff8f9fa),
                   onTap: (){},
                 );
@@ -56,20 +81,38 @@ class UserPage extends StatelessWidget {
             }
           ),
           ListTile(
-            title: Text("이메일: ${tiny_db.getString("user_email")}"),
+            title: Text(
+                "이메일: ${tiny_db.getString("user_email")}",
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: CtTheme.CtTextSize.general,
+              ),
+            ),
             tileColor: Color(0xfff8f9fa),
             onTap: (){},
           ),
           ListTile(
-            title: Text("교회 아이디: ${tiny_db.getString("user_church_id")}"),
+            title: Text(
+                "교회 아이디: ${tiny_db.getString("user_church_id")}",
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: CtTheme.CtTextSize.general,
+              ),
+            ),
             tileColor: Color(0xfff8f9fa),
             onTap: (){},
           ),
           SizedBox(height: 5.0,),
           ListTile(
             tileColor: Color(0xfff8f9fa),
-            leading: Icon(Icons.exit_to_app),
-            title: Text("로그아웃"),
+            leading: Icon(Icons.exit_to_app, color: Colors.black,),
+            title: Text(
+                "로그아웃",
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: CtTheme.CtTextSize.general,
+              ),
+            ),
             onTap: (){
               showDialog<String>(
                   context: context,
@@ -102,8 +145,14 @@ class UserPage extends StatelessWidget {
           ),
           ListTile(
             tileColor: Color(0xfff8f9fa),
-            leading: Icon(Icons.delete_forever),
-            title: Text("계정 삭제"),
+            leading: Icon(Icons.delete_forever, color: Colors.black,),
+            title: Text(
+                "계정 삭제",
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: CtTheme.CtTextSize.general,
+              ),
+            ),
             onTap: (){
               showDialog<String>(
                   context: context,
