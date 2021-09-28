@@ -575,7 +575,7 @@ class _MainPageState extends State<MainPage> {
                 SizedBox(height: 30.0,),
                 Container(
                   width: double.infinity,
-                  height: 660.0,
+                  height: 680.0,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(CtTheme.CtRadiusSize.general*2),

@@ -300,6 +300,32 @@ class SigninPage extends StatelessWidget {
                         tiny_db.setString("user_church_id", input_user_church_id);
                         tiny_db.setInt("user_point", 0);
 
+                        List<String> _members = [];
+                        String _db_user_type_tag = "students";
+                        if(input_user_type == "t"){
+                          _db_user_type_tag = "teachers";
+                        }
+
+                        await firestoreInstance
+                            .collection("churches")
+                            .doc(input_user_church_id)
+                            .get().then(
+                                (value){
+                              _members = value[_db_user_type_tag].cast<String>();
+                            }
+                        );
+
+                        _members.add(input_user_email);
+
+                        await firestoreInstance
+                            .collection("churches")
+                            .doc(input_user_church_id)
+                            .update(
+                            {
+                              _db_user_type_tag : _members
+                            }
+                        );
+
                         Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
                             MainPage()), (Route<dynamic> route) => false);
                       }
