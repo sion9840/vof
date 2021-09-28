@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:vof/att_qrimage_page.dart';
 import 'package:vof/custom_theme.dart';
@@ -8,6 +9,14 @@ import 'package:vof/global_variable.dart';
 import 'package:vof/members_page.dart';
 
 import 'att_qrimage_scanner_page.dart';
+import 'custom_theme.dart';
+import 'custom_theme.dart';
+import 'custom_theme.dart';
+import 'custom_theme.dart';
+import 'custom_theme.dart';
+import 'custom_theme.dart';
+import 'custom_theme.dart';
+import 'custom_theme.dart';
 import 'user_page.dart';
 import 'pointspec_page.dart';
 
@@ -144,11 +153,19 @@ class _MainPageState extends State<MainPage> {
                                     showDialog<String>(
                                         context: context,
                                         builder: (context) => AlertDialog(
-                                          content: const Text("새로고침 완료"),
+                                          content: Text("새로고침 완료",
+                                            style: TextStyle(
+                                              fontSize: CtTheme.CtTextSize.general,
+                                              color: Colors.black,
+                                            ),),
                                           actions: <Widget>[
                                             TextButton(
                                               onPressed: () => Navigator.pop(context, "확인"),
-                                              child: const Text("확인"),
+                                              child: Text("확인",
+                                                style: TextStyle(
+                                                  fontSize: CtTheme.CtTextSize.general,
+                                                  color: Color(CtTheme.CtHexColor.primary),
+                                                ),),
                                             ),
                                           ],
                                         )
@@ -195,6 +212,8 @@ class _MainPageState extends State<MainPage> {
                                   Expanded(
                                     child: TextButton(
                                         onPressed: () async{
+                                          EasyLoading.show(status: '로딩중...');
+
                                           if(is_button1_clicked == false){
                                             is_button1_clicked = true;
                                           }
@@ -225,16 +244,25 @@ class _MainPageState extends State<MainPage> {
                                           }
 
                                           if(_is_contain){
+                                            EasyLoading.dismiss();
                                             showDialog<String>(
                                                 context: context,
                                                 builder: (context) =>
                                                     AlertDialog(
-                                                      content: const Text("오늘 이미 QT를 하셨습니다"),
+                                                      content: Text("오늘 이미 QT를 하셨습니다",
+                                                        style: TextStyle(
+                                                          fontSize: CtTheme.CtTextSize.general,
+                                                          color: Colors.black,
+                                                        ),),
                                                       actions: <Widget>[
                                                         TextButton(
                                                           onPressed: () =>
                                                               Navigator.pop(context, "확인"),
-                                                          child: const Text("확인"),
+                                                          child: Text("확인",
+                                                            style: TextStyle(
+                                                              fontSize: CtTheme.CtTextSize.general,
+                                                              color: Color(CtTheme.CtHexColor.primary),
+                                                            ),),
                                                         ),
                                                       ],
                                                     )
@@ -284,16 +312,26 @@ class _MainPageState extends State<MainPage> {
                                                 }
                                             );
 
+                                            EasyLoading.dismiss();
+
                                             showDialog<String>(
                                                 context: context,
                                                 builder: (context) =>
                                                     AlertDialog(
-                                                      content: Text("앗싸! ${_plus_point} 포인트가 적립되었습니다"),
+                                                      content: Text("앗싸! ${_plus_point} 포인트가 적립되었습니다",
+                                                        style: TextStyle(
+                                                          fontSize: CtTheme.CtTextSize.general,
+                                                          color: Colors.black,
+                                                        ),),
                                                       actions: <Widget>[
                                                         TextButton(
                                                           onPressed: () =>
                                                               Navigator.pop(context, "확인"),
-                                                          child: const Text("확인"),
+                                                          child: Text("확인",
+                                                            style: TextStyle(
+                                                              fontSize: CtTheme.CtTextSize.general,
+                                                              color: Color(CtTheme.CtHexColor.primary),
+                                                            ),),
                                                         ),
                                                       ],
                                                     )
@@ -324,6 +362,8 @@ class _MainPageState extends State<MainPage> {
                                   Expanded(
                                     child: TextButton(
                                         onPressed: () async{
+                                          EasyLoading.show(status: '로딩중...');
+
                                           if(is_button2_clicked == false){
                                             is_button2_clicked = true;
                                           }
@@ -354,22 +394,34 @@ class _MainPageState extends State<MainPage> {
                                           }
 
                                           if(_is_contain){
+                                            EasyLoading.dismiss();
+
                                             showDialog<String>(
                                                 context: context,
                                                 builder: (context) =>
                                                     AlertDialog(
-                                                      content: Text("오늘 이미 예배에 출석하셨습니다"),
+                                                      content: Text("오늘 이미 예배에 출석하셨습니다",
+                                                        style: TextStyle(
+                                                          fontSize: CtTheme.CtTextSize.general,
+                                                          color: Colors.black,
+                                                        ),),
                                                       actions: <Widget>[
                                                         TextButton(
                                                           onPressed: () =>
                                                               Navigator.pop(context, "확인"),
-                                                          child: const Text("확인"),
+                                                          child: Text("확인",
+                                                            style: TextStyle(
+                                                              fontSize: CtTheme.CtTextSize.general,
+                                                              color: Color(CtTheme.CtHexColor.primary),
+                                                            ),),
                                                         ),
                                                       ],
                                                     )
                                             );
                                           }
                                           else {
+                                            EasyLoading.dismiss();
+
                                             await Navigator.push(
                                               context,
                                               MaterialPageRoute(builder: (context) =>
@@ -425,6 +477,8 @@ class _MainPageState extends State<MainPage> {
                                   Expanded(
                                     child: TextButton(
                                       onPressed: () async{
+                                        EasyLoading.show(status: '로딩중...');
+
                                         if(is_button3_clicked == false){
                                           is_button3_clicked = true;
                                         }
@@ -433,16 +487,26 @@ class _MainPageState extends State<MainPage> {
                                         }
 
                                         if(today_datetime.weekday != 7){
+                                          EasyLoading.dismiss();
+
                                           showDialog<String>(
                                               context: context,
                                               builder: (context) =>
                                                   AlertDialog(
-                                                    content: const Text("주일이 아닙니다"),
+                                                    content: Text("주일이 아닙니다",
+                                                      style: TextStyle(
+                                                        fontSize: CtTheme.CtTextSize.general,
+                                                        color: Colors.black,
+                                                      ),),
                                                     actions: <Widget>[
                                                       TextButton(
                                                         onPressed: () =>
                                                             Navigator.pop(context, "확인"),
-                                                        child: const Text("확인"),
+                                                        child: Text("확인",
+                                                          style: TextStyle(
+                                                            fontSize: CtTheme.CtTextSize.general,
+                                                            color: Color(CtTheme.CtHexColor.primary),
+                                                          ),),
                                                       ),
                                                     ],
                                                   )
@@ -474,16 +538,26 @@ class _MainPageState extends State<MainPage> {
                                         }
 
                                         if(_is_contain){
+                                          EasyLoading.dismiss();
+
                                           showDialog<String>(
                                               context: context,
                                               builder: (context) =>
                                                   AlertDialog(
-                                                    content: const Text("오늘 이미 설교를 메모하셨습니다"),
+                                                    content: Text("오늘 이미 설교를 메모하셨습니다",
+                                                      style: TextStyle(
+                                                        fontSize: CtTheme.CtTextSize.general,
+                                                        color: Colors.black,
+                                                      ),),
                                                     actions: <Widget>[
                                                       TextButton(
                                                         onPressed: () =>
                                                             Navigator.pop(context, "확인"),
-                                                        child: const Text("확인"),
+                                                        child: Text("확인",
+                                                          style: TextStyle(
+                                                            fontSize: CtTheme.CtTextSize.general,
+                                                            color: Color(CtTheme.CtHexColor.primary),
+                                                          ),),
                                                       ),
                                                     ],
                                                   )
@@ -533,16 +607,26 @@ class _MainPageState extends State<MainPage> {
                                               }
                                           );
 
+                                          EasyLoading.dismiss();
+
                                           showDialog<String>(
                                               context: context,
                                               builder: (context) =>
                                                   AlertDialog(
-                                                    content: Text("앗싸! ${_plus_point} 포인트가 적립되었습니다"),
+                                                    content: Text("앗싸! ${_plus_point} 포인트가 적립되었습니다",
+                                                      style: TextStyle(
+                                                        fontSize: CtTheme.CtTextSize.general,
+                                                        color: Colors.black,
+                                                      ),),
                                                     actions: <Widget>[
                                                       TextButton(
                                                         onPressed: () =>
                                                             Navigator.pop(context, "확인"),
-                                                        child: const Text("확인"),
+                                                        child: Text("확인",
+                                                          style: TextStyle(
+                                                            fontSize: CtTheme.CtTextSize.general,
+                                                            color: Color(CtTheme.CtHexColor.primary),
+                                                          ),),
                                                       ),
                                                     ],
                                                   )
@@ -572,10 +656,10 @@ class _MainPageState extends State<MainPage> {
                     ),
                   ),
                 ),
-                SizedBox(height: 30.0,),
+                SizedBox(height: CtTheme.CtPaddingSize.general,),
                 Container(
                   width: double.infinity,
-                  height: 680.0,
+                  height: 690.0,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(CtTheme.CtRadiusSize.general*2),
@@ -617,7 +701,7 @@ class _MainPageState extends State<MainPage> {
                               if(snapshot.hasData){
                                 return SizedBox(
                                   width: double.infinity,
-                                  height: 580.0,
+                                  height: 610.0,
                                   child: ListView.builder(
                                     physics: NeverScrollableScrollPhysics(),
                                     itemCount: snapshot.data!.size,

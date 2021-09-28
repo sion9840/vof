@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:vof/custom_theme.dart';
 import 'package:vof/global_variable.dart';
 
+import 'custom_theme.dart';
 import 'guide_page.dart';
 
 class UserPage extends StatelessWidget {
@@ -117,10 +119,24 @@ class UserPage extends StatelessWidget {
               showDialog<String>(
                   context: context,
                   builder: (context) => AlertDialog(
-                    content: const Text("로그아웃 하시겠습니까?"),
+                    content: Text("로그아웃 하시겠습니까?",
+                      style: TextStyle(
+                        fontSize: CtTheme.CtTextSize.general,
+                        color: Colors.black,
+                      ),),
                     actions: <Widget>[
                       TextButton(
+                        onPressed: () => Navigator.pop(context, "아니요"),
+                        child: Text("아니요",
+                          style: TextStyle(
+                            fontSize: CtTheme.CtTextSize.general,
+                            color: Color(CtTheme.CtHexColor.primary),
+                          ),),
+                      ),
+                      TextButton(
                         onPressed: () async{
+                          EasyLoading.show(status: '로딩중...');
+
                           await FirebaseAuth.instance.signOut();
 
                           tiny_db.remove("user_name");
@@ -129,14 +145,16 @@ class UserPage extends StatelessWidget {
                           tiny_db.remove("user_church_id");
                           tiny_db.remove("user_point");
 
+                          EasyLoading.dismiss();
+
                           Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
                               GuidePage()), (Route<dynamic> route) => false);
                         },
-                        child: const Text("예"),
-                      ),
-                      TextButton(
-                        onPressed: () => Navigator.pop(context, "아니요"),
-                        child: const Text("아니요"),
+                        child: Text("예",
+                          style: TextStyle(
+                            fontSize: CtTheme.CtTextSize.general,
+                            color: Color(CtTheme.CtHexColor.primary),
+                          ),),
                       ),
                     ],
                   )
@@ -157,10 +175,24 @@ class UserPage extends StatelessWidget {
               showDialog<String>(
                   context: context,
                   builder: (context) => AlertDialog(
-                    content: const Text("계정을 삭제하시겠습니까?\n(경고 : 다시 계정을 되돌릴 수 없습니다)"),
+                    content: Text("계정을 삭제하시겠습니까?\n(경고 : 다시 계정을 되돌릴 수 없습니다)",
+                      style: TextStyle(
+                        fontSize: CtTheme.CtTextSize.general,
+                        color: Colors.black,
+                      ),),
                     actions: <Widget>[
                       TextButton(
+                        onPressed: () => Navigator.pop(context, "아니요"),
+                        child: Text("아니요",
+                          style: TextStyle(
+                            fontSize: CtTheme.CtTextSize.general,
+                            color: Color(CtTheme.CtHexColor.primary),
+                          ),),
+                      ),
+                      TextButton(
                         onPressed: () async{
+                          EasyLoading.show(status: '로딩중...');
+
                           String _db_user_password = "";
                           await firestoreInstance
                               .collection("users")
@@ -219,19 +251,33 @@ class UserPage extends StatelessWidget {
                           tiny_db.remove("user_church_id");
                           tiny_db.remove("user_point");
 
+                          EasyLoading.dismiss();
+
                           Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
                               GuidePage()), (Route<dynamic> route) => false);
                         },
-                        child: const Text("예"),
-                      ),
-                      TextButton(
-                        onPressed: () => Navigator.pop(context, "아니요"),
-                        child: const Text("아니요"),
+                        child: Text("예",
+                          style: TextStyle(
+                            fontSize: CtTheme.CtTextSize.general,
+                            color: Color(CtTheme.CtHexColor.primary),
+                          ),),
                       ),
                     ],
                   )
               );
             },
+          ),
+          SizedBox(height: 5.0,),
+          ListTile(
+            title: Text(
+              "버전 1.0.1",
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: CtTheme.CtTextSize.general,
+              ),
+            ),
+            tileColor: Color(0xfff8f9fa),
+            onTap: (){},
           ),
         ],
       ),

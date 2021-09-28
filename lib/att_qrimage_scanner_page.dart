@@ -4,6 +4,8 @@ import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:vof/custom_theme.dart';
 import 'package:vof/global_variable.dart';
 
+import 'custom_theme.dart';
+
 class AttQrimageScannerPage extends StatefulWidget {
   @override
   _AttQrimageScannerPageState createState() => _AttQrimageScannerPageState();
@@ -47,6 +49,10 @@ class _AttQrimageScannerPageState extends State<AttQrimageScannerPage> {
                     return AlertDialog(
                       title: Text(
                         "수동 입력 참석",
+                        style: TextStyle(
+                          fontSize: CtTheme.CtTextSize.general,
+                          color: Colors.black,
+                        ),
                       ),
                       content: TextField(
                         decoration: InputDecoration(
@@ -59,17 +65,25 @@ class _AttQrimageScannerPageState extends State<AttQrimageScannerPage> {
                       ),
                       actions: <Widget>[
                         TextButton(
-                          onPressed: () async{
-                            await cal_check(input_email);
-                          },
-                          child: const Text("확인"),
-                        ),
-                        TextButton(
                           onPressed: () {
                             input_email = "";
                             Navigator.pop(context, "취소");
                           },
-                          child: const Text("취소"),
+                          child: Text("취소",
+                            style: TextStyle(
+                              fontSize: CtTheme.CtTextSize.general,
+                              color: Color(CtTheme.CtHexColor.primary),
+                            ),),
+                        ),
+                        TextButton(
+                          onPressed: () async{
+                            await cal_check(input_email);
+                          },
+                          child: Text("확인",
+                            style: TextStyle(
+                              fontSize: CtTheme.CtTextSize.general,
+                              color: Color(CtTheme.CtHexColor.primary),
+                            ),),
                         ),
                       ],
                     );

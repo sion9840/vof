@@ -1,9 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:vof/custom_theme.dart';
 import 'package:vof/global_variable.dart';
 
+import 'custom_theme.dart';
+import 'custom_theme.dart';
+import 'custom_theme.dart';
+import 'custom_theme.dart';
+import 'custom_theme.dart';
 import 'main_page.dart';
 
 class LoginPage extends StatelessWidget {
@@ -65,15 +71,31 @@ class LoginPage extends StatelessWidget {
                 height: 50.0,
                 child: ElevatedButton(
                   onPressed: () async{
+                    EasyLoading.show(status: '로딩중...');
+
                     if((6 > input_user_password.length) || (16 < input_user_password.length)) {
+                      EasyLoading.dismiss();
+
                       showDialog<String>(
                           context: context,
                           builder: (context) => AlertDialog(
-                            content: const Text("비밀번호는 6~16자여야 합니다"),
+                            content: Text(
+                                "비밀번호는 6~16자여야 합니다",
+                              style: TextStyle(
+                                fontSize: CtTheme.CtTextSize.general,
+                                color: Colors.black,
+                              ),
+                            ),
                             actions: <Widget>[
                               TextButton(
                                 onPressed: () => Navigator.pop(context, "확인"),
-                                child: const Text("확인"),
+                                child: Text(
+                                    "확인",
+                                  style: TextStyle(
+                                    fontSize: CtTheme.CtTextSize.general,
+                                    color: Color(CtTheme.CtHexColor.primary),
+                                  ),
+                                ),
                               ),
                             ],
                           )
@@ -93,58 +115,98 @@ class LoginPage extends StatelessWidget {
                         print(e);
 
                         if (e.code == 'user-not-found') {
+                          EasyLoading.dismiss();
+
                           showDialog<String>(
                               context: context,
                               builder: (context) => AlertDialog(
-                                content: const Text("존재하지 않는 이메일입니다"),
+                                content: Text("존재하지 않는 이메일입니다",
+                                  style: TextStyle(
+                                    fontSize: CtTheme.CtTextSize.general,
+                                    color: Colors.black,
+                                  ),),
                                 actions: <Widget>[
                                   TextButton(
                                     onPressed: () => Navigator.pop(context, "확인"),
-                                    child: const Text("확인"),
+                                    child: Text("확인",
+                                      style: TextStyle(
+                                        fontSize: CtTheme.CtTextSize.general,
+                                        color: Color(CtTheme.CtHexColor.primary),
+                                      ),),
                                   ),
                                 ],
                               )
                           );
                         } else if (e.code == 'wrong-password') {
+                          EasyLoading.dismiss();
+
                           showDialog<String>(
                               context: context,
                               builder: (context) => AlertDialog(
-                                content: const Text("비밀번호가 맞지 않습니다"),
+                                content: Text("비밀번호가 맞지 않습니다",
+                                  style: TextStyle(
+                                    fontSize: CtTheme.CtTextSize.general,
+                                    color: Colors.black,
+                                  ),),
                                 actions: <Widget>[
                                   TextButton(
                                     onPressed: () => Navigator.pop(context, "확인"),
-                                    child: const Text("확인"),
+                                    child: Text("확인",
+                                      style: TextStyle(
+                                        fontSize: CtTheme.CtTextSize.general,
+                                        color: Color(CtTheme.CtHexColor.primary),
+                                      ),),
                                   ),
                                 ],
                               )
                           );
                         } else if (e.code == 'invalid-email'){
+                          EasyLoading.dismiss();
+
                           showDialog<String>(
                               context: context,
                               builder: (context) =>
                                   AlertDialog(
-                                    content: const Text("이메일의 형식이 맞지 않습니다"),
+                                    content: Text("이메일의 형식이 맞지 않습니다",
+                                      style: TextStyle(
+                                        fontSize: CtTheme.CtTextSize.general,
+                                        color: Colors.black,
+                                      ),),
                                     actions: <Widget>[
                                       TextButton(
                                         onPressed: () =>
                                             Navigator.pop(context, "확인"),
-                                        child: const Text("확인"),
+                                        child: Text("확인",
+                                          style: TextStyle(
+                                            fontSize: CtTheme.CtTextSize.general,
+                                            color: Color(CtTheme.CtHexColor.primary),
+                                          ),),
                                       ),
                                     ],
                                   )
                           );
                         }
                         else{
+                          EasyLoading.dismiss();
+
                           showDialog<String>(
                               context: context,
                               builder: (context) =>
                                   AlertDialog(
-                                    content: const Text("로그인에 실패하셨습니다"),
+                                    content: Text("로그인에 실패하셨습니다",
+                                      style: TextStyle(
+                                        fontSize: CtTheme.CtTextSize.general,
+                                        color: Colors.black,
+                                      ),),
                                     actions: <Widget>[
                                       TextButton(
                                         onPressed: () =>
                                             Navigator.pop(context, "확인"),
-                                        child: const Text("확인"),
+                                        child: Text("확인",
+                                          style: TextStyle(
+                                            fontSize: CtTheme.CtTextSize.general,
+                                            color: Color(CtTheme.CtHexColor.primary),
+                                          ),),
                                       ),
                                     ],
                                   )
@@ -173,6 +235,8 @@ class LoginPage extends StatelessWidget {
                         tiny_db.setString("user_email", input_user_email);
                         tiny_db.setString("user_church_id", _db_user_church_id);
                         tiny_db.setInt("user_point", _db_user_point);
+
+                        EasyLoading.dismiss();
 
                         Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
                             MainPage()), (Route<dynamic> route) => false);

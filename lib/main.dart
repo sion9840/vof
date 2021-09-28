@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:vof/custom_theme.dart';
@@ -19,6 +20,20 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(MyApp());
+  configLoading();
+}
+
+void configLoading() {
+  EasyLoading.instance
+    ..loadingStyle = EasyLoadingStyle.light
+    ..textStyle = TextStyle(
+      fontSize: CtTheme.CtTextSize.general,
+      color: Colors.black,
+    )
+    ..backgroundColor = Colors.white
+    ..indicatorType = EasyLoadingIndicatorType.fadingCircle
+    ..indicatorColor = Colors.black
+    ..indicatorSize = 50.0;
 }
 
 class MyApp extends StatelessWidget {
@@ -46,6 +61,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: primary_materialcolor,
       ),
       home: ReadyPage(),
+      builder: EasyLoading.init(),
     );
   }
 }

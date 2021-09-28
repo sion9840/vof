@@ -1,9 +1,19 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:vof/custom_theme.dart';
 import 'package:vof/global_variable.dart';
 
+import 'custom_theme.dart';
+import 'custom_theme.dart';
+import 'custom_theme.dart';
+import 'custom_theme.dart';
+import 'custom_theme.dart';
+import 'custom_theme.dart';
+import 'custom_theme.dart';
+import 'custom_theme.dart';
+import 'custom_theme.dart';
 import 'main_page.dart';
 
 class SigninPage extends StatelessWidget {
@@ -115,85 +125,147 @@ class SigninPage extends StatelessWidget {
                 height: 50.0,
                 child: ElevatedButton(
                   onPressed: () async{
+                    EasyLoading.show(status: '로딩중...');
+
                     if((1 > input_user_name.length) || (10 < input_user_name.length)) {
+                      EasyLoading.dismiss();
+
                       showDialog<String>(
                           context: context,
                           builder: (context) => AlertDialog(
-                            content: const Text("이름은 1~10자여야 합니다"),
+                            content: Text("이름은 1~10자여야 합니다",
+                              style: TextStyle(
+                                fontSize: CtTheme.CtTextSize.general,
+                                color: Colors.black,
+                              ),),
                             actions: <Widget>[
                               TextButton(
                                 onPressed: () => Navigator.pop(context, "확인"),
-                                child: const Text("확인"),
+                                child: Text("확인",
+                                  style: TextStyle(
+                                    fontSize: CtTheme.CtTextSize.general,
+                                    color: Color(CtTheme.CtHexColor.primary),
+                                  ),),
                               ),
                             ],
                           )
                       );
                     }
                     else if(input_user_church_id.length != 6){
+                      EasyLoading.dismiss();
+
                       showDialog<String>(
                           context: context,
                           builder: (context) => AlertDialog(
-                            content: const Text("교회 아이디는 6글자 입니다"),
+                            content: Text("교회 아이디는 6글자 입니다",
+                              style: TextStyle(
+                                fontSize: CtTheme.CtTextSize.general,
+                                color: Colors.black,
+                              ),),
                             actions: <Widget>[
                               TextButton(
                                 onPressed: () => Navigator.pop(context, "확인"),
-                                child: const Text("확인"),
+                                child: Text("확인",
+                                  style: TextStyle(
+                                    fontSize: CtTheme.CtTextSize.general,
+                                    color: Color(CtTheme.CtHexColor.primary),
+                                  ),),
                               ),
                             ],
                           )
                       );
                     }
                     else if((6 > input_user_password.length) || (16 < input_user_password.length)) {
+                      EasyLoading.dismiss();
+
                       showDialog<String>(
                           context: context,
                           builder: (context) => AlertDialog(
-                            content: const Text("비밀번호는 6~16자여야 합니다"),
+                            content: Text("비밀번호는 6~16자여야 합니다",
+                              style: TextStyle(
+                                fontSize: CtTheme.CtTextSize.general,
+                                color: Colors.black,
+                              ),),
                             actions: <Widget>[
                               TextButton(
                                 onPressed: () => Navigator.pop(context, "확인"),
-                                child: const Text("확인"),
+                                child: Text("확인",
+                                  style: TextStyle(
+                                    fontSize: CtTheme.CtTextSize.general,
+                                    color: Color(CtTheme.CtHexColor.primary),
+                                  ),),
                               ),
                             ],
                           )
                       );
                     }
                     else if(input_user_password != input_user_passwordcheck){
+                      EasyLoading.dismiss();
+
                       showDialog<String>(
                           context: context,
                           builder: (context) => AlertDialog(
-                            content: const Text("비밀번호가 일치하지 않습니다"),
+                            content: Text("비밀번호가 일치하지 않습니다",
+                              style: TextStyle(
+                                fontSize: CtTheme.CtTextSize.general,
+                                color: Colors.black,
+                              ),),
                             actions: <Widget>[
                               TextButton(
                                 onPressed: () => Navigator.pop(context, "확인"),
-                                child: const Text("확인"),
+                                child: Text("확인",
+                                  style: TextStyle(
+                                    fontSize: CtTheme.CtTextSize.general,
+                                    color: Color(CtTheme.CtHexColor.primary),
+                                  ),),
                               ),
                             ],
                           )
                       );
                     }
                     else if(input_user_email.contains(".com") == false){
+                      EasyLoading.dismiss();
+
                       showDialog<String>(
                           context: context,
                           builder: (context) => AlertDialog(
-                            content: const Text(".com으로 끝나는 이메일만 가능합니다"),
+                            content: Text(".com으로 끝나는 이메일만 가능합니다",
+                              style: TextStyle(
+                                fontSize: CtTheme.CtTextSize.general,
+                                color: Colors.black,
+                              ),),
                             actions: <Widget>[
                               TextButton(
                                 onPressed: () => Navigator.pop(context, "확인"),
-                                child: const Text("확인"),
+                                child: Text("확인",
+                                  style: TextStyle(
+                                    fontSize: CtTheme.CtTextSize.general,
+                                    color: Color(CtTheme.CtHexColor.primary),
+                                  ),),
                               ),
                             ],
                           )
                       );
                     }
                     else if(input_user_church_id != "SdbGa9"){
+                      EasyLoading.dismiss();
+
                       showDialog<String>(
                           context: context,
                           builder: (context) => AlertDialog(
-                            content: const Text("존재하지 않는 교회 아이디 입니다"),
+                            content: Text("존재하지 않는 교회 아이디 입니다",
+                              style: TextStyle(
+                                fontSize: CtTheme.CtTextSize.general,
+                                color: Colors.black,
+                              ),),
                             actions: <Widget>[
                               TextButton(
                                 onPressed: () => Navigator.pop(context, "확인"),
-                                child: const Text("확인"),
+                                child: Text("확인",
+                                  style: TextStyle(
+                                    fontSize: CtTheme.CtTextSize.general,
+                                    color: Color(CtTheme.CtHexColor.primary),
+                                  ),),
                               ),
                             ],
                           )
@@ -213,63 +285,103 @@ class SigninPage extends StatelessWidget {
                         print(e);
 
                         if (e.code == 'weak-password') {
+                          EasyLoading.dismiss();
+
                           showDialog<String>(
                               context: context,
                               builder: (context) =>
                                   AlertDialog(
-                                    content: const Text(
-                                        "보안이 약한 비밀번호입니다\n비밀번호를 바꿔주세요"),
+                                    content: Text(
+                                        "보안이 약한 비밀번호입니다\n비밀번호를 바꿔주세요",
+                                      style: TextStyle(
+                                        fontSize: CtTheme.CtTextSize.general,
+                                        color: Colors.black,
+                                      ),),
                                     actions: <Widget>[
                                       TextButton(
                                         onPressed: () =>
                                             Navigator.pop(context, "확인"),
-                                        child: const Text("확인"),
+                                        child: Text("확인",
+                                          style: TextStyle(
+                                            fontSize: CtTheme.CtTextSize.general,
+                                            color: Color(CtTheme.CtHexColor.primary),
+                                          ),),
                                       ),
                                     ],
                                   )
                           );
                         } else if (e.code == 'email-already-in-use') {
+                          EasyLoading.dismiss();
+
                           showDialog<String>(
                               context: context,
                               builder: (context) =>
                                   AlertDialog(
-                                    content: const Text("이미 존재하는 이메일입니다"),
+                                    content: Text("이미 존재하는 이메일입니다",
+                                      style: TextStyle(
+                                        fontSize: CtTheme.CtTextSize.general,
+                                        color: Colors.black,
+                                      ),),
                                     actions: <Widget>[
                                       TextButton(
                                         onPressed: () =>
                                             Navigator.pop(context, "확인"),
-                                        child: const Text("확인"),
+                                        child: Text("확인",
+                                          style: TextStyle(
+                                            fontSize: CtTheme.CtTextSize.general,
+                                            color: Color(CtTheme.CtHexColor.primary),
+                                          ),),
                                       ),
                                     ],
                                   )
                           );
                         } else if (e.code == 'invalid-email'){
+                          EasyLoading.dismiss();
+
                           showDialog<String>(
                               context: context,
                               builder: (context) =>
                                   AlertDialog(
-                                    content: const Text("이메일의 형식이 맞지 않습니다"),
+                                    content: Text("이메일의 형식이 맞지 않습니다",
+                                      style: TextStyle(
+                                        fontSize: CtTheme.CtTextSize.general,
+                                        color: Colors.black,
+                                      ),),
                                     actions: <Widget>[
                                       TextButton(
                                         onPressed: () =>
                                             Navigator.pop(context, "확인"),
-                                        child: const Text("확인"),
+                                        child: Text("확인",
+                                          style: TextStyle(
+                                            fontSize: CtTheme.CtTextSize.general,
+                                            color: Color(CtTheme.CtHexColor.primary),
+                                          ),),
                                       ),
                                     ],
                                   )
                           );
                         }
                         else{
+                          EasyLoading.dismiss();
+
                           showDialog<String>(
                               context: context,
                               builder: (context) =>
                                   AlertDialog(
-                                    content: const Text("회원가입에 실패하셨습니다"),
+                                    content: Text("회원가입에 실패하셨습니다",
+                                      style: TextStyle(
+                                        fontSize: CtTheme.CtTextSize.general,
+                                        color: Colors.black,
+                                      ),),
                                     actions: <Widget>[
                                       TextButton(
                                         onPressed: () =>
                                             Navigator.pop(context, "확인"),
-                                        child: const Text("확인"),
+                                        child: Text("확인",
+                                          style: TextStyle(
+                                            fontSize: CtTheme.CtTextSize.general,
+                                            color: Color(CtTheme.CtHexColor.primary),
+                                          ),),
                                       ),
                                     ],
                                   )
@@ -325,6 +437,8 @@ class SigninPage extends StatelessWidget {
                               _db_user_type_tag : _members
                             }
                         );
+
+                        EasyLoading.dismiss();
 
                         Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
                             MainPage()), (Route<dynamic> route) => false);
