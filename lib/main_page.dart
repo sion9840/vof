@@ -659,7 +659,7 @@ class _MainPageState extends State<MainPage> {
                 SizedBox(height: CtTheme.CtPaddingSize.general,),
                 Container(
                   width: double.infinity,
-                  height: 690.0,
+                  height: 700.0,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(CtTheme.CtRadiusSize.general*2),
@@ -701,7 +701,7 @@ class _MainPageState extends State<MainPage> {
                               if(snapshot.hasData){
                                 return SizedBox(
                                   width: double.infinity,
-                                  height: 610.0,
+                                  height: 620.0,
                                   child: ListView.builder(
                                     physics: NeverScrollableScrollPhysics(),
                                     itemCount: snapshot.data!.size,

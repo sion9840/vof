@@ -270,7 +270,7 @@ class UserPage extends StatelessWidget {
           SizedBox(height: 5.0,),
           ListTile(
             title: Text(
-              "버전 1.0.1",
+              "v1.0.1",
               style: TextStyle(
                 color: Colors.black,
                 fontSize: CtTheme.CtTextSize.general,

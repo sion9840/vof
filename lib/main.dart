@@ -30,6 +30,7 @@ void configLoading() {
       fontSize: CtTheme.CtTextSize.general,
       color: Colors.black,
     )
+    ..maskType = EasyLoadingMaskType.black
     ..backgroundColor = Colors.white
     ..indicatorType = EasyLoadingIndicatorType.fadingCircle
     ..indicatorColor = Colors.black

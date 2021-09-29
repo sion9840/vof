@@ -21,8 +21,9 @@ class _GuidePageState extends State<GuidePage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             Spacer(),
+            Image.asset("img/boat.png"),
             Text(
-              "믿음의 항해를 통해 포인트를 적립하세요",
+              "믿음의 항해를 통해\n포인트를 적립하세요",
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: Colors.black,
