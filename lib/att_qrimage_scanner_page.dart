@@ -26,77 +26,9 @@ class _AttQrimageScannerPageState extends State<AttQrimageScannerPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text("${worship_weekday_names[today_datetime.weekday-1]} 참석"),
-        backgroundColor: Colors.transparent,
-        elevation: 0.0,
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.flip_camera_android),
-            onPressed: (){
-              this.controller!.flipCamera();
-            },
-          ),
-          IconButton(
-            icon: Icon(Icons.input),
-            onPressed: (){
-              showDialog(
-                  context: context,
-                  builder: (context){
-                    return AlertDialog(
-                      title: Text(
-                        "수동 입력 참석",
-                        style: TextStyle(
-                          fontSize: CtTheme.CtTextSize.general,
-                          color: Colors.black,
-                        ),
-                      ),
-                      content: TextField(
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(),
-                          labelText: "구성원 이메일",
-                        ),
-                        onChanged: (value) {
-                          input_email = value;
-                        },
-                      ),
-                      actions: <Widget>[
-                        TextButton(
-                          onPressed: () {
-                            input_email = "";
-                            Navigator.pop(context, "취소");
-                          },
-                          child: Text("취소",
-                            style: TextStyle(
-                              fontSize: CtTheme.CtTextSize.general,
-                              color: Color(CtTheme.CtHexColor.primary),
-                            ),),
-                        ),
-                        TextButton(
-                          onPressed: () async{
-                            await cal_check(input_email);
-                          },
-                          child: Text("확인",
-                            style: TextStyle(
-                              fontSize: CtTheme.CtTextSize.general,
-                              color: Color(CtTheme.CtHexColor.primary),
-                            ),),
-                        ),
-                      ],
-                    );
-                  }
-              );
-            },
-          ),
-        ],
-      ),
-      body: isWeb(),
-    );
+    return isWeb();
   }
-  
+
   Widget isWeb(){
     return Scaffold(
       extendBodyBehindAppBar: true,
