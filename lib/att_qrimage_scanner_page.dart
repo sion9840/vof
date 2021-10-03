@@ -93,28 +93,88 @@ class _AttQrimageScannerPageState extends State<AttQrimageScannerPage> {
           ),
         ],
       ),
+      body: isWeb(),
+    );
+  }
+  
+  Widget isWeb(){
+    return Scaffold(
+      extendBodyBehindAppBar: true,
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        centerTitle: true,
+        title: Text("${worship_weekday_names[today_datetime.weekday-1]} 참석"),
+        backgroundColor: Colors.transparent,
+        elevation: 0.0,
+        iconTheme: IconThemeData(color: Colors.black),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.input),
+            onPressed: (){
+              showDialog(
+                  context: context,
+                  builder: (context){
+                    return AlertDialog(
+                      title: Text(
+                        "수동 입력 참석",
+                        style: TextStyle(
+                          fontSize: CtTheme.CtTextSize.general,
+                          color: Colors.black,
+                        ),
+                      ),
+                      content: TextField(
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: "구성원 이메일",
+                        ),
+                        onChanged: (value) {
+                          input_email = value;
+                        },
+                      ),
+                      actions: <Widget>[
+                        TextButton(
+                          onPressed: () {
+                            input_email = "";
+                            Navigator.pop(context, "취소");
+                          },
+                          child: Text("취소",
+                            style: TextStyle(
+                              fontSize: CtTheme.CtTextSize.general,
+                              color: Color(CtTheme.CtHexColor.primary),
+                            ),),
+                        ),
+                        TextButton(
+                          onPressed: () async{
+                            await cal_check(input_email);
+                          },
+                          child: Text("확인",
+                            style: TextStyle(
+                              fontSize: CtTheme.CtTextSize.general,
+                              color: Color(CtTheme.CtHexColor.primary),
+                            ),),
+                        ),
+                      ],
+                    );
+                  }
+              );
+            },
+          ),
+        ],
+      ),
       body: Column(
         children: <Widget>[
           Expanded(
-            flex: 1,
-            child: Builder(
-              builder: (context) {
-                var scanArea = (MediaQuery.of(context).size.width < 400 ||
-                    MediaQuery.of(context).size.height < 400)
-                    ? 150.0
-                    : 300.0;
-
-                return QRView(
-                  key: qrKey,
-                  onQRViewCreated: onQRViewCreated,
-                  overlay: QrScannerOverlayShape(
-                      borderColor: Color(CtTheme.CtHexColor.primary),
-                      borderRadius: 10,
-                      borderLength: 30,
-                      borderWidth: 10,
-                      cutOutSize: scanArea),
-                );
-              }
+            child: Container(
+              child: Center(
+                child: Text(
+                  "VOF 포인트의 웹 버전은 QR코드 스캐너가 지원되지 않습니다\n안드로이드 앱 혹은 수동 입력 참석 기능을 이용해주세요",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: CtTheme.CtTextSize.general,
+                    color: Colors.black
+                  ),
+                ),
+              ),
             ),
           ),
           Container(
@@ -122,7 +182,118 @@ class _AttQrimageScannerPageState extends State<AttQrimageScannerPage> {
             height: 200,
             child: Center(
               child: Text(
-                  notice,
+                notice,
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: CtTheme.CtTextSize.general,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget isNotWeb(){
+    return Scaffold(
+      extendBodyBehindAppBar: true,
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        centerTitle: true,
+        title: Text("${worship_weekday_names[today_datetime.weekday-1]} 참석"),
+        backgroundColor: Colors.transparent,
+        elevation: 0.0,
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.flip_camera_android),
+            onPressed: (){
+              this.controller!.flipCamera();
+            },
+          ),
+          IconButton(
+            icon: Icon(Icons.input),
+            onPressed: (){
+              showDialog(
+                  context: context,
+                  builder: (context){
+                    return AlertDialog(
+                      title: Text(
+                        "수동 입력 참석",
+                        style: TextStyle(
+                          fontSize: CtTheme.CtTextSize.general,
+                          color: Colors.black,
+                        ),
+                      ),
+                      content: TextField(
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: "구성원 이메일",
+                        ),
+                        onChanged: (value) {
+                          input_email = value;
+                        },
+                      ),
+                      actions: <Widget>[
+                        TextButton(
+                          onPressed: () {
+                            input_email = "";
+                            Navigator.pop(context, "취소");
+                          },
+                          child: Text("취소",
+                            style: TextStyle(
+                              fontSize: CtTheme.CtTextSize.general,
+                              color: Color(CtTheme.CtHexColor.primary),
+                            ),),
+                        ),
+                        TextButton(
+                          onPressed: () async{
+                            await cal_check(input_email);
+                          },
+                          child: Text("확인",
+                            style: TextStyle(
+                              fontSize: CtTheme.CtTextSize.general,
+                              color: Color(CtTheme.CtHexColor.primary),
+                            ),),
+                        ),
+                      ],
+                    );
+                  }
+              );
+            },
+          ),
+        ],
+      ),
+      body: Column(
+        children: <Widget>[
+          Expanded(
+            flex: 1,
+            child: Builder(
+                builder: (context) {
+                  var scanArea = (MediaQuery.of(context).size.width < 400 ||
+                      MediaQuery.of(context).size.height < 400)
+                      ? 150.0
+                      : 300.0;
+
+                  return QRView(
+                    key: qrKey,
+                    onQRViewCreated: onQRViewCreated,
+                    overlay: QrScannerOverlayShape(
+                        borderColor: Color(CtTheme.CtHexColor.primary),
+                        borderRadius: 10,
+                        borderLength: 30,
+                        borderWidth: 10,
+                        cutOutSize: scanArea),
+                  );
+                }
+            ),
+          ),
+          Container(
+            width: double.infinity,
+            height: 200,
+            child: Center(
+              child: Text(
+                notice,
                 style: TextStyle(
                   color: Colors.black,
                   fontSize: CtTheme.CtTextSize.general,
