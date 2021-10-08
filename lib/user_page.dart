@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:numberpicker/numberpicker.dart';
 import 'package:vof/custom_theme.dart';
 import 'package:vof/global_variable.dart';
 
@@ -19,13 +18,7 @@ class _UserPageState extends State<UserPage> {
 
   Future<bool>? is_get = null;
 
-  int monday_point = 0;
-  int tuesday_point = 0;
-  int wenday_point = 0;
-  int thursday_point = 0;
-  int friday_point = 0;
-  int saturday_point = 0;
-  int sunday_point = 0;
+  Map week_point = {"월" : 0, "화" : 0, "수" : 0, "목" : 0, "금" : 0, "토" : 0, "일" : 0};
 
   @override
   void initState() {
@@ -40,13 +33,13 @@ class _UserPageState extends State<UserPage> {
         .then(
             (value){
           var val = value["worship_completion_points"];
-          monday_point = val["월"];
-          tuesday_point = val["화"];
-          wenday_point = val["수"];
-          thursday_point = val["목"];
-          friday_point = val["금"];
-          saturday_point = val["토"];
-          sunday_point = val["일"];
+          week_point["월"] = val["월"];
+          week_point["화"] = val["화"];
+          week_point["수"] = val["수"];
+          week_point["목"] = val["목"];
+          week_point["금"] = val["금"];
+          week_point["토"] = val["토"];
+          week_point["일"] = val["일"];
         }
     );
 
@@ -152,7 +145,6 @@ class _UserPageState extends State<UserPage> {
               ),
               tileColor: Color(0xfff8f9fa),
             ),
-            SizedBox(height: 5.0,),
             ListTile(
               title: Text(
                 "교회",
@@ -170,233 +162,13 @@ class _UserPageState extends State<UserPage> {
                     tileColor: Color(0xfff8f9fa),
                     title: Wrap(
                       children: <Widget>[
-                        FlatButton(
-                          color: Color(0xfff8f9fa),
-                          onPressed: () async{
-                            await showDialog<int>(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return new NumberPicker(
-                                  minValue: 0,
-                                  maxValue: 100,
-                                  step: 10,
-                                  value: monday_point,
-                                  onChanged: (value) {
-                                    monday_point = value;
-                                  },
-                                );
-                              },
-                            ).then(
-                                (value){
-
-                                }
-                            );
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.all(5.0),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: <Widget>[
-                                Text(
-                                  "월",
-                                  style: TextStyle(
-                                      fontSize: CtTheme.CtTextSize.general,
-                                      color: Colors.black
-                                  ),
-                                ),
-                                SizedBox(height: 5.0,),
-                                Text(
-                                  "${monday_point}",
-                                  style: TextStyle(
-                                      fontSize: CtTheme.CtTextSize.general,
-                                      color: Colors.black
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        FlatButton(
-                          color: Color(0xfff8f9fa),
-                          onPressed: (){
-
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.all(5.0),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: <Widget>[
-                                Text(
-                                  "화",
-                                  style: TextStyle(
-                                      fontSize: CtTheme.CtTextSize.general,
-                                      color: Colors.black
-                                  ),
-                                ),
-                                SizedBox(height: 5.0,),
-                                Text(
-                                  "${tuesday_point}",
-                                  style: TextStyle(
-                                      fontSize: CtTheme.CtTextSize.general,
-                                      color: Colors.black
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        FlatButton(
-                          color: Color(0xfff8f9fa),
-                          onPressed: (){
-
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.all(5.0),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: <Widget>[
-                                Text(
-                                  "수",
-                                  style: TextStyle(
-                                      fontSize: CtTheme.CtTextSize.general,
-                                      color: Colors.black
-                                  ),
-                                ),
-                                SizedBox(height: 5.0,),
-                                Text(
-                                  "${wenday_point}",
-                                  style: TextStyle(
-                                      fontSize: CtTheme.CtTextSize.general,
-                                      color: Colors.black
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        FlatButton(
-                          color: Color(0xfff8f9fa),
-                          onPressed: (){
-
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.all(5.0),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: <Widget>[
-                                Text(
-                                  "목",
-                                  style: TextStyle(
-                                      fontSize: CtTheme.CtTextSize.general,
-                                      color: Colors.black
-                                  ),
-                                ),
-                                SizedBox(height: 5.0,),
-                                Text(
-                                  "${thursday_point}",
-                                  style: TextStyle(
-                                      fontSize: CtTheme.CtTextSize.general,
-                                      color: Colors.black
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        FlatButton(
-                          color: Color(0xfff8f9fa),
-                          onPressed: (){
-
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.all(5.0),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: <Widget>[
-                                Text(
-                                  "금",
-                                  style: TextStyle(
-                                      fontSize: CtTheme.CtTextSize.general,
-                                      color: Colors.black
-                                  ),
-                                ),
-                                SizedBox(height: 5.0,),
-                                Text(
-                                  "${friday_point}",
-                                  style: TextStyle(
-                                      fontSize: CtTheme.CtTextSize.general,
-                                      color: Colors.black
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        FlatButton(
-                          color: Color(0xfff8f9fa),
-                          onPressed: (){
-
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.all(5.0),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: <Widget>[
-                                Text(
-                                  "토",
-                                  style: TextStyle(
-                                      fontSize: CtTheme.CtTextSize.general,
-                                      color: Colors.black
-                                  ),
-                                ),
-                                SizedBox(height: 5.0,),
-                                Text(
-                                  "${saturday_point}",
-                                  style: TextStyle(
-                                      fontSize: CtTheme.CtTextSize.general,
-                                      color: Colors.black
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        FlatButton(
-                          color: Color(0xfff8f9fa),
-                          onPressed: (){
-
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.all(5.0),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: <Widget>[
-                                Text(
-                                  "일",
-                                  style: TextStyle(
-                                      fontSize: CtTheme.CtTextSize.general,
-                                      color: Colors.black
-                                  ),
-                                ),
-                                SizedBox(height: 5.0,),
-                                Text(
-                                  "${sunday_point}",
-                                  style: TextStyle(
-                                      fontSize: CtTheme.CtTextSize.general,
-                                      color: Colors.black
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
+                        churchPointButton("월"),
+                        churchPointButton("화"),
+                        churchPointButton("수"),
+                        churchPointButton("목"),
+                        churchPointButton("금"),
+                        churchPointButton("토"),
+                        churchPointButton("일"),
                       ],
                     ),
                   );
@@ -419,7 +191,6 @@ class _UserPageState extends State<UserPage> {
                 }
               },
             ),
-            SizedBox(height: 5.0,),
             ListTile(
               title: Text(
                 "기타",
@@ -602,6 +373,136 @@ class _UserPageState extends State<UserPage> {
               ),
               tileColor: Color(0xfff8f9fa),
               onTap: (){},
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget churchPointButton(String day_of_week){
+    return FlatButton(
+      color: Color(0xfff8f9fa),
+      onPressed: () async{
+        await showDialog(
+          context: context,
+          builder: (BuildContext context) =>
+              StatefulBuilder(
+                builder: (_, setState){
+                  return AlertDialog(
+                    title: Text(
+                      "${day_of_week}요일 포인트",
+                      style: TextStyle(
+                        fontSize: CtTheme.CtTextSize.general,
+                        color: Colors.black,
+                      ),
+                    ),
+                    content: Text(
+                      "${week_point[day_of_week]}",
+                      style: TextStyle(
+                        fontSize: CtTheme.CtTextSize.general,
+                        color: Colors.black,
+                      ),
+                    ),
+                    actions: <Widget>[
+                      IconButton(
+                        icon: Icon(Icons.exposure_minus_1_rounded),
+                        onPressed: () async{
+                          if(week_point[day_of_week] == 0){
+                            return;
+                          }
+
+                          week_point[day_of_week]--;
+
+                          Map<String, dynamic> _worship_completion_points = {};
+
+                          await firestoreInstance
+                              .collection("churches")
+                              .doc(tiny_db.getString("user_church_id"))
+                              .get()
+                              .then(
+                                  (value){
+                                _worship_completion_points = value["worship_completion_points"];
+                              }
+                          );
+
+                          _worship_completion_points[day_of_week] = week_point[day_of_week];
+
+                          await firestoreInstance
+                              .collection("churches")
+                              .doc(tiny_db.getString("user_church_id"))
+                              .update(
+                              {
+                                "worship_completion_points" : _worship_completion_points
+                              }
+                          );
+
+                          setState(() {});
+                        },
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.plus_one_rounded),
+                        onPressed: () async{
+                          if(week_point[day_of_week] == 100){
+                            return;
+                          }
+
+                          week_point[day_of_week]++;
+
+                          Map<String, dynamic> _worship_completion_points = {};
+
+                          await firestoreInstance
+                              .collection("churches")
+                              .doc(tiny_db.getString("user_church_id"))
+                              .get()
+                              .then(
+                                  (value){
+                                _worship_completion_points = value["worship_completion_points"];
+                              }
+                          );
+
+                          _worship_completion_points[day_of_week] = week_point[day_of_week];
+
+                          await firestoreInstance
+                              .collection("churches")
+                              .doc(tiny_db.getString("user_church_id"))
+                              .update(
+                              {
+                                "worship_completion_points" : _worship_completion_points
+                              }
+                          );
+
+                          setState(() {});
+                        },
+                      )
+                    ],
+                  );
+                },
+              ),
+        );
+
+        setState(() {});
+      },
+      child: Padding(
+        padding: const EdgeInsets.all(5.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              "${day_of_week}",
+              style: TextStyle(
+                  fontSize: CtTheme.CtTextSize.general,
+                  color: Colors.black
+              ),
+            ),
+            SizedBox(height: 5.0,),
+            Text(
+              "${week_point[day_of_week]}",
+              style: TextStyle(
+                  fontSize: CtTheme.CtTextSize.general,
+                  color: Colors.black
+              ),
             ),
           ],
         ),
