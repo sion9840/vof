@@ -6,10 +6,6 @@ import 'package:vof/custom_theme.dart';
 import 'package:vof/global_variable.dart';
 
 import 'custom_theme.dart';
-import 'custom_theme.dart';
-import 'custom_theme.dart';
-import 'custom_theme.dart';
-import 'custom_theme.dart';
 import 'main_page.dart';
 
 class LoginPage extends StatelessWidget {
@@ -49,7 +45,7 @@ class LoginPage extends StatelessWidget {
                   labelText: "이메일",
                 ),
                 onChanged: (value) {
-                  input_user_email = value;
+                  input_user_email = value.trim();
                 },
               ),
               SizedBox(height: 10.0,),

@@ -6,14 +6,6 @@ import 'package:vof/custom_theme.dart';
 import 'package:vof/global_variable.dart';
 
 import 'custom_theme.dart';
-import 'custom_theme.dart';
-import 'custom_theme.dart';
-import 'custom_theme.dart';
-import 'custom_theme.dart';
-import 'custom_theme.dart';
-import 'custom_theme.dart';
-import 'custom_theme.dart';
-import 'custom_theme.dart';
 import 'main_page.dart';
 
 class SigninPage extends StatelessWidget {
@@ -90,7 +82,7 @@ class SigninPage extends StatelessWidget {
                   labelText: "이메일(.com으로 끝나는 이메일만 가능합니다)",
                 ),
                 onChanged: (value) {
-                  input_user_email = value;
+                  input_user_email = value.trim();
                 },
               ),
               SizedBox(height: 10.0,),
