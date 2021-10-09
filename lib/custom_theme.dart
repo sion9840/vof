@@ -43,6 +43,13 @@ class nCtIcon {
       size: size,
     );
   }
+  Widget manager(Color color, double size){
+    return Icon(
+      Icons.manage_accounts_rounded,
+      color: color,
+      size: size,
+    );
+  }
   Widget point(Color color, double size){
     return Icon(
       Icons.toll_rounded,

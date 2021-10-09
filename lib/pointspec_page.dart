@@ -49,6 +49,9 @@ class _PointspecPageState extends State<PointspecPage> {
             if(user_type == "t"){
               _display_type = CtTheme.CtIcon.teacher(Colors.white, 24.0);
             }
+            else if(user_type == "m"){
+              _display_type = CtTheme.CtIcon.manager(Colors.white, 24.0);
+            }
 
             return Row(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -68,34 +71,9 @@ class _PointspecPageState extends State<PointspecPage> {
         actions: <Widget>[
           Builder(
             builder: (context){
-              if((tiny_db.getString("user_type") == "t") && (user_email != tiny_db.getString("user_email"))){
+              if((tiny_db.getString("user_type") != "s") && (user_email != tiny_db.getString("user_email"))){
                 return Row(
                   children: <Widget>[
-                    IconButton(
-                      onPressed: () async{
-                        int _db_user_point = 0;
-                        await firestoreInstance.collection("users")
-                            .doc(user_email)
-                            .get().then(
-                            (value){
-                              _db_user_point = value["point"];
-                            }
-                        );
-
-                        await firestoreInstance.collection("users")
-                            .doc(user_email)
-                            .update(
-                          {
-                            "point" : _db_user_point + 1,
-                          }
-                        );
-
-                        user_point = _db_user_point + 1;
-
-                        setState(() {});
-                      },
-                      icon: Icon(Icons.arrow_upward),
-                    ),
                     IconButton(
                       onPressed: () async{
                         int _db_user_point = 0;
@@ -119,7 +97,32 @@ class _PointspecPageState extends State<PointspecPage> {
 
                         setState(() {});
                       },
-                      icon: Icon(Icons.arrow_downward),
+                      icon: Icon(Icons.remove_rounded),
+                    ),
+                    IconButton(
+                      onPressed: () async{
+                        int _db_user_point = 0;
+                        await firestoreInstance.collection("users")
+                            .doc(user_email)
+                            .get().then(
+                                (value){
+                              _db_user_point = value["point"];
+                            }
+                        );
+
+                        await firestoreInstance.collection("users")
+                            .doc(user_email)
+                            .update(
+                            {
+                              "point" : _db_user_point + 1,
+                            }
+                        );
+
+                        user_point = _db_user_point + 1;
+
+                        setState(() {});
+                      },
+                      icon: Icon(Icons.add_rounded),
                     ),
                   ],
                 );
@@ -177,6 +180,7 @@ class _PointspecPageState extends State<PointspecPage> {
                         Map<String, dynamic> _temp_qt_completion_date = _temp_qt_completion_dates[i];
                         events[new DateTime(_temp_qt_completion_date["year"], _temp_qt_completion_date["month"], _temp_qt_completion_date["day"])] = [
                           CleanCalendarEvent('QT 완료',
+                              isDone: true,
                               startTime: new DateTime(
                                 _temp_qt_completion_date["year"],
                                 _temp_qt_completion_date["month"],
@@ -219,6 +223,7 @@ class _PointspecPageState extends State<PointspecPage> {
 
                           _temp.add(
                             CleanCalendarEvent('${_display_worship_name} 출석',
+                                isDone: true,
                                 startTime: new DateTime(
                                     _temp_worship_completion_date["year"],
                                     _temp_worship_completion_date["month"],
@@ -242,6 +247,7 @@ class _PointspecPageState extends State<PointspecPage> {
                         else{
                           events[new DateTime(_temp_worship_completion_date["year"], _temp_worship_completion_date["month"], _temp_worship_completion_date["day"])] = [
                             CleanCalendarEvent('${_display_worship_name} 출석',
+                                isDone: true,
                                 startTime: new DateTime(
                                     _temp_worship_completion_date["year"],
                                     _temp_worship_completion_date["month"],
@@ -270,6 +276,7 @@ class _PointspecPageState extends State<PointspecPage> {
 
                           _temp.add(
                               CleanCalendarEvent('설교메모 완료',
+                                  isDone: true,
                                   startTime: new DateTime(
                                       _temp_worship_write_completion_date["year"],
                                       _temp_worship_write_completion_date["month"],
@@ -293,6 +300,7 @@ class _PointspecPageState extends State<PointspecPage> {
                         else{
                           events[new DateTime(_temp_worship_write_completion_date["year"], _temp_worship_write_completion_date["month"], _temp_worship_write_completion_date["day"])] = [
                             CleanCalendarEvent('설교메모 완료',
+                                isDone: true,
                                 startTime: new DateTime(
                                     _temp_worship_write_completion_date["year"],
                                     _temp_worship_write_completion_date["month"],

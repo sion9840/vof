@@ -131,5 +131,15 @@ class ReadyPage extends StatelessWidget {
               tiny_db.setInt("user_point", value["point"]);
             }
     );
+
+    await firestoreInstance
+      .collection("users")
+      .doc(tiny_db.getString("user_email"))
+      .get()
+      .then(
+        (value){
+          tiny_db.setString("user_type", value["type"]);
+        }
+    );
   }
 }

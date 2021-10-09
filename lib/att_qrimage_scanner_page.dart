@@ -60,7 +60,7 @@ class _AttQrimageScannerPageState extends State<AttQrimageScannerPage> {
                           labelText: "구성원 이메일",
                         ),
                         onChanged: (value) {
-                          input_email = value;
+                          input_email = value.trim();
                         },
                       ),
                       actions: <Widget>[
@@ -335,7 +335,19 @@ class _AttQrimageScannerPageState extends State<AttQrimageScannerPage> {
               0
           );
 
-          if(_today_datetime.compareTo(_thatday_datetime) < _today_datetime.weekday){
+          bool _is_multi_worship_completion_point = false;
+
+          await firestoreInstance
+              .collection("churches")
+              .doc(tiny_db.getString("user_church_id"))
+              .get()
+              .then(
+                  (value){
+                _is_multi_worship_completion_point = value["is_multi_worship_completion_point"];
+              }
+          );
+
+          if((_today_datetime.compareTo(_thatday_datetime) < _today_datetime.weekday) && (_is_multi_worship_completion_point == false)){
             notice = "${_db_user_name}님이 ${worship_weekday_names[today_datetime.weekday-1]}에 출석하셨습니다\n(이번주에 이미 기도회를 참석하셨기에 포인트가 지급되어지지 않습니다)";
             setState(() {});
           }

@@ -75,6 +75,9 @@ class _MembersPageState extends State<MembersPage> {
                                 if(_user["type"] == "t"){
                                   _display_type = CtTheme.CtIcon.teacher(Colors.black, 24.0);
                                 }
+                                else if(_user["type"] == "m"){
+                                  _display_type = CtTheme.CtIcon.manager(Colors.black, 24.0);
+                                }
 
                                 return _display_type;
                               },

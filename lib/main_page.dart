@@ -49,6 +49,9 @@ class _MainPageState extends State<MainPage> {
                   if(tiny_db.getString("user_type") == "t"){
                     _display_type = CtTheme.CtIcon.teacher(Colors.black, 24.0);
                   }
+                  else if(tiny_db.getString("user_type") == "m"){
+                    _display_type = CtTheme.CtIcon.manager(Colors.black, 24.0);
+                  }
 
                   return IconButton(
                     onPressed: (){
@@ -70,30 +73,34 @@ class _MainPageState extends State<MainPage> {
             actions: <Widget>[
               Builder(
                 builder: (context){
-                  if(tiny_db.getString("user_type") == "t"){
-                    return IconButton(
-                      onPressed: (){
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => AttQrimageScannerPage()),
-                        );
-                      },
-                      icon: Icon(Icons.qr_code_scanner_rounded),
+                  if(tiny_db.getString("user_type") != "s"){
+                    return Row(
+                      children: [
+                        IconButton(
+                          onPressed: (){
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => AttQrimageScannerPage()),
+                            );
+                          },
+                          icon: Icon(Icons.qr_code_scanner_rounded),
+                        ),
+                        IconButton(
+                          onPressed: (){
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => MembersPage()),
+                            );
+                          },
+                          icon: Icon(Icons.group_rounded),
+                        ),
+                      ],
                     );
                   }
                   else{
                     return SizedBox();
                   }
                 }
-              ),
-              IconButton(
-                onPressed: (){
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => MembersPage()),
-                  );
-                },
-                icon: Icon(Icons.group_rounded),
               ),
             ],
           ),
@@ -202,147 +209,178 @@ class _MainPageState extends State<MainPage> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: <Widget>[
-                                  Expanded(
-                                    child: TextButton(
-                                        onPressed: () async{
-                                          EasyLoading.show(status: '로딩중...');
+                                  FutureBuilder<List>(
+                                    future: firestoreInstance
+                                      .collection("users")
+                                      .doc(tiny_db.getString("user_email"))
+                                      .get()
+                                      .then((value) => value["qt_completion_dates"]),
+                                    builder: (_, snapshot){
+                                      if(snapshot.hasData){
+                                        var _near_day = snapshot.data![-1];
+                                        if(){
 
-                                          if(is_button1_clicked == false){
-                                            is_button1_clicked = true;
-                                          }
-                                          else{
-                                            return;
-                                          }
-
-                                          List _db_qt_completion_dates = [];
-                                          DateTime _today_datetime = new DateTime.now();
-                                          Map<String, int> _today_datemap = {"year" : _today_datetime.year, "month" : _today_datetime.month, "day" : _today_datetime.day, "hour" : _today_datetime.hour, "minute" : _today_datetime.minute};
-
-                                          await firestoreInstance
-                                              .collection("users")
-                                              .doc(tiny_db.getString("user_email"))
-                                              .get().then(
-                                                  (value){
-                                                _db_qt_completion_dates = value["qt_completion_dates"].cast<Map>();
-                                              }
-                                          );
-
-                                          bool _is_contain = false;
-                                          for(int i = 0; i<_db_qt_completion_dates.length; i++){
-                                            Map<String, dynamic> _db_qt_completion_date = _db_qt_completion_dates[i];
-                                            if((_db_qt_completion_date["day"] == _today_datemap["day"]) && (_db_qt_completion_date["month"] == _today_datemap["month"]) && (_db_qt_completion_date["year"] == _today_datemap["year"])){
-                                              _is_contain = true;
-                                              break;
-                                            }
-                                          }
-
-                                          if(_is_contain){
-                                            EasyLoading.dismiss();
-                                            showDialog<String>(
-                                                context: context,
-                                                builder: (context) =>
-                                                    AlertDialog(
-                                                      content: Text("오늘 이미 QT를 하셨습니다",
-                                                        style: TextStyle(
-                                                          fontSize: CtTheme.CtTextSize.general,
-                                                          color: Colors.black,
-                                                        ),),
-                                                      actions: <Widget>[
-                                                        TextButton(
-                                                          onPressed: () =>
-                                                              Navigator.pop(context, "확인"),
-                                                          child: Text("확인",
-                                                            style: TextStyle(
-                                                              fontSize: CtTheme.CtTextSize.general,
-                                                              color: Color(CtTheme.CtHexColor.primary),
-                                                            ),),
-                                                        ),
-                                                      ],
-                                                    )
-                                            );
-                                          }
-                                          else{
-                                            int _plus_point = 0;
-                                            int _db_user_point = 0;
-
-                                            await firestoreInstance
-                                                .collection("churches")
-                                                .doc(tiny_db.getString("user_church_id"))
-                                                .get().then(
-                                                    (value){
-                                                  _plus_point = value["qt_completion_point"];
-                                                }
-                                            );
-
-                                            await firestoreInstance
-                                                .collection("users")
-                                                .doc(tiny_db.getString("user_email"))
-                                                .get().then(
-                                                    (value){
-                                                  _db_user_point = value["point"];
-                                                }
-                                            );
-
-                                            await firestoreInstance
-                                                .collection("users")
-                                                .doc(tiny_db.getString("user_email"))
-                                                .update(
-                                                {
-                                                  "point" : _db_user_point + _plus_point,
-                                                }
-                                            );
-
-                                            tiny_db.setInt("user_point", _db_user_point + _plus_point);
-
-                                            _db_qt_completion_dates.add(_today_datemap);
-
-                                            await firestoreInstance
-                                                .collection("users")
-                                                .doc(tiny_db.getString("user_email"))
-                                                .update(
-                                                {
-                                                  "qt_completion_dates" : _db_qt_completion_dates,
-                                                }
-                                            );
-
-                                            EasyLoading.dismiss();
-
-                                            showDialog<String>(
-                                                context: context,
-                                                builder: (context) =>
-                                                    AlertDialog(
-                                                      content: Text("앗싸! ${_plus_point} 포인트가 적립되었습니다",
-                                                        style: TextStyle(
-                                                          fontSize: CtTheme.CtTextSize.general,
-                                                          color: Colors.black,
-                                                        ),),
-                                                      actions: <Widget>[
-                                                        TextButton(
-                                                          onPressed: () =>
-                                                              Navigator.pop(context, "확인"),
-                                                          child: Text("확인",
-                                                            style: TextStyle(
-                                                              fontSize: CtTheme.CtTextSize.general,
-                                                              color: Color(CtTheme.CtHexColor.primary),
-                                                            ),),
-                                                        ),
-                                                      ],
-                                                    )
-                                            );
-
-                                            setState(() {});
-                                          }
-
-                                          is_button1_clicked = false;
-                                        },
-                                        child: Text(
-                                          "QT\n완료",
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: CtTheme.CtTextSize.general,
+                                        }
+                                      }
+                                      else if(snapshot.hasError){
+                                        return Center(
+                                          child: Text(
+                                            "오류",
+                                            style: TextStyle(
+                                              fontSize: CtTheme.CtTextSize.general,
+                                              color: Colors.black,
+                                            ),
                                           ),
-                                        )
+                                        );
+                                      }
+                                      else{
+                                        return Center(
+                                          child: CircularProgressIndicator(),
+                                        );
+                                      }
+                                    },
+                                    child: Expanded(
+                                      child: TextButton(
+                                          onPressed: () async{
+                                            EasyLoading.show(status: '로딩중...');
+
+                                            if(is_button1_clicked == false){
+                                              is_button1_clicked = true;
+                                            }
+                                            else{
+                                              return;
+                                            }
+
+                                            List _db_qt_completion_dates = [];
+                                            DateTime _today_datetime = new DateTime.now();
+                                            Map<String, int> _today_datemap = {"year" : _today_datetime.year, "month" : _today_datetime.month, "day" : _today_datetime.day, "hour" : _today_datetime.hour, "minute" : _today_datetime.minute};
+
+                                            await firestoreInstance
+                                                .collection("users")
+                                                .doc(tiny_db.getString("user_email"))
+                                                .get().then(
+                                                    (value){
+                                                  _db_qt_completion_dates = value["qt_completion_dates"].cast<Map>();
+                                                }
+                                            );
+
+                                            bool _is_contain = false;
+                                            for(int i = 0; i<_db_qt_completion_dates.length; i++){
+                                              Map<String, dynamic> _db_qt_completion_date = _db_qt_completion_dates[i];
+                                              if((_db_qt_completion_date["day"] == _today_datemap["day"]) && (_db_qt_completion_date["month"] == _today_datemap["month"]) && (_db_qt_completion_date["year"] == _today_datemap["year"])){
+                                                _is_contain = true;
+                                                break;
+                                              }
+                                            }
+
+                                            if(_is_contain){
+                                              EasyLoading.dismiss();
+                                              showDialog<String>(
+                                                  context: context,
+                                                  builder: (context) =>
+                                                      AlertDialog(
+                                                        content: Text("오늘 이미 QT를 하셨습니다",
+                                                          style: TextStyle(
+                                                            fontSize: CtTheme.CtTextSize.general,
+                                                            color: Colors.black,
+                                                          ),),
+                                                        actions: <Widget>[
+                                                          TextButton(
+                                                            onPressed: () =>
+                                                                Navigator.pop(context, "확인"),
+                                                            child: Text("확인",
+                                                              style: TextStyle(
+                                                                fontSize: CtTheme.CtTextSize.general,
+                                                                color: Color(CtTheme.CtHexColor.primary),
+                                                              ),),
+                                                          ),
+                                                        ],
+                                                      )
+                                              );
+                                            }
+                                            else{
+                                              int _plus_point = 0;
+                                              int _db_user_point = 0;
+
+                                              await firestoreInstance
+                                                  .collection("churches")
+                                                  .doc(tiny_db.getString("user_church_id"))
+                                                  .get().then(
+                                                      (value){
+                                                    _plus_point = value["qt_completion_point"];
+                                                  }
+                                              );
+
+                                              await firestoreInstance
+                                                  .collection("users")
+                                                  .doc(tiny_db.getString("user_email"))
+                                                  .get().then(
+                                                      (value){
+                                                    _db_user_point = value["point"];
+                                                  }
+                                              );
+
+                                              await firestoreInstance
+                                                  .collection("users")
+                                                  .doc(tiny_db.getString("user_email"))
+                                                  .update(
+                                                  {
+                                                    "point" : _db_user_point + _plus_point,
+                                                  }
+                                              );
+
+                                              tiny_db.setInt("user_point", _db_user_point + _plus_point);
+
+                                              _db_qt_completion_dates.add(_today_datemap);
+
+                                              await firestoreInstance
+                                                  .collection("users")
+                                                  .doc(tiny_db.getString("user_email"))
+                                                  .update(
+                                                  {
+                                                    "qt_completion_dates" : _db_qt_completion_dates,
+                                                  }
+                                              );
+
+                                              EasyLoading.dismiss();
+
+                                              showDialog<String>(
+                                                  context: context,
+                                                  builder: (context) =>
+                                                      AlertDialog(
+                                                        content: Text("앗싸! ${_plus_point} 포인트가 적립되었습니다",
+                                                          style: TextStyle(
+                                                            fontSize: CtTheme.CtTextSize.general,
+                                                            color: Colors.black,
+                                                          ),),
+                                                        actions: <Widget>[
+                                                          TextButton(
+                                                            onPressed: () =>
+                                                                Navigator.pop(context, "확인"),
+                                                            child: Text("확인",
+                                                              style: TextStyle(
+                                                                fontSize: CtTheme.CtTextSize.general,
+                                                                color: Color(CtTheme.CtHexColor.primary),
+                                                              ),),
+                                                          ),
+                                                        ],
+                                                      )
+                                              );
+
+                                              setState(() {});
+                                            }
+
+                                            is_button1_clicked = false;
+                                          },
+                                          child: Text(
+                                            "QT\n완료",
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: CtTheme.CtTextSize.general,
+                                            ),
+                                          )
+                                      ),
                                     ),
                                   ),
                                   Container(
@@ -757,6 +795,9 @@ class _MainPageState extends State<MainPage> {
                                                           Widget _display_type = CtTheme.CtIcon.student(Colors.black, 24.0);
                                                           if(_user["type"] == "t"){
                                                             _display_type = CtTheme.CtIcon.teacher(Colors.black, 24.0);
+                                                          }
+                                                          else if(_user["type"] == "m"){
+                                                            _display_type = CtTheme.CtIcon.manager(Colors.black, 24.0);
                                                           }
 
                                                           return _display_type;
