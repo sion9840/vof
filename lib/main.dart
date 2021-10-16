@@ -1,56 +1,36 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:vof/custom_theme.dart';
-import 'package:vof/global_variable.dart';
+import 'package:vof/_.dart';
 
-import 'main_page.dart';
 import 'guide_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-    statusBarColor: Colors.transparent, // transparent status bar
+    statusBarColor: Colors.transparent,
   ));
 
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(MyApp());
-  configLoading();
-}
-
-void configLoading() {
-  EasyLoading.instance
-    ..loadingStyle = EasyLoadingStyle.light
-    ..textStyle = TextStyle(
-      fontSize: CtTheme.CtTextSize.general,
-      color: Colors.black,
-    )
-    ..maskType = EasyLoadingMaskType.black
-    ..backgroundColor = Colors.white
-    ..indicatorType = EasyLoadingIndicatorType.fadingCircle
-    ..indicatorColor = Colors.black
-    ..indicatorSize = 50.0;
 }
 
 class MyApp extends StatelessWidget {
-  MaterialColor primary_materialcolor = MaterialColor(
-    CtTheme.CtHexColor.primary,
+  MaterialColor primary_material_color = MaterialColor(
+    CtTheme.HexColor.Primary3,
     <int, Color>{
-      50: Color(CtTheme.CtHexColor.primary),
-      100: Color(CtTheme.CtHexColor.primary),
-      200: Color(CtTheme.CtHexColor.primary),
-      300: Color(CtTheme.CtHexColor.primary),
-      400: Color(CtTheme.CtHexColor.primary),
-      500: Color(CtTheme.CtHexColor.primary),
-      600: Color(CtTheme.CtHexColor.primary),
-      700: Color(CtTheme.CtHexColor.primary),
-      800: Color(CtTheme.CtHexColor.primary),
-      900: Color(CtTheme.CtHexColor.primary),
+      50: Color(CtTheme.HexColor.Primary3),
+      100: Color(CtTheme.HexColor.Primary3),
+      200: Color(CtTheme.HexColor.Primary3),
+      300: Color(CtTheme.HexColor.Primary3),
+      400: Color(CtTheme.HexColor.Primary3),
+      500: Color(CtTheme.HexColor.Primary3),
+      600: Color(CtTheme.HexColor.Primary3),
+      700: Color(CtTheme.HexColor.Primary3),
+      800: Color(CtTheme.HexColor.Primary3),
+      900: Color(CtTheme.HexColor.Primary3),
     }
   );
 
@@ -59,16 +39,14 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primarySwatch: primary_materialcolor,
+        primarySwatch: primary_material_color,
       ),
       home: ReadyPage(),
-      builder: EasyLoading.init(),
     );
   }
 }
 
 class ReadyPage extends StatelessWidget {
-  final firestoreInstance = FirebaseFirestore.instance;
   Future<SharedPreferences> prefs = SharedPreferences.getInstance();
 
   @override
@@ -77,30 +55,35 @@ class ReadyPage extends StatelessWidget {
       future: prefs,
       builder: (context, snapshot) {
         if(snapshot.hasData) {
-          tiny_db = snapshot.data;
+          ClientDbInstance = snapshot.data;
 
-          if(tiny_db.getString("user_email") == null){
+          if(ClientDbInstance.getString("user_id") == null){ // 만약 앱을 처음 사용한다면
             return GuidePage();
           }
           else{
-            checkUser();
-            return MainPage();
+            return GuidePage();
+            //initSet();
+            //return MainPage();
           }
         }
         else if(snapshot.hasError) {
           return Scaffold(
+            backgroundColor: Color(CtTheme.HexColor.Background),
             body: Center(
-              child: Text(
-                "앱을 다시 실행시켜주세요",
-                style: Theme.of(context).textTheme.bodyText1,
+              child: CtTheme.Icon.Error(
+                Color(CtTheme.HexColor.Black),
+                CtTheme.IconSize.Middle,
               ),
             ),
           );
         }
         else{
           return Scaffold(
+            backgroundColor: Color(CtTheme.HexColor.Background),
             body: Center(
-              child: CircularProgressIndicator(),
+              child: CtTheme.Icon.Loading(
+                Color(CtTheme.HexColor.Black),
+              ),
             ),
           );
         }
@@ -108,12 +91,14 @@ class ReadyPage extends StatelessWidget {
     );
   }
 
-  void checkUser() async{
+  /*
+  void initSet() async{
+    // 만약 앱을 로그아웃 혹은 계정 삭제를 안하고 삭제한 경우 DB에 저장 되어있는 사용자 정보를 이용하여 자동 파이어베이스 어스 로그인
     if (await FirebaseAuth.instance.currentUser! == null) {
       String _db_user_password = "";
 
-      await firestoreInstance.collection("users")
-        .doc(tiny_db.getString("user_email"))
+      await FirestoreInstance.collection("users")
+        .doc(ClientDbInstance.getString("user_id"))
         .get().then(
           (value){
             _db_user_password = value["password"];
@@ -126,20 +111,12 @@ class ReadyPage extends StatelessWidget {
       );
     }
 
+    // 포인트 새로고침
     await firestoreInstance.collection("users").doc(tiny_db.getString("user_email")).get().then(
             (value) {
               tiny_db.setInt("user_point", value["point"]);
             }
     );
-
-    await firestoreInstance
-      .collection("users")
-      .doc(tiny_db.getString("user_email"))
-      .get()
-      .then(
-        (value){
-          tiny_db.setString("user_type", value["type"]);
-        }
-    );
   }
+   */
 }

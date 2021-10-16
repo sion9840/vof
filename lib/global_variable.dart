@@ -1,1 +1,0 @@
-dynamic tiny_db;

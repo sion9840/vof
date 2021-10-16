@@ -1,0 +1,2 @@
+tiny db 형식
+["user_name", "user_type", "user_email", "user_church_id", "user_point"]

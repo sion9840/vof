@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:vof/custom_theme.dart';
-import 'package:vof/signin_page.dart';
-
-import 'login_page.dart';
-import 'signin_page.dart';
+import 'package:vof/_.dart';
 
 class GuidePage extends StatefulWidget {
   @override
@@ -11,115 +7,149 @@ class GuidePage extends StatefulWidget {
 }
 
 class _GuidePageState extends State<GuidePage> {
+  var attend_church_text_field_controller = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    attend_church_text_field_controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Color(CtTheme.HexColor.Background),
       body: Padding(
-        padding: EdgeInsets.all(CtTheme.CtPaddingSize.general),
+        padding: EdgeInsets.all(CtTheme.PaddingSize.Middle),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            Spacer(),
-            Image.asset("img/boat.png"),
+            Spacer(
+              flex: 1,
+            ),
+            attendChurchContainer(),
+            SizedBox(
+              height: 40.0,
+            ),
             Text(
-              "믿음의 항해를 통해\n포인트를 적립하세요",
-              textAlign: TextAlign.center,
+              "OR",
               style: TextStyle(
-                color: Colors.black,
-                fontSize: CtTheme.CtTextSize.general,
+                color: Color(CtTheme.HexColor.Side),
+                fontSize: CtTheme.FontSize.Big,
+                fontFamily: CtTheme.FontFamily.Bold,
               ),
             ),
-            Spacer(),
             SizedBox(
-              width: double.infinity,
-              height: 50.0,
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => LoginPage()),
-                  );
-                },
-                child: Text(
-                  "로그인",
-                  style: TextStyle(
-                    fontSize: CtTheme.CtTextSize.general,
-                    color: Colors.white,
-                  ),
-                ),
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all<Color>(Color(CtTheme.CtHexColor.primary)),
-                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(CtTheme.CtRadiusSize.general),
-                      )),
-                ),
-              ),
+              height: 40.0,
             ),
-            SizedBox(height: 10.0,),
-            SizedBox(
-              width: double.infinity,
-              height: 50.0,
-              child: OutlinedButton(
-                onPressed: () {
-                  showDialog<String>(
-                      context: context,
-                      builder: (context) => AlertDialog(
-                        actions: <Widget>[
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: <Widget>[
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.pop(context, "교사로 회원가입");
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(builder: (context) => SigninPage("t")),
-                                  );
-                                },
-                                child: const Text("교사로 회원가입"),
-                              ),
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.pop(context, "학생으로 회원가입");
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(builder: (context) => SigninPage("s")),
-                                  );
-                                },
-                                child: const Text("학생으로 회원가입"),
-                              ),
-                            ],
-                          ),
-                        ],
-                      )
-                  );
-                },
-                child: Text(
-                  "회원가입",
-                  style: TextStyle(
-                    fontSize: CtTheme.CtTextSize.general,
-                    color: Color(CtTheme.CtHexColor.primary),
-                  ),
-                ),
-                style: ButtonStyle(
-                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(CtTheme.CtRadiusSize.general),
-                      )),
-                    side: MaterialStateProperty.all(
-                        BorderSide(
-                          color: Color(CtTheme.CtHexColor.primary),
-                          width: 1.0,
-                          style: BorderStyle.solid)
-                    ),
-                ),
-              ),
+            makeChurchContainer(),
+            Spacer(
+              flex: 1,
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget attendChurchContainer(){
+    return Container(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Text(
+            "교회에 참석하세요!",
+            style: TextStyle(
+              color: Color(CtTheme.HexColor.Black),
+              fontSize: CtTheme.FontSize.Big,
+              fontFamily: CtTheme.FontFamily.Bold,
+            ),
+          ),
+          SizedBox(
+            height: 30.0,
+          ),
+          TextField( // attend_church_text_field
+            decoration: InputDecoration(
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: Color(CtTheme.HexColor.Primary3),
+                  width: 2.0,
+                ),
+                borderRadius: BorderRadius.circular(CtTheme.RadiusSize.Middle),
+              ),
+              border: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: Color(CtTheme.HexColor.Primary3),
+                  width: 2.0,
+                ),
+                borderRadius: BorderRadius.circular(CtTheme.RadiusSize.Middle),
+              ),
+              labelStyle: TextStyle(
+                color: Color(CtTheme.HexColor.Primary3),
+                fontSize: CtTheme.FontSize.Middle,
+                fontFamily: CtTheme.FontFamily.General,
+              ),
+              labelText: "교회 아이디",
+            ),
+            style: TextStyle(
+              color: Color(CtTheme.HexColor.Black),
+              fontSize: CtTheme.FontSize.Middle,
+              fontFamily: CtTheme.FontFamily.General,
+            ),
+            controller: attend_church_text_field_controller,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget makeChurchContainer(){
+    return Container(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Text(
+            "교회를 만드세요!",
+            style: TextStyle(
+              color: Color(CtTheme.HexColor.Black),
+              fontSize: CtTheme.FontSize.Big,
+              fontFamily: CtTheme.FontFamily.Bold,
+            ),
+          ),
+          SizedBox(
+            height: 30.0,
+          ),
+          SizedBox(
+            width: double.infinity,
+            height: 50.0,
+            child: ElevatedButton(
+              style: ButtonStyle(
+                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(CtTheme.RadiusSize.Middle),
+                      ),
+                  ),
+                backgroundColor: MaterialStateProperty.all<Color>(Color(CtTheme.HexColor.Primary3)),
+              ),
+              child: Text(
+                "교회 만들기",
+                style: TextStyle(
+                  color: Color(CtTheme.HexColor.White),
+                  fontSize: CtTheme.FontSize.Middle,
+                  fontFamily: CtTheme.FontFamily.General,
+                ),
+              ),
+              onPressed: () {
+
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
