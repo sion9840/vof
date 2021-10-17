@@ -31,6 +31,7 @@ class _PaddingSize {
 
 class _RadiusSize {
   double Middle = 12.0;
+  double Big = 24.0;
 }
 
 class _FontSize {
