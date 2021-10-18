@@ -8,6 +8,8 @@ class GuidePage extends StatefulWidget {
 
 class _GuidePageState extends State<GuidePage> {
   var attend_church_text_field_controller = TextEditingController();
+  var user_name_text_field_controller = TextEditingController();
+  var user_password_text_field_controller = TextEditingController();
   var spec_attend_church_page_view_controller = PageController(
     initialPage: 0,
   );
@@ -37,18 +39,7 @@ class _GuidePageState extends State<GuidePage> {
             ),
             attendChurchContainer(),
             SizedBox(
-              height: 40.0,
-            ),
-            Text(
-              "OR",
-              style: TextStyle(
-                color: Color(CtTheme.HexColor.Side),
-                fontSize: CtTheme.FontSize.Big,
-                fontFamily: CtTheme.FontFamily.Bold,
-              ),
-            ),
-            SizedBox(
-              height: 40.0,
+              height: 20.0,
             ),
             makeChurchContainer(),
             Spacer(
@@ -80,24 +71,52 @@ class _GuidePageState extends State<GuidePage> {
             decoration: InputDecoration(
               enabledBorder: OutlineInputBorder(
                 borderSide: BorderSide(
-                  color: Color(CtTheme.HexColor.Primary3),
-                  width: 2.0,
+                  color: Color(CtTheme.HexColor.Black),
+                ),
+                borderRadius: BorderRadius.circular(CtTheme.RadiusSize.Middle),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: Color(CtTheme.HexColor.Black),
                 ),
                 borderRadius: BorderRadius.circular(CtTheme.RadiusSize.Middle),
               ),
               border: OutlineInputBorder(
                 borderSide: BorderSide(
-                  color: Color(CtTheme.HexColor.Primary3),
-                  width: 2.0,
+                  color: Color(CtTheme.HexColor.Black),
                 ),
                 borderRadius: BorderRadius.circular(CtTheme.RadiusSize.Middle),
               ),
               labelStyle: TextStyle(
-                color: Color(CtTheme.HexColor.Primary3),
+                color: Color(CtTheme.HexColor.Black),
                 fontSize: CtTheme.FontSize.Middle,
                 fontFamily: CtTheme.FontFamily.General,
               ),
               labelText: "교회 아이디",
+              suffixIcon: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: IconButton(
+                  onPressed: (){
+                    showModalBottomSheet(
+                      context: context,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(CtTheme.RadiusSize.Big),
+                          topRight: Radius.circular(CtTheme.RadiusSize.Big),
+                        ),
+                      ),
+                      backgroundColor: Color(CtTheme.HexColor.Background),
+                      builder: (context) => specAttendChurchContainer(),
+                      //isScrollControlled: true,
+                    );
+                  },
+                  icon: Icon(
+                    Icons.east_rounded,
+                    size: CtTheme.IconSize.Middle,
+                    color: Color(CtTheme.HexColor.Black),
+                  ),
+                ),
+              ),
             ),
             style: TextStyle(
               color: Color(CtTheme.HexColor.Black),
@@ -105,20 +124,6 @@ class _GuidePageState extends State<GuidePage> {
               fontFamily: CtTheme.FontFamily.General,
             ),
             controller: attend_church_text_field_controller,
-            onSubmitted: (String value) {
-              showModalBottomSheet(
-                context: context,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(CtTheme.RadiusSize.Big),
-                    topRight: Radius.circular(CtTheme.RadiusSize.Big),
-                  ),
-                ),
-                backgroundColor: Color(CtTheme.HexColor.Background),
-                builder: (context) => specAttendChurchContainer(),
-                //isScrollControlled: true,
-              );
-            },
           ),
         ],
       ),
@@ -127,47 +132,21 @@ class _GuidePageState extends State<GuidePage> {
 
   Widget makeChurchContainer(){
     return Container(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          Text(
-            "교회를 만드세요!",
-            style: TextStyle(
-              color: Color(CtTheme.HexColor.Black),
-              fontSize: CtTheme.FontSize.Big,
-              fontFamily: CtTheme.FontFamily.Bold,
-            ),
+      child: TextButton(
+        child: Text(
+          "교회를 만들고 싶나요?",
+          style: TextStyle(
+            color: Color(CtTheme.HexColor.Side),
+            fontSize: CtTheme.FontSize.Small,
+            fontFamily: CtTheme.FontFamily.General,
+            decoration: TextDecoration.underline,
+            decorationColor: Color(CtTheme.HexColor.Side),
           ),
-          SizedBox(
-            height: 30.0,
-          ),
-          SizedBox(
-            width: double.infinity,
-            height: 50.0,
-            child: ElevatedButton(
-              style: ButtonStyle(
-                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(CtTheme.RadiusSize.Middle),
-                      ),
-                  ),
-                backgroundColor: MaterialStateProperty.all<Color>(Color(CtTheme.HexColor.Primary3)),
-              ),
-              child: Text(
-                "교회 만들기",
-                style: TextStyle(
-                  color: Color(CtTheme.HexColor.White),
-                  fontSize: CtTheme.FontSize.Middle,
-                  fontFamily: CtTheme.FontFamily.General,
-                ),
-              ),
-              onPressed: () {
+        ),
+        onPressed: (){
 
-              },
-            ),
-          ),
-        ],
-      ),
+        },
+      )
     );
   }
 
@@ -210,7 +189,7 @@ class _GuidePageState extends State<GuidePage> {
                 SizedBox.expand(
                   child: Container(
                     child: Padding(
-                      padding: EdgeInsets.all(CtTheme.PaddingSize.Middle * 2),
+                      padding: EdgeInsets.all(CtTheme.PaddingSize.Middle),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
@@ -233,7 +212,7 @@ class _GuidePageState extends State<GuidePage> {
                           Spacer(),
                           Container(
                             width: double.infinity,
-                            height: 170.0,
+                            height: 200.0,
                             decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.all(Radius.circular(CtTheme.RadiusSize.Middle)),
@@ -250,8 +229,8 @@ class _GuidePageState extends State<GuidePage> {
                                   "${_church_name}",
                                   style: TextStyle(
                                     color: Color(CtTheme.HexColor.Black),
-                                    fontSize: CtTheme.FontSize.Big,
-                                    fontFamily: CtTheme.FontFamily.Bold,
+                                    fontSize: CtTheme.FontSize.Middle,
+                                    fontFamily: CtTheme.FontFamily.General,
                                     decoration: TextDecoration.underline,
                                     decorationColor: Color(CtTheme.HexColor.Primary3),
                                     decorationStyle: TextDecorationStyle.wavy,
@@ -262,8 +241,8 @@ class _GuidePageState extends State<GuidePage> {
                                   "주 관리자 : ${_church_main_admin_name}",
                                   style: TextStyle(
                                     color: Color(CtTheme.HexColor.Side),
-                                    fontSize: CtTheme.FontSize.Middle,
-                                    fontFamily: CtTheme.FontFamily.Bold,
+                                    fontSize: CtTheme.FontSize.Small,
+                                    fontFamily: CtTheme.FontFamily.General,
                                   ),
                                 )
                               ],
@@ -272,19 +251,26 @@ class _GuidePageState extends State<GuidePage> {
                           Spacer(),
                           SizedBox(
                             width: double.infinity,
-                            height: 50.0,
+                            height: 70.0,
                             child: Row(
                               children: <Widget>[
                                 Expanded(
                                   flex: 1,
                                   child: SizedBox(
-                                    height: 50.0,
+                                    height: 70.0,
                                     child: TextButton(
+                                      style: ButtonStyle(
+                                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                          RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(CtTheme.RadiusSize.Middle),
+                                          ),
+                                        ),
+                                      ),
                                       child: Text(
                                         "아니요",
                                         style: TextStyle(
                                           color: Color(CtTheme.HexColor.Black),
-                                          fontSize: CtTheme.FontSize.Middle,
+                                          fontSize: CtTheme.FontSize.Small,
                                           fontFamily: CtTheme.FontFamily.General,
                                         ),
                                       ),
@@ -296,9 +282,9 @@ class _GuidePageState extends State<GuidePage> {
                                 ),
                                 SizedBox(width: 10.0,),
                                 Expanded(
-                                  flex: 5,
+                                  flex: 3,
                                   child: SizedBox(
-                                    height: 50.0,
+                                    height: 70.0,
                                     child: ElevatedButton(
                                       style: ButtonStyle(
                                         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
@@ -312,7 +298,7 @@ class _GuidePageState extends State<GuidePage> {
                                         "네",
                                         style: TextStyle(
                                           color: Color(CtTheme.HexColor.White),
-                                          fontSize: CtTheme.FontSize.Middle,
+                                          fontSize: CtTheme.FontSize.Small,
                                           fontFamily: CtTheme.FontFamily.General,
                                         ),
                                       ),
@@ -337,7 +323,7 @@ class _GuidePageState extends State<GuidePage> {
                 SizedBox.expand(
                   child: Container(
                     child: Padding(
-                      padding: EdgeInsets.all(CtTheme.PaddingSize.Middle * 2),
+                      padding: EdgeInsets.all(CtTheme.PaddingSize.Middle),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
@@ -360,7 +346,7 @@ class _GuidePageState extends State<GuidePage> {
                           Spacer(),
                           Container(
                             width: double.infinity,
-                            height: 170.0,
+                            height: 200.0,
                             decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.all(Radius.circular(CtTheme.RadiusSize.Middle)),
@@ -377,32 +363,48 @@ class _GuidePageState extends State<GuidePage> {
                                   "${_church_name}",
                                   style: TextStyle(
                                     color: Color(CtTheme.HexColor.Black),
-                                    fontSize: CtTheme.FontSize.Big,
-                                    fontFamily: CtTheme.FontFamily.Bold,
+                                    fontSize: CtTheme.FontSize.Middle,
+                                    fontFamily: CtTheme.FontFamily.General,
                                     decoration: TextDecoration.underline,
                                     decorationColor: Color(CtTheme.HexColor.Primary3),
                                     decorationStyle: TextDecorationStyle.wavy,
                                   ),
                                 ),
+                                SizedBox(height: 20.0,),
+                                Text(
+                                  "주 관리자 : ${_church_main_admin_name}",
+                                  style: TextStyle(
+                                    color: Color(CtTheme.HexColor.Side),
+                                    fontSize: CtTheme.FontSize.Small,
+                                    fontFamily: CtTheme.FontFamily.General,
+                                  ),
+                                )
                               ],
                             ),
                           ),
                           Spacer(),
                           SizedBox(
                             width: double.infinity,
-                            height: 50.0,
+                            height: 70.0,
                             child: Row(
                               children: <Widget>[
                                 Expanded(
                                   flex: 1,
                                   child: SizedBox(
-                                    height: 50.0,
+                                    height: 70.0,
                                     child: TextButton(
+                                      style: ButtonStyle(
+                                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                          RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(CtTheme.RadiusSize.Middle),
+                                          ),
+                                        ),
+                                      ),
                                       child: Text(
                                         "아니요",
                                         style: TextStyle(
                                           color: Color(CtTheme.HexColor.Black),
-                                          fontSize: CtTheme.FontSize.Middle,
+                                          fontSize: CtTheme.FontSize.Small,
                                           fontFamily: CtTheme.FontFamily.General,
                                         ),
                                       ),
@@ -414,9 +416,9 @@ class _GuidePageState extends State<GuidePage> {
                                 ),
                                 SizedBox(width: 10.0,),
                                 Expanded(
-                                  flex: 5,
+                                  flex: 3,
                                   child: SizedBox(
-                                    height: 50.0,
+                                    height: 70.0,
                                     child: ElevatedButton(
                                       style: ButtonStyle(
                                         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
@@ -430,12 +432,179 @@ class _GuidePageState extends State<GuidePage> {
                                         "네",
                                         style: TextStyle(
                                           color: Color(CtTheme.HexColor.White),
-                                          fontSize: CtTheme.FontSize.Middle,
+                                          fontSize: CtTheme.FontSize.Small,
+                                          fontFamily: CtTheme.FontFamily.General,
+                                        ),
+                                      ),
+                                      onPressed: () {
+                                        spec_attend_church_page_view_controller.jumpToPage(2);
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox.expand(
+                  child: Container(
+                    child: Padding(
+                      padding: EdgeInsets.all(CtTheme.PaddingSize.Middle),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          Text(
+                            "교회 등록",
+                            style: TextStyle(
+                              color: Color(CtTheme.HexColor.Black),
+                              fontSize: CtTheme.FontSize.Big,
+                              fontFamily: CtTheme.FontFamily.Bold,
+                            ),
+                          ),
+                          Text(
+                            "3 / 3",
+                            style: TextStyle(
+                              color: Color(CtTheme.HexColor.Side),
+                              fontSize: CtTheme.FontSize.Middle,
+                              fontFamily: CtTheme.FontFamily.Bold,
+                            ),
+                          ),
+                          Spacer(),
+                          Container(
+                            child: Column(
+                              children: <Widget>[
+                                TextField( // attend_church_text_field
+                                  decoration: InputDecoration(
+                                    enabledBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: Color(CtTheme.HexColor.Black),
+                                      ),
+                                      borderRadius: BorderRadius.circular(CtTheme.RadiusSize.Middle),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: Color(CtTheme.HexColor.Black),
+                                      ),
+                                      borderRadius: BorderRadius.circular(CtTheme.RadiusSize.Middle),
+                                    ),
+                                    border: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: Color(CtTheme.HexColor.Black),
+                                      ),
+                                      borderRadius: BorderRadius.circular(CtTheme.RadiusSize.Middle),
+                                    ),
+                                    labelStyle: TextStyle(
+                                      color: Color(CtTheme.HexColor.Black),
+                                      fontSize: CtTheme.FontSize.Middle,
+                                      fontFamily: CtTheme.FontFamily.General,
+                                    ),
+                                    labelText: "이름",
+                                  ),
+                                  style: TextStyle(
+                                    color: Color(CtTheme.HexColor.Black),
+                                    fontSize: CtTheme.FontSize.Middle,
+                                    fontFamily: CtTheme.FontFamily.General,
+                                  ),
+                                  controller: user_name_text_field_controller,
+                                ),
+                                SizedBox(height: 20.0,),
+                                TextField( // attend_church_text_field
+                                  decoration: InputDecoration(
+                                    enabledBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: Color(CtTheme.HexColor.Black),
+                                      ),
+                                      borderRadius: BorderRadius.circular(CtTheme.RadiusSize.Middle),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: Color(CtTheme.HexColor.Black),
+                                      ),
+                                      borderRadius: BorderRadius.circular(CtTheme.RadiusSize.Middle),
+                                    ),
+                                    border: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: Color(CtTheme.HexColor.Black),
+                                      ),
+                                      borderRadius: BorderRadius.circular(CtTheme.RadiusSize.Middle),
+                                    ),
+                                    labelStyle: TextStyle(
+                                      color: Color(CtTheme.HexColor.Black),
+                                      fontSize: CtTheme.FontSize.Middle,
+                                      fontFamily: CtTheme.FontFamily.General,
+                                    ),
+                                    labelText: "비밀번호",
+                                  ),
+                                  style: TextStyle(
+                                    color: Color(CtTheme.HexColor.Black),
+                                    fontSize: CtTheme.FontSize.Middle,
+                                    fontFamily: CtTheme.FontFamily.General,
+                                  ),
+                                  controller: user_password_text_field_controller,
+                                ),
+                              ],
+                            ),
+                          ),
+                          Spacer(),
+                          SizedBox(
+                            width: double.infinity,
+                            height: 70.0,
+                            child: Row(
+                              children: <Widget>[
+                                Expanded(
+                                  flex: 1,
+                                  child: SizedBox(
+                                    height: 70.0,
+                                    child: TextButton(
+                                      style: ButtonStyle(
+                                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                          RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(CtTheme.RadiusSize.Middle),
+                                          ),
+                                        ),
+                                      ),
+                                      child: Text(
+                                        "뒤로",
+                                        style: TextStyle(
+                                          color: Color(CtTheme.HexColor.Black),
+                                          fontSize: CtTheme.FontSize.Small,
                                           fontFamily: CtTheme.FontFamily.General,
                                         ),
                                       ),
                                       onPressed: () {
                                         spec_attend_church_page_view_controller.jumpToPage(1);
+                                      },
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(width: 10.0,),
+                                Expanded(
+                                  flex: 3,
+                                  child: SizedBox(
+                                    height: 70.0,
+                                    child: ElevatedButton(
+                                      style: ButtonStyle(
+                                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                          RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(CtTheme.RadiusSize.Middle),
+                                          ),
+                                        ),
+                                        backgroundColor: MaterialStateProperty.all<Color>(Color(CtTheme.HexColor.Primary3)),
+                                      ),
+                                      child: Text(
+                                        "등록",
+                                        style: TextStyle(
+                                          color: Color(CtTheme.HexColor.White),
+                                          fontSize: CtTheme.FontSize.Small,
+                                          fontFamily: CtTheme.FontFamily.General,
+                                        ),
+                                      ),
+                                      onPressed: () {
+
                                       },
                                     ),
                                   ),

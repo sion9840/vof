@@ -57,7 +57,7 @@ flutter:
         - asset: assets/fonts/NotoSansKR-Regular.otf
     - family: Bold
       fonts:
-        - asset: assets/fonts/BlackHanSans-Regular.ttf
+        - asset: assets/fonts/NotoSansKR-Bold.otf
 
   # To add assets to your application, add an assets section, like this:
   # assets:
