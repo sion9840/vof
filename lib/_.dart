@@ -26,7 +26,7 @@ class _HexColor {
 }
 
 class _PaddingSize {
-  double Middle = 48.0;
+  double Middle = 20.0;
 }
 
 class _RadiusSize {
@@ -35,14 +35,14 @@ class _RadiusSize {
 }
 
 class _FontSize {
-  double Small = 24.0;
-  double Middle = 30.0;
-  double Big = 45.0;
-  double TooBig = 60.0;
+  double Small = 18.0;
+  double Middle = 24.0;
+  double Big = 30.0;
+  double TooBig = 45.0;
 }
 
 class _IconSize {
-  double Middle = 24.0;
+  double Middle = 30.0;
 }
 
 class _Icon {
