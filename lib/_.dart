@@ -15,14 +15,15 @@ class CtTheme {
 }
 
 class _HexColor {
-  int Primary1 = 0xFF228BE6;
-  int Primary2 = 0xFF1C7ED6;
-  int Primary3 = 0xFF1971C2;
-  int Primary4 = 0xFF1864AB;
-  int Background = 0xFFF8F9FA;
-  int Black = 0xFF343A40;
+  int Primary1 = 0xFF649BED;
+  int Primary2 = 0xFF196BE5;
+  int Background = 0xFFF8FAFC;
+  int Black = 0xFF000000;
   int White = 0xFFFFFFFF;
-  int Side = 0xFF495057;
+  int Side1 = 0xFFE9EDF1;
+  int Side2 = 0xFFCAD4DD;
+  int Red = 0xFFE08C8D;
+  int Green = 0xFFBADFDE;
 }
 
 class _PaddingSize {
@@ -30,19 +31,19 @@ class _PaddingSize {
 }
 
 class _RadiusSize {
-  double Middle = 12.0;
-  double Big = 24.0;
+  double Small = 4.0;
+  double Middle = 9.0;
+  double Big = 18.0;
 }
 
 class _FontSize {
-  double Small = 18.0;
-  double Middle = 24.0;
-  double Big = 30.0;
-  double TooBig = 45.0;
+  double Small = 14.0;
+  double Middle = 17.0;
+  double Big = 28.0;
 }
 
 class _IconSize {
-  double Middle = 30.0;
+  double Middle = 33.0;
 }
 
 class _Icon {

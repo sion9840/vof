@@ -19,18 +19,18 @@ void main() async {
 
 class MyApp extends StatelessWidget {
   MaterialColor primary_material_color = MaterialColor(
-    CtTheme.HexColor.Primary3,
+    CtTheme.HexColor.Primary2,
     <int, Color>{
-      50: Color(CtTheme.HexColor.Primary3),
-      100: Color(CtTheme.HexColor.Primary3),
-      200: Color(CtTheme.HexColor.Primary3),
-      300: Color(CtTheme.HexColor.Primary3),
-      400: Color(CtTheme.HexColor.Primary3),
-      500: Color(CtTheme.HexColor.Primary3),
-      600: Color(CtTheme.HexColor.Primary3),
-      700: Color(CtTheme.HexColor.Primary3),
-      800: Color(CtTheme.HexColor.Primary3),
-      900: Color(CtTheme.HexColor.Primary3),
+      50: Color(CtTheme.HexColor.Primary2),
+      100: Color(CtTheme.HexColor.Primary2),
+      200: Color(CtTheme.HexColor.Primary2),
+      300: Color(CtTheme.HexColor.Primary2),
+      400: Color(CtTheme.HexColor.Primary2),
+      500: Color(CtTheme.HexColor.Primary2),
+      600: Color(CtTheme.HexColor.Primary2),
+      700: Color(CtTheme.HexColor.Primary2),
+      800: Color(CtTheme.HexColor.Primary2),
+      900: Color(CtTheme.HexColor.Primary2),
     }
   );
 
