@@ -1,6 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vof/_.dart';
+import 'package:uuid/uuid.dart';
+
+import 'main_page.dart';
 
 class GuidePage extends StatefulWidget {
   @override
@@ -13,15 +18,15 @@ class _GuidePageState extends State<GuidePage> {
   var user_password_text_field_controller = TextEditingController();
   var user_password_check_text_field_controller = TextEditingController();
 
-  bool is_error_attend_church_text_field = true;
-  bool is_error_user_name_text_field = true;
-  bool is_error_user_password_text_field = true;
-  bool is_error_user_password_check_text_field = true;
+  bool is_error_attend_church_text_field = false;
+  bool is_error_user_name_text_field = false;
+  bool is_error_user_password_text_field = false;
+  bool is_error_user_password_check_text_field = false;
 
-  String attend_church_text_field_error_message = "교회 아이디를 입력해주세요";
-  String user_name_text_field_error_message = "이름을 입력해주세요";
-  String user_password_text_field_error_message = "비밀번호를 입력해주세요";
-  String user_password_check_text_field_error_message = "비밀번호 확인을 입력해주세요";
+  String attend_church_text_field_error_message = "";
+  String user_name_text_field_error_message = "";
+  String user_password_text_field_error_message = "";
+  String user_password_check_text_field_error_message = "";
 
   var spec_attend_church_page_view_controller = PageController(
     initialPage: 0,
@@ -48,22 +53,25 @@ class _GuidePageState extends State<GuidePage> {
     return Scaffold(
       backgroundColor: Color(CtTheme.HexColor.Background),
       body: SingleChildScrollView(
-        child: ConstrainedBox(
-          constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
-          child: Padding(
-            padding: EdgeInsets.all(CtTheme.PaddingSize.Middle),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Spacer(
-                  flex: 1,
-                ),
-                guideAppContainer(),
-                Spacer(
-                  flex: 1,
-                ),
-                attendChurchContainer(),
-              ],
+        child: Padding(
+          padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          child: ConstrainedBox(
+            constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
+            child: Padding(
+              padding: EdgeInsets.all(CtTheme.PaddingSize.Middle),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Spacer(
+                    flex: 1,
+                  ),
+                  guideAppContainer(),
+                  Spacer(
+                    flex: 1,
+                  ),
+                  attendChurchContainer(),
+                ],
+              ),
             ),
           ),
         ),
@@ -87,7 +95,7 @@ class _GuidePageState extends State<GuidePage> {
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: Color(CtTheme.HexColor.Black),
-                fontSize: CtTheme.FontSize.Big,
+                fontSize: CtTheme.FontSize.TooBig,
                 fontFamily: CtTheme.FontFamily.Bold,
               ),
             )
@@ -289,7 +297,7 @@ class _GuidePageState extends State<GuidePage> {
                                           "처음 등록 하시나요?",
                                           style: TextStyle(
                                             color: Color(CtTheme.HexColor.Black),
-                                            fontSize: CtTheme.FontSize.Big,
+                                            fontSize: CtTheme.FontSize.TooBig,
                                             fontFamily: CtTheme.FontFamily.Bold,
                                           ),
                                         ),
@@ -316,7 +324,7 @@ class _GuidePageState extends State<GuidePage> {
                                                 "${_church_name}",
                                                 style: TextStyle(
                                                   color: Color(CtTheme.HexColor.Black),
-                                                  fontSize: CtTheme.FontSize.Big,
+                                                  fontSize: CtTheme.FontSize.TooBig,
                                                   fontFamily: CtTheme.FontFamily.Bold,
                                                 ),
                                               ),
@@ -359,13 +367,13 @@ class _GuidePageState extends State<GuidePage> {
                                                       ),
                                                     ),
                                                     onPressed: () {
-                                                      is_error_user_name_text_field = true;
-                                                      is_error_user_password_text_field = true;
-                                                      is_error_user_password_check_text_field = true;
+                                                      is_error_user_name_text_field = false;
+                                                      is_error_user_password_text_field = false;
+                                                      is_error_user_password_check_text_field = false;
 
-                                                      user_name_text_field_error_message = "이름을 입력해주세요";
-                                                      user_password_text_field_error_message = "비밀번호를 입력해주세요";
-                                                      user_password_check_text_field_error_message = "비밀번호 확인을 입력해주세요";
+                                                      user_name_text_field_error_message = "";
+                                                      user_password_text_field_error_message = "";
+                                                      user_password_check_text_field_error_message = "";
 
                                                       user_name_text_field_controller.clear();
                                                       user_password_text_field_controller.clear();
@@ -401,13 +409,13 @@ class _GuidePageState extends State<GuidePage> {
                                                       ),
                                                     ),
                                                     onPressed: () {
-                                                      is_error_user_name_text_field = true;
-                                                      is_error_user_password_text_field = true;
-                                                      is_error_user_password_check_text_field = true;
+                                                      is_error_user_name_text_field = false;
+                                                      is_error_user_password_text_field = false;
+                                                      is_error_user_password_check_text_field = false;
 
-                                                      user_name_text_field_error_message = "이름을 입력해주세요";
-                                                      user_password_text_field_error_message = "비밀번호를 입력해주세요";
-                                                      user_password_check_text_field_error_message = "비밀번호 확인을 입력해주세요";
+                                                      user_name_text_field_error_message = "";
+                                                      user_password_text_field_error_message = "";
+                                                      user_password_check_text_field_error_message = "";
 
                                                       user_name_text_field_controller.clear();
                                                       user_password_text_field_controller.clear();
@@ -439,7 +447,7 @@ class _GuidePageState extends State<GuidePage> {
                                           "교회 등록",
                                           style: TextStyle(
                                             color: Color(CtTheme.HexColor.Black),
-                                            fontSize: CtTheme.FontSize.Big,
+                                            fontSize: CtTheme.FontSize.TooBig,
                                             fontFamily: CtTheme.FontFamily.Bold,
                                           ),
                                         ),
@@ -702,10 +710,10 @@ class _GuidePageState extends State<GuidePage> {
                                                           !is_error_user_name_text_field &&
                                                               !is_error_user_password_text_field &&
                                                               !is_error_user_password_check_text_field &&
-                                                              (user_name_text_field_controller.text.length > 0)
+                                                              (user_password_text_field_controller.text.length > 0)
                                                       ) ?
                                                       MaterialStateProperty.all<Color>(Color(CtTheme.HexColor.Primary2)) :
-                                                      MaterialStateProperty.all<Color>(Color(CtTheme.HexColor.Primary2).withOpacity(0.5)),
+                                                      MaterialStateProperty.all<Color>(Color(0xFF83ADEA)),
                                                     ),
                                                     child: Text(
                                                       "등록",
@@ -713,7 +721,7 @@ class _GuidePageState extends State<GuidePage> {
                                                           !is_error_user_name_text_field &&
                                                               !is_error_user_password_text_field &&
                                                               !is_error_user_password_check_text_field &&
-                                                              (user_name_text_field_controller.text.length > 0)
+                                                              (user_password_text_field_controller.text.length > 0)
                                                       ) ?
                                                       TextStyle(
                                                         color: Color(CtTheme.HexColor.White),
@@ -726,8 +734,69 @@ class _GuidePageState extends State<GuidePage> {
                                                         fontFamily: CtTheme.FontFamily.General,
                                                       ),
                                                     ),
-                                                    onPressed: () {
+                                                    onPressed: () async {
+                                                      if(
+                                                      !(!is_error_user_name_text_field &&
+                                                          !is_error_user_password_text_field &&
+                                                          !is_error_user_password_check_text_field &&
+                                                          (user_password_text_field_controller.text.length > 0))
+                                                      ){
+                                                        return;
+                                                      }
 
+                                                      var _uuid = Uuid();
+                                                      String _user_id = _uuid.v1();
+                                                      bool _is_error = false;
+
+                                                      try {
+                                                        UserCredential _userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+                                                            email: "${_user_id}@userid.com",
+                                                            password: user_password_text_field_controller.text,
+                                                        );
+                                                      } on FirebaseAuthException catch (e) {
+                                                        _is_error = true;
+                                                      }
+
+                                                      if(_is_error){
+                                                        showDialog(
+                                                            context: context,
+                                                            builder: (context) =>
+                                                                AlertDialog(
+                                                                  content: Text(
+                                                                    "교회 등록에 실패하였습니다\n(※ 네트워크 상태를 확인해주세요)",
+                                                                    style: TextStyle(
+                                                                      color: Color(CtTheme.HexColor.Black),
+                                                                      fontSize: CtTheme.FontSize.Middle,
+                                                                      fontFamily: CtTheme.FontFamily.General,
+                                                                    ),
+                                                                  ),
+                                                                  actions: <Widget>[
+                                                                    TextButton(
+                                                                      onPressed: () =>
+                                                                          Navigator.pop(context),
+                                                                      child: Text("확인",
+                                                                        style: TextStyle(
+                                                                          color: Color(CtTheme.HexColor.Primary2),
+                                                                          fontSize: CtTheme.FontSize.Middle,
+                                                                          fontFamily: CtTheme.FontFamily.General,
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                )
+                                                        );
+
+                                                        return;
+                                                      }
+
+                                                      TinyDb
+                                                        ..setString("user_id", _user_id)
+                                                        ..setString("user_church_id", attend_church_text_field_controller.text);
+
+                                                      DataBase().createTable(await DataBase().fixed_database);
+
+                                                      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
+                                                          MainPage()), (Route<dynamic> route) => false);
                                                     },
                                                   ),
                                                 ),
@@ -751,7 +820,7 @@ class _GuidePageState extends State<GuidePage> {
                                           "교회 참가",
                                           style: TextStyle(
                                             color: Color(CtTheme.HexColor.Black),
-                                            fontSize: CtTheme.FontSize.Big,
+                                            fontSize: CtTheme.FontSize.TooBig,
                                             fontFamily: CtTheme.FontFamily.Bold,
                                           ),
                                         ),
@@ -936,17 +1005,17 @@ class _GuidePageState extends State<GuidePage> {
                                                       backgroundColor: (
                                                           !is_error_user_name_text_field &&
                                                               !is_error_user_password_text_field &&
-                                                              (user_name_text_field_controller.text.length > 0)
+                                                              (user_password_text_field_controller.text.length > 0)
                                                       ) ?
                                                       MaterialStateProperty.all<Color>(Color(CtTheme.HexColor.Primary2)) :
-                                                      MaterialStateProperty.all<Color>(Color(CtTheme.HexColor.Primary2).withOpacity(0.5)),
+                                                      MaterialStateProperty.all<Color>(Color(0xFF83ADEA)),
                                                     ),
                                                     child: Text(
                                                       "참가",
                                                       style: (
                                                           !is_error_user_name_text_field &&
                                                               !is_error_user_password_text_field &&
-                                                              (user_name_text_field_controller.text.length > 0)
+                                                              (user_password_text_field_controller.text.length > 0)
                                                       ) ?
                                                       TextStyle(
                                                         color: Color(CtTheme.HexColor.White),
@@ -959,8 +1028,68 @@ class _GuidePageState extends State<GuidePage> {
                                                         fontFamily: CtTheme.FontFamily.General,
                                                       ),
                                                     ),
-                                                    onPressed: () {
+                                                    onPressed: () async {
+                                                      if(
+                                                      !(!is_error_user_name_text_field &&
+                                                          !is_error_user_password_text_field &&
+                                                          (user_password_text_field_controller.text.length > 0))
+                                                      ){
+                                                        return;
+                                                      }
 
+                                                      var _uuid = Uuid();
+                                                      String _user_id = _uuid.v1();
+                                                      bool _is_error = false;
+
+                                                      try {
+                                                        UserCredential _userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+                                                          email: "${_user_id}@userid.com",
+                                                          password: user_password_text_field_controller.text,
+                                                        );
+                                                      } on FirebaseAuthException catch (e) {
+                                                        _is_error = true;
+                                                      }
+
+                                                      if(_is_error){
+                                                        showDialog(
+                                                            context: context,
+                                                            builder: (context) =>
+                                                                AlertDialog(
+                                                                  content: Text(
+                                                                    "교회 참가에 실패하였습니다\n(※ 네트워크 상태를 확인해주세요)",
+                                                                    style: TextStyle(
+                                                                      color: Color(CtTheme.HexColor.Black),
+                                                                      fontSize: CtTheme.FontSize.Middle,
+                                                                      fontFamily: CtTheme.FontFamily.General,
+                                                                    ),
+                                                                  ),
+                                                                  actions: <Widget>[
+                                                                    TextButton(
+                                                                      onPressed: () =>
+                                                                          Navigator.pop(context),
+                                                                      child: Text("확인",
+                                                                        style: TextStyle(
+                                                                          color: Color(CtTheme.HexColor.Primary2),
+                                                                          fontSize: CtTheme.FontSize.Middle,
+                                                                          fontFamily: CtTheme.FontFamily.General,
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                )
+                                                        );
+
+                                                        return;
+                                                      }
+
+                                                      TinyDb
+                                                        ..setString("user_id", _user_id)
+                                                        ..setString("user_church_id", attend_church_text_field_controller.text);
+
+                                                      DataBase().createTable(await DataBase().fixed_database);
+
+                                                      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
+                                                          MainPage()), (Route<dynamic> route) => false);
                                                     },
                                                   ),
                                                 ),

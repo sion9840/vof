@@ -55,15 +55,13 @@ class ReadyPage extends StatelessWidget {
       future: prefs,
       builder: (context, snapshot) {
         if(snapshot.hasData) {
-          ClientDbInstance = snapshot.data;
+          TinyDb = snapshot.data;
 
-          if(ClientDbInstance.getString("user_id") == null){ // 만약 앱을 처음 사용한다면
+          if(TinyDb.getBool("user_id") == null){ // 만약 앱을 처음 사용한다면
             return GuidePage();
           }
           else{
             return GuidePage();
-            //initSet();
-            //return MainPage();
           }
         }
         else if(snapshot.hasError) {

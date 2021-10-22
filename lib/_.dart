@@ -3,32 +3,32 @@ import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
-var ClientDbInstance;
+var TinyDb;
 final FirestoreInstance = FirebaseFirestore.instance;
 
 class DataBase{
-  var fixed_database;
+  var _fixed_database;
 
-  Future<Database> get fixedDatabase async {
-    if(fixed_database != null) return fixed_database;
+  Future<Database> get fixed_database async {
+    if(_fixed_database != null) return _fixed_database;
 
-    fixed_database = openDatabase(
+    _fixed_database = openDatabase(
       join(await getDatabasesPath(), "fixed_database.db"),
       onCreate: (db, version) => createTable(db),
       version: 1,
     );
 
-    return fixed_database;
+    return _fixed_database;
   }
 
-  void createTable(Database db) {
+  void createTable(Database db) async {
     db.execute(
-        "CREATE TABLE user (id TEXT, church_id TEXT, units TEXT)"
+        "CREATE TABLE user (unit TEXT)"
     );
   }
 
   Future<void> insertUserModel(UserModel userModel) async {
-    final db = await fixed_database;
+    final db = await _fixed_database;
 
     await db.insert(
       "user",
@@ -36,20 +36,45 @@ class DataBase{
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
   }
+
+  Future<UserModel> getUserModel() async {
+    final db = await _fixed_database;
+
+    final List<Map<String, dynamic>> maps = await db.query("user");
+
+    return UserModel(
+      unit: maps[0]["unit"],
+    );
+  }
+
+  Future<void> deleteUser() async{
+    final db = await _fixed_database;
+
+    await db.delete(
+      "user"
+    );
+  }
+
+  Future<void> updateUserModel(UserModel userModel) async {
+    final db = await _fixed_database;
+
+    await db.update(
+      'user',
+      userModel.toMap(),
+      where: "unit = ?",
+      whereArgs: [0],
+    );
+  }
 }
 
 class UserModel {
-  late String id;
-  late String church_id;
-  late List<String> units;
+  late String unit;
 
-  UserModel({required this.id, required this.church_id, required this.units});
+  UserModel({required this.unit});
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
-      "id" : id,
-      "church_id" : church_id,
-      "units" : units,
+      "units" : unit,
     };
   }
 }
@@ -89,11 +114,13 @@ class _RadiusSize {
 class _FontSize {
   double Small = 14.0;
   double Middle = 17.0;
-  double Big = 28.0;
+  double Big = 24.0;
+  double TooBig = 28.0;
 }
 
 class _IconSize {
   double Middle = 33.0;
+  double Big = 60.0;
 }
 
 class _Icon {
@@ -135,6 +162,13 @@ class _Icon {
   Widget Loading(Color color){
     return CircularProgressIndicator(
       color: color,
+    );
+  }
+  Widget Account(Color color, double size){
+    return Icon(
+      Icons.account_circle_rounded,
+      color: color,
+      size: size,
     );
   }
 }

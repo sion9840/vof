@@ -3,7 +3,7 @@ import 'package:vof/_.dart';
 
 class MainPage extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => ;
+  _MainPageState createState() => _MainPageState();
 }
 
 class _MainPageState extends State<MainPage> {
@@ -43,7 +43,14 @@ class _MainPageState extends State<MainPage> {
               child: CustomScrollView(
                 slivers: <Widget>[
                   SliverAppBar(
-                    title: "${user_doc["user_name"]}",
+                    leading: CtTheme.Icon.Account(Color(CtTheme.HexColor.Black), CtTheme.IconSize.Big),
+                    title: Text(
+                      "${user_doc["name"]}",
+                      style: TextStyle(
+                        color: Color(CtTheme.HexColor.Black),
+                        fontSize: CtTheme.FontSize.Big
+                      ),
+                    ),
                   ),
                 ],
               ),

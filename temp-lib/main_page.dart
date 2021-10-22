@@ -189,12 +189,12 @@ class _MainPageState extends State<MainPage> {
                                           "${tiny_db.getInt("user_point")}",
                                           style: TextStyle(
                                             color: Colors.white,
-                                            fontSize: CtTheme.FontSize.Big,
+                                            fontSize: CtTheme.FontSize.TooBig,
                                             fontWeight: FontWeight.w900,
                                           ),
                                         ),
                                         SizedBox(width: 10.0,),
-                                        CtTheme.Icon.Point(Colors.white, CtTheme.FontSize.Big),
+                                        CtTheme.Icon.Point(Colors.white, CtTheme.FontSize.TooBig),
                                       ],
                                     ),
                                   ],
@@ -761,7 +761,7 @@ class _MainPageState extends State<MainPage> {
                                                       "${index+1}등",
                                                       style: TextStyle(
                                                         color: Colors.black,
-                                                        fontSize: CtTheme.FontSize.Big,
+                                                        fontSize: CtTheme.FontSize.TooBig,
                                                       ),
                                                     ),
                                                     SizedBox(width: 20.0,),
