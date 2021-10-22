@@ -1,8 +1,58 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:path/path.dart';
+import 'package:sqflite/sqflite.dart';
 
 var ClientDbInstance;
 final FirestoreInstance = FirebaseFirestore.instance;
+
+class DataBase{
+  var fixed_database;
+
+  Future<Database> get fixedDatabase async {
+    if(fixed_database != null) return fixed_database;
+
+    fixed_database = openDatabase(
+      join(await getDatabasesPath(), "fixed_database.db"),
+      onCreate: (db, version) => createTable(db),
+      version: 1,
+    );
+
+    return fixed_database;
+  }
+
+  void createTable(Database db) {
+    db.execute(
+        "CREATE TABLE user (id TEXT, church_id TEXT, units TEXT)"
+    );
+  }
+
+  Future<void> insertUserModel(UserModel userModel) async {
+    final db = await fixed_database;
+
+    await db.insert(
+      "user",
+      userModel.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
+}
+
+class UserModel {
+  late String id;
+  late String church_id;
+  late List<String> units;
+
+  UserModel({required this.id, required this.church_id, required this.units});
+
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      "id" : id,
+      "church_id" : church_id,
+      "units" : units,
+    };
+  }
+}
 
 class CtTheme {
   static _HexColor HexColor = _HexColor();
