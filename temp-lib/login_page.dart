@@ -2,10 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:vof/_.dart';
+import 'package:vof/my.dart';
 import 'global_variable.dart';
 
-import '../lib/_.dart';
+import '../lib/my.dart';
 import '../lib/main_page.dart';
 
 class LoginPage extends StatelessWidget {

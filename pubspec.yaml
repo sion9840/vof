@@ -28,8 +28,8 @@ dependencies:
   cloud_firestore: ^2.5.2
   firebase_auth: ^3.1.1
   firebase_core: ^1.6.0
-  sqflite: ^2.0.0+4
-  path: ^1.8.0
+  hive: ^2.0.4
+  hive_flutter: ^1.1.0
   uuid: ^3.0.5
 
   qr_flutter: ^4.0.0
@@ -40,6 +40,9 @@ dependencies:
   cupertino_icons: ^1.0.2
 
 dev_dependencies:
+  hive_generator: ^1.1.1
+  build_runner: ^2.1.4
+
   flutter_native_splash: ^1.2.3
   flutter_test:
     sdk: flutter

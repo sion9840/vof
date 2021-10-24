@@ -1,82 +1,28 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:path/path.dart';
-import 'package:sqflite/sqflite.dart';
+import 'package:hive/hive.dart';
+
+part 'my.g.dart';
 
 var TinyDb;
 final FirestoreInstance = FirebaseFirestore.instance;
 
-class DataBase{
-  var _fixed_database;
+@HiveType(typeId : 1)
+class Unit{
+  @HiveField(0)
+  String type;
+  @HiveField(1)
+  String user_id;
+  @HiveField(2)
+  bool okay;
+  @HiveField(3)
+  Map<String, int> date;
+  @HiveField(4)
+  String title;
+  @HiveField(5)
+  String content;
 
-  Future<Database> get fixed_database async {
-    if(_fixed_database != null) return _fixed_database;
-
-    _fixed_database = openDatabase(
-      join(await getDatabasesPath(), "fixed_database.db"),
-      onCreate: (db, version) => createTable(db),
-      version: 1,
-    );
-
-    return _fixed_database;
-  }
-
-  void createTable(Database db) async {
-    db.execute(
-        "CREATE TABLE user (unit TEXT)"
-    );
-  }
-
-  Future<void> insertUserModel(UserModel userModel) async {
-    final db = await _fixed_database;
-
-    await db.insert(
-      "user",
-      userModel.toMap(),
-      conflictAlgorithm: ConflictAlgorithm.replace,
-    );
-  }
-
-  Future<UserModel> getUserModel() async {
-    final db = await _fixed_database;
-
-    final List<Map<String, dynamic>> maps = await db.query("user");
-
-    return UserModel(
-      unit: maps[0]["unit"],
-    );
-  }
-
-  Future<void> deleteUser() async{
-    final db = await _fixed_database;
-
-    await db.delete(
-      "user"
-    );
-  }
-
-  Future<void> updateUserModel(UserModel userModel) async {
-    final db = await _fixed_database;
-
-    await db.update(
-      'user',
-      userModel.toMap(),
-      where: "unit = ?",
-      whereArgs: [0],
-    );
-  }
-}
-
-class UserModel {
-  late String unit;
-
-  UserModel({required this.unit});
-
-  Map<String, dynamic> toMap() {
-    return <String, dynamic>{
-      "units" : unit,
-    };
-  }
+  Unit({required this.type, required this.user_id, required this.okay, required this.date, required this.title, required this.content});
 }
 
 class CtTheme {

@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_clean_calendar/clean_calendar_event.dart';
 import 'package:flutter_clean_calendar/flutter_clean_calendar.dart';
-import 'package:vof/_.dart';
+import 'package:vof/my.dart';
 import 'global_variable.dart';
 
 class PointspecPage extends StatefulWidget {

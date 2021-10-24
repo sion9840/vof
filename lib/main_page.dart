@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:vof/_.dart';
+import 'package:vof/my.dart';
 
 class MainPage extends StatefulWidget {
   @override
@@ -17,16 +17,16 @@ class _MainPageState extends State<MainPage> {
       body: FutureBuilder(
         future: FirestoreInstance
           .collection("churches")
-          .doc(ClientDbInstance.getString("user_church_id"))
+          .doc(TinyDb.getString("user_church_id"))
           .get().then(
             (value) async{
               church_doc = value;
 
               await FirestoreInstance
                 .collection("churches")
-                .doc(ClientDbInstance.getString("user_church_id"))
+                .doc(TinyDb.getString("user_church_id"))
                 .collection("members")
-                .doc(ClientDbInstance.getString("user_id"))
+                .doc(TinyDb.getString("user_id"))
                 .get().then(
                   (value){
                     user_doc = value;

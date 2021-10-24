@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
-import 'package:vof/_.dart';
+import 'package:vof/my.dart';
 import 'global_variable.dart';
 
-import '../lib/_.dart';
+import '../lib/my.dart';
 
 class AttQrimageScannerPage extends StatefulWidget {
   @override

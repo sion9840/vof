@@ -4,12 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'att_qrimage_page.dart';
-import 'package:vof/_.dart';
+import 'package:vof/my.dart';
 import 'global_variable.dart';
 import 'members_page.dart';
 
 import 'att_qrimage_scanner_page.dart';
-import '../lib/_.dart';
+import '../lib/my.dart';
 import '../lib/user_page.dart';
 import '../lib/pointspec_page.dart';
 

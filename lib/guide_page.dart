@@ -1,8 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:vof/_.dart';
+import 'package:vof/my.dart';
 import 'package:uuid/uuid.dart';
 
 import 'main_page.dart';
@@ -748,6 +749,8 @@ class _GuidePageState extends State<GuidePage> {
                                                       String _user_id = _uuid.v1();
                                                       bool _is_error = false;
 
+                                                      // 클라우드 데이터베이스 관리
+
                                                       try {
                                                         UserCredential _userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
                                                             email: "${_user_id}@userid.com",
@@ -789,11 +792,47 @@ class _GuidePageState extends State<GuidePage> {
                                                         return;
                                                       }
 
+                                                      await FirestoreInstance
+                                                        .collection("churches")
+                                                        .doc(attend_church_text_field_controller.text)
+                                                        .collection("members")
+                                                        .add(
+                                                        {
+                                                          "id" : _user_id,
+                                                          "point" : 0,
+                                                          "name" : user_name_text_field_controller.text,
+                                                          "password" : user_password_text_field_controller.text,
+                                                          "church_id" : attend_church_text_field_controller.text,
+                                                          "type" : "student",
+                                                          "units" : [],
+                                                        }
+                                                      );
+
+                                                      // 클라이언트 데이터베이스 관리
+
+                                                      DateTime now = new DateTime.now();
+
+                                                      await Hive.box("units").add(
+                                                          Unit(
+                                                            type: "look",
+                                                            user_id: _user_id,
+                                                            okay: true,
+                                                            date: {
+                                                              "year" : now.year,
+                                                              "month" : now.month,
+                                                              "day" : now.day,
+                                                              "weekday" : now.weekday,
+                                                              "hour" : now.hour,
+                                                              "minute" : now.minute,
+                                                            },
+                                                            title: "튜토리얼!",
+                                                            content: "",
+                                                          )
+                                                      );
+
                                                       TinyDb
                                                         ..setString("user_id", _user_id)
                                                         ..setString("user_church_id", attend_church_text_field_controller.text);
-
-                                                      DataBase().createTable(await DataBase().fixed_database);
 
                                                       Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
                                                           MainPage()), (Route<dynamic> route) => false);
@@ -1037,26 +1076,41 @@ class _GuidePageState extends State<GuidePage> {
                                                         return;
                                                       }
 
-                                                      var _uuid = Uuid();
-                                                      String _user_id = _uuid.v1();
                                                       bool _is_error = false;
+                                                      var _searched_user_doc;
 
-                                                      try {
-                                                        UserCredential _userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
-                                                          email: "${_user_id}@userid.com",
-                                                          password: user_password_text_field_controller.text,
-                                                        );
-                                                      } on FirebaseAuthException catch (e) {
-                                                        _is_error = true;
-                                                      }
+                                                      // 클라우드 데이터베이스 관리
+
+                                                      await FirestoreInstance
+                                                        .collection("churches")
+                                                        .doc(attend_church_text_field_controller.text)
+                                                        .collection("members")
+                                                        .where("name", isEqualTo: user_name_text_field_controller.text)
+                                                        .get()
+                                                        .then(
+                                                          (value){
+                                                            _searched_user_doc = value.docs[0];
+                                                          },
+                                                        )
+                                                        .catchError(
+                                                          (e){
+                                                            _is_error = true;
+
+                                                            print("ERROR:${e.message}");
+                                                          }
+                                                      );
 
                                                       if(_is_error){
+                                                        return;
+                                                      }
+
+                                                      if(user_password_text_field_controller.text != _searched_user_doc["password"]) {
                                                         showDialog(
                                                             context: context,
                                                             builder: (context) =>
                                                                 AlertDialog(
                                                                   content: Text(
-                                                                    "교회 참가에 실패하였습니다\n(※ 네트워크 상태를 확인해주세요)",
+                                                                    "비밀번호가 틀렸습니다",
                                                                     style: TextStyle(
                                                                       color: Color(CtTheme.HexColor.Black),
                                                                       fontSize: CtTheme.FontSize.Middle,
@@ -1082,11 +1136,11 @@ class _GuidePageState extends State<GuidePage> {
                                                         return;
                                                       }
 
-                                                      TinyDb
-                                                        ..setString("user_id", _user_id)
-                                                        ..setString("user_church_id", attend_church_text_field_controller.text);
+                                                      // 클라이언트 데이터베이스 관리
 
-                                                      DataBase().createTable(await DataBase().fixed_database);
+                                                      TinyDb
+                                                        ..setString("user_id", _searched_user_doc["id"])
+                                                        ..setString("user_church_id", attend_church_text_field_controller.text);
 
                                                       Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
                                                           MainPage()), (Route<dynamic> route) => false);
