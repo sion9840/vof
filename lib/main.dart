@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -22,6 +23,22 @@ Future<void> main() async {
   await Hive.openBox('units');
 
   runApp(MyApp());
+  configLoading();
+}
+
+void configLoading() {
+  EasyLoading.instance
+    ..loadingStyle = EasyLoadingStyle.light
+    ..textStyle = TextStyle(
+      color: Color(CtTheme.HexColor.Black),
+      fontSize: CtTheme.FontSize.Middle,
+      fontFamily: CtTheme.FontFamily.General,
+    )
+    ..maskType = EasyLoadingMaskType.black
+    ..backgroundColor = Color(CtTheme.HexColor.White)
+    ..indicatorType = EasyLoadingIndicatorType.fadingCircle
+    ..indicatorColor = Color(CtTheme.HexColor.Black)
+    ..indicatorSize = 50.0;
 }
 
 class MyApp extends StatelessWidget {

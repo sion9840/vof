@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:hive/hive.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vof/my.dart';
@@ -745,6 +746,8 @@ class _GuidePageState extends State<GuidePage> {
                                                         return;
                                                       }
 
+                                                      EasyLoading.show(status: '교회 등록 중...');
+
                                                       var _uuid = Uuid();
                                                       String _user_id = _uuid.v1();
                                                       bool _is_error = false;
@@ -761,6 +764,8 @@ class _GuidePageState extends State<GuidePage> {
                                                       }
 
                                                       if(_is_error){
+                                                        EasyLoading.dismiss();
+
                                                         showDialog(
                                                             context: context,
                                                             builder: (context) =>
@@ -833,6 +838,8 @@ class _GuidePageState extends State<GuidePage> {
                                                       TinyDb
                                                         ..setString("user_id", _user_id)
                                                         ..setString("user_church_id", attend_church_text_field_controller.text);
+
+                                                      EasyLoading.dismiss();
 
                                                       Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
                                                           MainPage()), (Route<dynamic> route) => false);
@@ -1076,6 +1083,8 @@ class _GuidePageState extends State<GuidePage> {
                                                         return;
                                                       }
 
+                                                      EasyLoading.show(status: "교회 참가 중...");
+
                                                       bool _is_error = false;
                                                       var _searched_user_doc;
 
@@ -1101,10 +1110,14 @@ class _GuidePageState extends State<GuidePage> {
                                                       );
 
                                                       if(_is_error){
+                                                        EasyLoading.dismiss();
+
                                                         return;
                                                       }
 
                                                       if(user_password_text_field_controller.text != _searched_user_doc["password"]) {
+                                                        EasyLoading.dismiss();
+
                                                         showDialog(
                                                             context: context,
                                                             builder: (context) =>
@@ -1141,6 +1154,8 @@ class _GuidePageState extends State<GuidePage> {
                                                       TinyDb
                                                         ..setString("user_id", _searched_user_doc["id"])
                                                         ..setString("user_church_id", attend_church_text_field_controller.text);
+
+                                                      EasyLoading.dismiss();
 
                                                       Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
                                                           MainPage()), (Route<dynamic> route) => false);
