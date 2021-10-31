@@ -88,8 +88,8 @@ class _GuidePageState extends State<GuidePage> {
           children: <Widget>[
             Image.asset(
               "assets/images/yay.png",
-              width: 272.0,
-              height: 279.0,
+              width: 263.0,
+              height: 270.0,
             ),
             SizedBox(height: 20.0,),
             Text(
@@ -555,6 +555,7 @@ class _GuidePageState extends State<GuidePage> {
                                                     borderRadius: BorderRadius.circular(CtTheme.RadiusSize.Middle),
                                                   ),
                                                 ),
+                                                obscureText: true,
                                                 style: TextStyle(
                                                   color: Color(CtTheme.HexColor.Black),
                                                   fontSize: CtTheme.FontSize.Middle,
@@ -626,6 +627,7 @@ class _GuidePageState extends State<GuidePage> {
                                                     borderRadius: BorderRadius.circular(CtTheme.RadiusSize.Middle),
                                                   ),
                                                 ),
+                                                obscureText: true,
                                                 style: TextStyle(
                                                   color: Color(CtTheme.HexColor.Black),
                                                   fontSize: CtTheme.FontSize.Middle,
@@ -715,7 +717,7 @@ class _GuidePageState extends State<GuidePage> {
                                                               (user_password_text_field_controller.text.length > 0)
                                                       ) ?
                                                       MaterialStateProperty.all<Color>(Color(CtTheme.HexColor.Primary2)) :
-                                                      MaterialStateProperty.all<Color>(Color(0xFF83ADEA)),
+                                                      MaterialStateProperty.all<Color>(Color(0xFFF6CC7E)),
                                                     ),
                                                     child: Text(
                                                       "등록",
@@ -801,24 +803,27 @@ class _GuidePageState extends State<GuidePage> {
                                                         .collection("churches")
                                                         .doc(attend_church_text_field_controller.text)
                                                         .collection("members")
-                                                        .add(
-                                                        {
-                                                          "id" : _user_id,
-                                                          "point" : 0,
-                                                          "name" : user_name_text_field_controller.text,
-                                                          "password" : user_password_text_field_controller.text,
-                                                          "church_id" : attend_church_text_field_controller.text,
-                                                          "type" : "student",
-                                                          "units" : [],
-                                                        }
+                                                        .doc(_user_id)
+                                                        .set(
+                                                          {
+                                                            "id" : _user_id,
+                                                            "point" : 0,
+                                                            "name" : user_name_text_field_controller.text,
+                                                            "password" : user_password_text_field_controller.text,
+                                                            "church_id" : attend_church_text_field_controller.text,
+                                                            "type" : "student",
+                                                            "units" : [],
+                                                          }
                                                       );
 
                                                       // 클라이언트 데이터베이스 관리
 
                                                       DateTime now = new DateTime.now();
+                                                      String _unit_id = _uuid.v1();
 
                                                       await Hive.box("units").add(
                                                           Unit(
+                                                            id: _unit_id,
                                                             type: "look",
                                                             user_id: _user_id,
                                                             okay: true,
@@ -972,6 +977,7 @@ class _GuidePageState extends State<GuidePage> {
                                                     borderRadius: BorderRadius.circular(CtTheme.RadiusSize.Middle),
                                                   ),
                                                 ),
+                                                obscureText: true,
                                                 style: TextStyle(
                                                   color: Color(CtTheme.HexColor.Black),
                                                   fontSize: CtTheme.FontSize.Middle,
@@ -1054,7 +1060,7 @@ class _GuidePageState extends State<GuidePage> {
                                                               (user_password_text_field_controller.text.length > 0)
                                                       ) ?
                                                       MaterialStateProperty.all<Color>(Color(CtTheme.HexColor.Primary2)) :
-                                                      MaterialStateProperty.all<Color>(Color(0xFF83ADEA)),
+                                                      MaterialStateProperty.all<Color>(Color(0xFFF6CC7E)),
                                                     ),
                                                     child: Text(
                                                       "참가",

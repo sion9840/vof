@@ -66,6 +66,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: primary_material_color,
       ),
       home: ReadyPage(),
+      builder: EasyLoading.init(),
     );
   }
 }
@@ -81,7 +82,7 @@ class ReadyPage extends StatelessWidget {
         if(snapshot.hasData) {
           TinyDb = snapshot.data;
 
-          if(TinyDb.getBool("user_id") == null){ // 만약 앱을 처음 사용한다면
+          if(TinyDb.getString("user_id") == null){ // 만약 앱을 처음 사용한다면
             return GuidePage();
           }
           else{

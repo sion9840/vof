@@ -38,12 +38,18 @@ class _MainPageState extends State<MainPage> {
         ),
         builder: (context, snapshot) {
           if(snapshot.hasData){
-            return Padding(
-              padding: EdgeInsets.all(CtTheme.PaddingSize.Middle),
-              child: CustomScrollView(
-                slivers: <Widget>[
-                  SliverAppBar(
-                    leading: CtTheme.Icon.Account(Color(CtTheme.HexColor.Black), CtTheme.IconSize.Big),
+            return CustomScrollView(
+              slivers: <Widget>[
+                SliverPadding(
+                  padding: EdgeInsets.all(CtTheme.PaddingSize.Middle),
+                  sliver: SliverAppBar(
+                    backgroundColor: Color(CtTheme.HexColor.Background),
+                    leading: IconButton(
+                      icon: CtTheme.Icon.Account(Color(CtTheme.HexColor.Black), CtTheme.IconSize.Big),
+                      onPressed: (){
+
+                      },
+                    ),
                     title: Text(
                       "${user_doc["name"]}",
                       style: TextStyle(
@@ -52,8 +58,75 @@ class _MainPageState extends State<MainPage> {
                       ),
                     ),
                   ),
-                ],
-              ),
+                ),
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: EdgeInsets.only(
+                        left: 30.0,
+                        right: 30.0,
+                        bottom: 30.0,
+                    ),
+                    child: Container(
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: Color(CtTheme.HexColor.White),
+                        borderRadius: BorderRadius.circular(CtTheme.RadiusSize.Big),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Color(0xffDFE1E3),
+                            blurRadius: 20,
+                            offset: Offset(0, 0),
+                          ),
+                        ],
+                      ),
+                      child: Padding(
+                        padding: EdgeInsets.all(20.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              "나의 달란트",
+                              style: TextStyle(
+                                color: Color(CtTheme.HexColor.Side2),
+                                fontSize: CtTheme.FontSize.Middle,
+                                fontFamily: CtTheme.FontFamily.General,
+                              ),
+                            ),
+                            SizedBox(height: 2.0,),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: <Widget>[
+                                Text(
+                                  "${user_doc["point"]} 포인트",
+                                  style: TextStyle(
+                                    color: Color(CtTheme.HexColor.Black),
+                                    fontSize: CtTheme.FontSize.TooBig,
+                                    fontFamily: CtTheme.FontFamily.Bold,
+                                  ),
+                                ),
+                                SizedBox(width: double.infinity,),
+                                IconButton(
+                                  icon: Icon(
+                                    Icons.keyboard_arrow_right_rounded,
+                                    size: CtTheme.IconSize.Middle,
+                                    color: Color(CtTheme.HexColor.Black),
+                                  ),
+                                  onPressed: (){
+
+                                  },
+                                ),
+                                SizedBox(height: 30.0,),
+                                
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             );
           }
           else if(snapshot.hasError){

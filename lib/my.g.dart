@@ -17,30 +17,33 @@ class UnitAdapter extends TypeAdapter<Unit> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return Unit(
-      type: fields[0] as String,
-      user_id: fields[1] as String,
-      okay: fields[2] as bool,
-      date: (fields[3] as Map).cast<String, int>(),
-      title: fields[4] as String,
-      content: fields[5] as String,
+      id: fields[0] as String,
+      type: fields[1] as String,
+      user_id: fields[2] as String,
+      okay: fields[3] as bool,
+      date: (fields[4] as Map).cast<String, int>(),
+      title: fields[5] as String,
+      content: fields[6] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, Unit obj) {
     writer
-      ..writeByte(6)
+      ..writeByte(7)
       ..writeByte(0)
-      ..write(obj.type)
+      ..write(obj.id)
       ..writeByte(1)
-      ..write(obj.user_id)
+      ..write(obj.type)
       ..writeByte(2)
-      ..write(obj.okay)
+      ..write(obj.user_id)
       ..writeByte(3)
-      ..write(obj.date)
+      ..write(obj.okay)
       ..writeByte(4)
-      ..write(obj.title)
+      ..write(obj.date)
       ..writeByte(5)
+      ..write(obj.title)
+      ..writeByte(6)
       ..write(obj.content);
   }
 

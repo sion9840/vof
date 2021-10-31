@@ -10,19 +10,21 @@ final FirestoreInstance = FirebaseFirestore.instance;
 @HiveType(typeId : 1)
 class Unit{
   @HiveField(0)
-  String type;
+  String id;
   @HiveField(1)
-  String user_id;
+  String type;
   @HiveField(2)
-  bool okay;
+  String user_id;
   @HiveField(3)
-  Map<String, int> date;
+  bool okay;
   @HiveField(4)
-  String title;
+  Map<String, int> date;
   @HiveField(5)
+  String title;
+  @HiveField(6)
   String content;
 
-  Unit({required this.type, required this.user_id, required this.okay, required this.date, required this.title, required this.content});
+  Unit({required this.id, required this.type, required this.user_id, required this.okay, required this.date, required this.title, required this.content});
 }
 
 class CtTheme {
@@ -36,8 +38,8 @@ class CtTheme {
 }
 
 class _HexColor {
-  int Primary1 = 0xFF649BED;
-  int Primary2 = 0xFF196BE5;
+  int Primary1 = 0xFFffe066;
+  int Primary2 = 0xFFF59F00;
   int Background = 0xFFF8FAFC;
   int Black = 0xFF000000;
   int White = 0xFFFFFFFF;
