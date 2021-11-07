@@ -45,7 +45,8 @@ class _MainPageState extends State<MainPage> {
                   sliver: SliverAppBar(
                     backgroundColor: Color(CtTheme.HexColor.Background),
                     leading: IconButton(
-                      icon: CtTheme.Icon.Account(Color(CtTheme.HexColor.Black), CtTheme.IconSize.Big),
+                      icon: CtTheme.Icon.Account(Color(CtTheme.HexColor.Black), CtTheme.IconSize.Middle),
+                      iconSize: CtTheme.IconSize.Middle,
                       onPressed: (){
 
                       },
@@ -97,15 +98,16 @@ class _MainPageState extends State<MainPage> {
                             Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: <Widget>[
-                                Text(
-                                  "${user_doc["point"]} 포인트",
-                                  style: TextStyle(
-                                    color: Color(CtTheme.HexColor.Black),
-                                    fontSize: CtTheme.FontSize.TooBig,
-                                    fontFamily: CtTheme.FontFamily.Bold,
+                                Expanded(
+                                  child: Text(
+                                    "${user_doc["point"]} 포인트",
+                                    style: TextStyle(
+                                      color: Color(CtTheme.HexColor.Black),
+                                      fontSize: CtTheme.FontSize.TooBig,
+                                      fontFamily: CtTheme.FontFamily.Bold,
+                                    ),
                                   ),
                                 ),
-                                SizedBox(width: double.infinity,),
                                 IconButton(
                                   icon: Icon(
                                     Icons.keyboard_arrow_right_rounded,
@@ -116,9 +118,96 @@ class _MainPageState extends State<MainPage> {
 
                                   },
                                 ),
-                                SizedBox(height: 30.0,),
-                                
                               ],
+                            ),
+                            SizedBox(height: 20.0,),
+                            SizedBox(
+                              width: double.infinity,
+                              height: 50.0,
+                              child: Row(
+                                children: <Widget>[
+                                  Expanded(
+                                    flex: 1,
+                                    child: SizedBox(
+                                      height: 50.0,
+                                      child: ElevatedButton(
+                                        style: ButtonStyle(
+                                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                            RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(CtTheme.RadiusSize.Middle),
+                                            ),
+                                          ),
+                                          backgroundColor: MaterialStateProperty.all<Color>(Color(CtTheme.HexColor.Primary2)),
+                                        ),
+                                        child: Text(
+                                          "QT 하기",
+                                          style: TextStyle(
+                                            color: Color(CtTheme.HexColor.White),
+                                            fontSize: CtTheme.FontSize.Middle,
+                                            fontFamily: CtTheme.FontFamily.General,
+                                          ),
+                                        ),
+                                        onPressed: () {
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(width: 10.0,),
+                                  Expanded(
+                                    flex: 1,
+                                    child: SizedBox(
+                                      height: 50.0,
+                                      child: ElevatedButton(
+                                        style: ButtonStyle(
+                                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                            RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(CtTheme.RadiusSize.Middle),
+                                            ),
+                                          ),
+                                          backgroundColor: MaterialStateProperty.all<Color>(Color(CtTheme.HexColor.Primary2)),
+                                        ),
+                                        child: Text(
+                                          "예배 참석",
+                                          style: TextStyle(
+                                            color: Color(CtTheme.HexColor.White),
+                                            fontSize: CtTheme.FontSize.Middle,
+                                            fontFamily: CtTheme.FontFamily.General,
+                                          ),
+                                        ),
+                                        onPressed: () {
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(width: 10.0,),
+                                  Expanded(
+                                    flex: 1,
+                                    child: SizedBox(
+                                      height: 50.0,
+                                      child: ElevatedButton(
+                                        style: ButtonStyle(
+                                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                            RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(CtTheme.RadiusSize.Middle),
+                                            ),
+                                          ),
+                                          backgroundColor: MaterialStateProperty.all<Color>(Color(CtTheme.HexColor.Primary2)),
+                                        ),
+                                        child: Text(
+                                          "설교 메모",
+                                          style: TextStyle(
+                                            color: Color(CtTheme.HexColor.White),
+                                            fontSize: CtTheme.FontSize.Middle,
+                                            fontFamily: CtTheme.FontFamily.General,
+                                          ),
+                                        ),
+                                        onPressed: () {
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ],
                         ),
